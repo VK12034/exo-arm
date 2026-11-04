@@ -61,8 +61,13 @@ public:
         // than the continuous figure, and the decision itself is taken a tick
         // before the motion it governs. Using the ideal distance alone
         // overshoots the limit by a few steps every time.
+        //
+        // One more step on top of that, because position arrives as a whole
+        // step count. Travelling away from zero that count rounds down, so
+        // the arm may be up to a step further along than it is reported to
+        // be, and the planner has to assume it is.
         const float speed  = velocity_ < 0.0f ? -velocity_ : velocity_;
-        const float margin = stoppingDistance(velocity_, accel_) + speed * dt;
+        const float margin = stoppingDistance(velocity_, accel_) + speed * dt + 1.0f;
 
         if (velocity_ > 0.0f && static_cast<float>(max_steps_ - position) <= margin) {
             desired = 0.0f;
