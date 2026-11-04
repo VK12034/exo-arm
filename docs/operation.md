@@ -73,7 +73,7 @@ drive into a hard stop.
 115200 baud, a line every half second:
 
 ```
-t=12480 state=MOVING angle=42.3deg steps=2820 v=1333 estop=closed drive=on
+t=12480 state=MOVING angle=42.3deg steps=2820 v=1333 estop=closed amps=1.18 drive=on
 ```
 
 | Field | Meaning |
@@ -83,6 +83,7 @@ t=12480 state=MOVING angle=42.3deg steps=2820 v=1333 estop=closed drive=on
 | `steps` | Raw step count |
 | `v` | Commanded velocity, steps per second |
 | `estop` | `OPEN` or `closed` |
+| `amps` | Filtered supply current to the driver |
 | `drive` | Whether the motor is energised |
 
 ## Faults
@@ -94,7 +95,23 @@ t=12480 state=MOVING angle=42.3deg steps=2820 v=1333 estop=closed drive=on
 | `ready` never prints | A button is stuck closed |
 | Angle drifts from reality | Steps lost. Park and power cycle |
 | Buzz without motion | Stall. Reduce speed, check for a mechanical bind, check driver current |
+| `FAULT: overload` | The arm is working against something. Find out what before clearing it |
+| `FAULT: current collapse` | Motor disconnected, or the rotor lost synchronism. Check the motor cable first |
 | Arm sags when idle | The worm is not holding. Stop using it |
+
+## After a load fault
+
+Both load faults clear the same way as an e-stop: release both buttons and
+the arm returns to ready. That is deliberately easy, because being stuck in a
+fault with an arm strapped on is its own hazard.
+
+It is also the wrong thing to do twice. A repeated overload means the arm is
+binding on something, and the second attempt pushes into it harder than the
+first. Take the arm off and find the cause.
+
+After either fault, treat the reported angle as suspect: steps may have been
+lost. Park at full extension and power cycle before relying on the limits
+again.
 
 ## Shutdown
 

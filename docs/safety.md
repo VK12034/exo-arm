@@ -27,7 +27,7 @@ Everything below follows from that.
 | Motion on power-up from a stuck button | Firmware boots into fault and will not leave it until the e-stop is closed and both buttons are released |
 | Accumulated step loss moving the limits | Re-zero gesture, and a power-on park against the extension stop |
 | Ambiguous command | Both buttons, or neither, reads as stop |
-| Stepper stalling against an obstruction | **Not mitigated.** See Known gaps |
+| Arm binding or pushing against something | Supply current monitored while driving; sustained overload faults the arm. Partial — see Known gaps |
 | Wearer trapped in a dead arm | Every strap releases one-handed from the free hand; cuffs are quick-release |
 
 ## Interlocks
@@ -49,10 +49,21 @@ actively asking for, for as long as they are asking for it.
 Stated plainly, because a safety page that only lists mitigations is a sales
 page:
 
-- **No stall detection.** If the arm jams, the motor keeps stepping, the
-  position counter keeps counting, and the firmware believes the arm is
-  somewhere it is not. The limits are then wrong by that error until the next
-  re-zero.
+- **Load monitoring is inferred, not measured.** A TB6600 regulates phase
+  current, so the motor draws much the same whether or not it is turning.
+  What the firmware watches is the *supply* current, which tracks mechanical
+  power: it climbs as the arm works harder and collapses once the rotor loses
+  synchronism. Sustained overload faults the arm, and so does a collapse
+  while steps are being commanded.
+
+  Both are heuristics. A slow bind that never crosses the threshold will not
+  trip, a collapse reads the same as a disconnected motor, and a stall that
+  happens below the overload threshold is invisible. A shaft encoder would
+  make this exact instead of inferred, and remains the right fix.
+
+- **Lost steps are still unrecoverable.** Whether or not the load monitor
+  catches the event, the position counter has no way back to the truth. After
+  any fault, park the arm and power cycle rather than trusting the angle.
 - **No limit switches.** Soft limits are counted steps from an assumed
   power-on pose. Park the arm wrong and the limits are wrong with it.
 - **No torque limit.** The drivetrain can deliver roughly seven times the

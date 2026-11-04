@@ -30,6 +30,7 @@ current and a plan for what happens when it is lost.
 | 1 | DC barrel jack, 24 V | 0.001 kg |
 | 2 | PG7 cable gland | 0.002 kg each |
 | 1 | Relay or contactor for the e-stop supply break | — | Rated for the driver's current |
+| 1 | ACS712-20A current sensor module | 0.005 kg | In the 24 V feed to the driver, for load monitoring |
 
 ## Power
 

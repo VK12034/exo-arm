@@ -57,10 +57,14 @@ limit rather than arriving at it under power. That matters more than it
 sounds — a stepper stopped dead at speed loses steps, and with no encoder the
 step counter is the only idea the firmware has of where the arm is.
 
-Three things are enforced below the planner: the step generator refuses to
+Four things are enforced below the planner: the step generator refuses to
 pulse past the travel limits whatever it is told, the e-stop drops the driver
-enable before anything else runs, and both buttons at once reads as stop
-rather than as a guess.
+enable before anything else runs, both buttons at once reads as stop rather
+than as a guess, and the supply current is watched while the arm drives so a
+bind faults it out.
+
+That last one is inferred rather than measured, and `docs/safety.md` is
+explicit about what it cannot catch. A shaft encoder would make it exact.
 
 ## Safety model
 

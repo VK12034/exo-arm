@@ -45,6 +45,21 @@ exactly backwards.
 |---|---|---|
 | Status LED | 8 | Green LED on the control box face, with its series resistor |
 | Onboard LED | 13 | Mirrors the status LED, useful on the bench |
+| Current sense | A0 | ACS712-20A output, 100 mV/A about a mid-rail zero |
+
+### Current sensor
+
+An ACS712-20A goes **in the 24 V feed to the TB6600**, downstream of the
+e-stop contact, so it sees the driver's draw and nothing else. Its 5 V and
+ground come from the Arduino, and its output goes to A0.
+
+Put it on the driver feed, not on the supply input: the buck converter and
+the Arduino would otherwise appear in the reading as a constant offset that
+drifts with whatever the logic is doing.
+
+The firmware measures the sensor's zero at every power-on, with the driver
+de-energised. Nothing may be moving during the first second after power-up or
+that reading becomes the zero point for the whole session.
 
 ## E-stop, in hardware as well as firmware
 

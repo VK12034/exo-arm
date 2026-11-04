@@ -8,6 +8,7 @@
 #include <avr/wdt.h>
 
 #include "config.h"
+#include "load.h"
 #include "motion.h"
 #include "pendant.h"
 #include "stepper.h"
@@ -15,7 +16,7 @@
 namespace {
 
 enum class State : uint8_t {
-    kFault,   // e-stop open, or waiting for the buttons to be let go
+    kFault,   // e-stop open, a load trip, or waiting for the buttons to be let go
     kIdle,
     kMoving,
 };
@@ -23,12 +24,23 @@ enum class State : uint8_t {
 Stepper         g_stepper;
 Pendant         g_pendant;
 motion::Planner g_planner;
+LoadMonitor     g_load;
 
 State    g_state = State::kFault;
 uint32_t g_last_plan_us = 0;
 uint32_t g_last_status_ms = 0;
 uint32_t g_idle_since_ms = 0;
 bool     g_rezeroed = false;
+
+// ADC counts read with the driver de-energised, so the sensor's own offset
+// is measured rather than assumed.
+int g_current_zero = 512;
+
+float readAmps() {
+    const int counts = analogRead(cfg::kCurrentSensePin) - g_current_zero;
+    const float amps = static_cast<float>(counts) * cfg::kAmpsPerCount;
+    return amps < 0.0f ? -amps : amps;
+}
 
 void setLeds(bool status, bool onboard) {
     digitalWrite(cfg::kStatusLedPin, status ? HIGH : LOW);
@@ -74,8 +86,35 @@ void printStatus(uint32_t now_ms, long position) {
     Serial.print(g_planner.velocity(), 0);
     Serial.print(F(" estop="));
     Serial.print(g_pendant.eStopOpen() ? F("OPEN") : F("closed"));
+    Serial.print(F(" amps="));
+    Serial.print(g_load.current(), 2);
     Serial.print(F(" drive="));
     Serial.println(g_stepper.enabled() ? F("on") : F("off"));
+}
+
+// Measures the current sensor's zero with the driver de-energised. Anything
+// moving during this would be read as the zero point for the rest of the
+// session, so it runs before the motor can be enabled.
+void calibrateCurrentZero() {
+    long total = 0;
+    for (uint8_t i = 0; i < cfg::kCurrentZeroSamples; ++i) {
+        total += analogRead(cfg::kCurrentSensePin);
+        delay(2);
+    }
+    g_current_zero = static_cast<int>(total / cfg::kCurrentZeroSamples);
+
+    Serial.print(F("current zero: "));
+    Serial.print(g_current_zero);
+    Serial.println(F(" counts"));
+}
+
+void enterFault(const __FlashStringHelper* reason) {
+    g_stepper.emergencyStop();
+    g_planner.stop();
+    g_state = State::kFault;
+
+    Serial.print(F("FAULT: "));
+    Serial.println(reason);
 }
 
 // A re-zero redefines where the travel limits sit, so it is only offered
@@ -116,6 +155,12 @@ void setup() {
 
     g_planner.configure(cfg::kMaxSpeedSteps, cfg::kAccelSteps, cfg::kMinSteps, cfg::kMaxSteps);
 
+    calibrateCurrentZero();
+    g_load.configure(cfg::kOverloadAmps, cfg::kOverloadMs,
+                     cfg::kCollapseAmps, cfg::kCollapseMs,
+                     cfg::kLoadGraceMs, cfg::kCurrentFilterAlpha);
+    g_load.reset(readAmps());
+
     g_last_plan_us = micros();
     g_idle_since_ms = now_ms;
 
@@ -144,20 +189,18 @@ void loop() {
     // --- Interlocks --------------------------------------------------------
     if (g_pendant.eStopOpen()) {
         if (g_state != State::kFault) {
-            g_stepper.emergencyStop();
-            g_planner.stop();
-            g_state = State::kFault;
-            Serial.println(F("ESTOP"));
+            enterFault(F("estop"));
         }
         updateLeds(now_ms);
         return;
     }
 
     if (g_state == State::kFault) {
-        // The loop is closed again. Wait for both buttons to be released
+        // The interlock has cleared. Wait for both buttons to be released
         // before handing control back, so releasing the mushroom while a
         // button is held does not start the arm moving.
         if (!g_pendant.upHeld() && !g_pendant.downHeld()) {
+            g_load.clear();
             g_state = State::kIdle;
             g_idle_since_ms = now_ms;
             g_last_plan_us = now_us;
@@ -181,6 +224,18 @@ void loop() {
     handleRezero(now_ms);
 
     g_planner.update(g_pendant.command(), position, dt);
+
+    // Load is judged against whether the arm is being driven, not against
+    // what the wearer asked for: a button held at a travel limit commands
+    // nothing and should not be read as a stall.
+    g_load.update(readAmps(), g_planner.moving(), now_ms);
+
+    if (g_load.tripped()) {
+        enterFault(g_load.overload() ? F("overload - the arm is pushing against something")
+                                     : F("current collapse - possible stall or motor disconnected"));
+        updateLeds(now_ms);
+        return;
+    }
 
     if (g_planner.moving()) {
         g_stepper.enable(true);

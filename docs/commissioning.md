@@ -115,10 +115,43 @@ feel unhurried. If the motor stalls or skips — a buzz without motion — reduc
 `kMaxSpeedDegPerSec` and `kAccelDegPerSec2` before raising the driver
 current.
 
-Record what the supply draws. That figure is the baseline a future stall will
-be measured against.
+Record what the supply draws, from the `amps=` field in the status line:
 
-## 9. First wear
+| Condition | Figure to record |
+|---|---|
+| Stopped, driver de-energised | Should read near zero. If not, the zero calibration at boot caught something moving |
+| Moving, unloaded | The floor the collapse threshold sits below |
+| Moving, loaded | The normal working figure |
+| Deliberately obstructed, briefly | The level the overload threshold sits below |
+
+Then set the thresholds in `config.h`:
+
+- `kCollapseAmps` about half the unloaded moving figure
+- `kOverloadAmps` midway between the loaded working figure and the obstructed
+  one
+
+The values shipped are placeholders sized for a NEMA 23 at roughly 2 A per
+phase. Set too low they will trip during normal use, and a safety device that
+cries wolf gets disabled; set too high they catch nothing.
+
+Obstruct the arm by hand against a bench, not against a person, and keep it
+brief.
+
+## 9. Load monitoring
+
+With the thresholds set, confirm both trips fire:
+
+- [ ] Obstruct the arm while it drives. It must fault within about half a
+      second and print `FAULT: overload`
+- [ ] Disconnect the motor and command motion. It must fault and print
+      `FAULT: current collapse`
+- [ ] Run the full travel loaded, several times, with no false trips
+
+The third is the one that decides whether the thresholds are usable. A
+monitor that trips during normal use will be turned off, and then it protects
+nothing.
+
+## 10. First wear
 
 Follow the checklist in [safety.md](safety.md). Short presses, not long ones.
 Someone else on the e-stop.

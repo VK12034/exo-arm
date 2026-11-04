@@ -3,6 +3,7 @@
 #include <unity.h>
 
 #include "debounce.h"
+#include "load.h"
 #include "motion.h"
 
 namespace {
@@ -256,6 +257,121 @@ void test_debounce_tracks_hold_time(void) {
     TEST_ASSERT_EQUAL_UINT32(3000u, button.heldMs(3130));
 }
 
+// --- Load monitor ----------------------------------------------------------
+
+namespace {
+
+// Thresholds from config.h, with the filter wide open so these tests
+// exercise the decision logic rather than the smoothing.
+LoadMonitor makeLoad() {
+    LoadMonitor load;
+    load.configure(2.5f, 400, 0.15f, 600, 250, 1.0f);
+    load.reset(0.0f);
+    return load;
+}
+
+uint32_t feed(LoadMonitor& load, float amps, bool moving, uint32_t from_ms, uint32_t ms) {
+    for (uint32_t t = 0; t < ms; ++t) {
+        load.update(amps, moving, from_ms + t);
+    }
+    return from_ms + ms;
+}
+
+}  // namespace
+
+void test_load_ignores_current_while_stopped(void) {
+    LoadMonitor load = makeLoad();
+
+    // A de-energised driver says nothing about load, however the reading looks.
+    feed(load, 9.0f, false, 0, 5000);
+
+    TEST_ASSERT_FALSE(load.tripped());
+}
+
+void test_load_allows_inrush_during_the_grace_period(void) {
+    LoadMonitor load = makeLoad();
+
+    feed(load, 6.0f, true, 0, 200);
+
+    TEST_ASSERT_FALSE(load.tripped());
+}
+
+void test_load_trips_on_sustained_overload(void) {
+    LoadMonitor load = makeLoad();
+
+    const uint32_t t = feed(load, 4.0f, true, 0, 300);
+    TEST_ASSERT_FALSE(load.tripped());
+
+    feed(load, 4.0f, true, t, 500);
+
+    TEST_ASSERT_TRUE(load.overload());
+    TEST_ASSERT_FALSE(load.collapse());
+}
+
+void test_load_ignores_a_brief_overload_spike(void) {
+    LoadMonitor load = makeLoad();
+
+    uint32_t t = feed(load, 1.0f, true, 0, 400);
+    t = feed(load, 4.0f, true, t, 200);   // spike, shorter than kOverloadMs
+    feed(load, 1.0f, true, t, 500);
+
+    TEST_ASSERT_FALSE(load.tripped());
+}
+
+void test_load_trips_on_current_collapse(void) {
+    LoadMonitor load = makeLoad();
+
+    uint32_t t = feed(load, 1.0f, true, 0, 400);
+    feed(load, 0.05f, true, t, 800);
+
+    TEST_ASSERT_TRUE(load.collapse());
+    TEST_ASSERT_FALSE(load.overload());
+}
+
+void test_load_accepts_normal_working_current(void) {
+    LoadMonitor load = makeLoad();
+
+    feed(load, 1.2f, true, 0, 10000);
+
+    TEST_ASSERT_FALSE(load.tripped());
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.2f, load.current());
+}
+
+void test_load_timers_restart_when_motion_stops(void) {
+    LoadMonitor load = makeLoad();
+
+    // Most of an overload, then a pause, then most of one again. Neither
+    // stretch is long enough on its own and they must not add up.
+    uint32_t t = feed(load, 4.0f, true, 0, 300);
+    t = feed(load, 0.0f, false, t, 100);
+    t = feed(load, 4.0f, true, t, 300);
+
+    TEST_ASSERT_FALSE(load.tripped());
+}
+
+void test_load_clear_releases_the_trip(void) {
+    LoadMonitor load = makeLoad();
+
+    feed(load, 4.0f, true, 0, 800);
+    TEST_ASSERT_TRUE(load.tripped());
+
+    load.clear();
+
+    TEST_ASSERT_FALSE(load.tripped());
+    TEST_ASSERT_FALSE(load.overload());
+}
+
+void test_load_filter_smooths_the_reading(void) {
+    LoadMonitor load;
+    load.configure(2.5f, 400, 0.15f, 600, 250, 0.05f);
+    load.reset(0.0f);
+
+    // One sample at the chopper's peak must not move the filtered value far.
+    load.update(5.0f, true, 0);
+
+    TEST_ASSERT_TRUE(load.current() < 0.5f);
+}
+
 int main(int, char**) {
     UNITY_BEGIN();
 
@@ -284,6 +400,16 @@ int main(int, char**) {
     RUN_TEST(test_debounce_reports_release);
     RUN_TEST(test_debounce_reset_does_not_report_an_edge);
     RUN_TEST(test_debounce_tracks_hold_time);
+
+    RUN_TEST(test_load_ignores_current_while_stopped);
+    RUN_TEST(test_load_allows_inrush_during_the_grace_period);
+    RUN_TEST(test_load_trips_on_sustained_overload);
+    RUN_TEST(test_load_ignores_a_brief_overload_spike);
+    RUN_TEST(test_load_trips_on_current_collapse);
+    RUN_TEST(test_load_accepts_normal_working_current);
+    RUN_TEST(test_load_timers_restart_when_motion_stops);
+    RUN_TEST(test_load_clear_releases_the_trip);
+    RUN_TEST(test_load_filter_smooths_the_reading);
 
     return UNITY_END();
 }

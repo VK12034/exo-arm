@@ -25,6 +25,9 @@ constexpr uint8_t kDownPin  = 7;
 constexpr uint8_t kStatusLedPin = 8;   // green LED on the control box face
 constexpr uint8_t kOnboardLedPin = 13;
 
+// Hall-effect current sensor in the 24 V feed to the driver.
+constexpr uint8_t kCurrentSensePin = A0;
+
 // The TB6600 enable input is active low in this wiring: pulling ENA low
 // energises the motor.
 constexpr bool kEnableActiveLow = true;
@@ -81,5 +84,32 @@ constexpr uint16_t kRezeroHoldMs = 3000;
 // TB6600 wants at least 2.2 us of pulse width; 4 us gives margin without
 // meaningfully lengthening the interrupt.
 constexpr uint8_t kStepPulseUs = 4;
+
+// --- Load monitoring -------------------------------------------------------
+// ACS712-20A in the driver's 24 V feed: 100 mV/A about a mid-rail zero, read
+// on a 5 V 10-bit ADC. That is about 49 mA per count, which is coarse but far
+// finer than the thresholds below.
+constexpr float kAmpsPerCount = (5.0f / 1024.0f) / 0.100f;
+
+// The zero point is measured at boot with the driver de-energised rather
+// than assumed to be mid-rail, because these sensors drift with temperature
+// and supply.
+constexpr uint8_t kCurrentZeroSamples = 64;
+
+// Every threshold here is a placeholder until it is measured on the bench.
+// docs/commissioning.md step 8 says to record the real figures; these are
+// sized for a NEMA 23 at roughly 2 A per phase off a 24 V supply.
+constexpr float    kOverloadAmps  = 2.5f;   // sustained draw that means binding
+constexpr uint16_t kOverloadMs    = 400;
+constexpr float    kCollapseAmps  = 0.15f;  // draw that means no useful work
+constexpr uint16_t kCollapseMs    = 600;
+
+// Current needs time to settle after motion starts, and the first step draws
+// an inrush that would otherwise read as an overload.
+constexpr uint16_t kLoadGraceMs = 250;
+
+// One-pole filter on the current reading. A stepper driver chops
+// continuously, so the raw reading is noisy at the sample rate.
+constexpr float kCurrentFilterAlpha = 0.05f;
 
 }  // namespace cfg

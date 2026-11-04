@@ -132,7 +132,10 @@ carries anything, and a stepper that stalls loses position silently.
 - Microstepping is set by DIP switches on the TB6600 and assumed to be 1/8 in
   `config.h`. Nothing checks that the two agree; if they do not, every angle
   is wrong by the same factor.
-- Stall detection. A stepper that loses steps against an obstruction gives no
-  indication. Current sensing on the driver supply would catch it.
+- Load monitoring infers rather than measures. Supply current tracks
+  mechanical power, so a bind shows as a sustained rise and a lost rotor as a
+  collapse, but a slow bind below the threshold is invisible and a collapse
+  is indistinguishable from an unplugged motor. A shaft encoder would make
+  this exact, and would also make homing real.
 - The pendant cable crosses no joint, but the motor cable does. That is the
   cable that will eventually fail.
