@@ -1,54 +1,92 @@
 # Bill of materials
 
-Quantities are for one arm. Prices are rough and from late 2026; treat them
-as a sanity check, not a quote.
+One right arm. Masses are from the Fusion model; see
+[cad/README.md](../cad/README.md) for the per-body breakdown.
 
-## Actuation
+## Drivetrain
 
-| Qty | Item | Notes |
-|---|---|---|
-| 1 | Brushed gearmotor, ~100:1, 24 V, 2048 CPR encoder | Shoulder. Needs roughly 26 Nm holding torque at the output |
-| 1 | Brushed gearmotor, ~70:1, 24 V, 2048 CPR encoder | Elbow. Roughly 12 Nm |
-| 2 | Pololu G2 High-Power Motor Driver 24v13 | Current sense and a fault output matter more than the headline rating |
-| 2 | Shaft coupling, backlash-free | Backlash here shows up directly as the arm feeling vague |
+| Qty | Item | Mass | Notes |
+|---|---|---|---|
+| 1 | NEMA 23 stepper, 23HS30, 76 mm body, 1.9 N·m | — | Lumped with the gearbox at 2.2 kg in the model |
+| 1 | NMRV030 worm gearbox, 15:1, 14 mm keyed output | — | Self-locking at this ratio. Do not substitute a lower ratio without rereading [safety.md](safety.md) |
+| 1 | Keyed shaft hub, 14 mm bore, steel | 0.115 kg | Drives the forearm module |
+| 1 | Shaft key, 5 × 5 | 0.003 kg | |
+| 1 | M5 set screw | — | Retains the hub |
 
-Size the gear ratio for backdrivability, not just torque. A ratio high enough
-to hold the arm effortlessly is also high enough to make it unpleasant to
-move when unpowered.
+The ratio is a safety property, not a performance one. A 15:1 worm holds the
+elbow with the motor off; a 10:1 may not, and the machine then needs holding
+current and a plan for what happens when it is lost.
 
 ## Control
 
-| Qty | Item |
-|---|---|
-| 1 | Teensy 4.1 |
-| 1 | Protoboard or a small custom PCB for the breakouts |
-| 2 | Load cell, 0-20 kg, with an instrumentation amp |
-| 1 | E-stop, normally closed, latching |
-| 1 | Momentary grip switch (deadman) |
-
-Prefer an analog instrumentation amp over an HX711 for the load cells: the
-HX711 80 Hz ceiling is slow enough to be felt in an admittance loop.
+| Qty | Item | Mass |
+|---|---|---|
+| 1 | Arduino Uno | 0.008 kg |
+| 1 | TB6600 stepper driver | 0.197 kg |
+| 1 | E-stop, latching mushroom, **normally closed** | 0.005 kg |
+| 2 | Momentary push button (UP green, DOWN black) | 0.001 kg each |
+| 1 | Green status LED and series resistor | — |
+| 1 | Power rocker switch | 0.002 kg |
+| 1 | DC barrel jack, 24 V | 0.001 kg |
+| 2 | PG7 cable gland | 0.002 kg each |
+| 1 | Relay or contactor for the e-stop supply break | — | Rated for the driver's current |
 
 ## Power
 
 | Qty | Item |
 |---|---|
-| 1 | 24 V supply, 10 A. A current-limited bench supply for commissioning |
-| 1 | 24 V to 5 V buck, 2 A |
-| 1 | Inline fuse, 15 A |
-| 2 | 1000 uF electrolytic, 35 V |
+| 1 | 24 V supply, 4 A or better. A current-limited bench supply for commissioning |
+| 1 | 24 V to 5 V buck converter |
+| 1 | Inline fuse, sized to the driver current setting |
+| 1 | Electrolytic capacitor across the driver supply |
 
-## Structure
+## Printed parts
 
-| Qty | Item | Notes |
+PETG, FDM, 4 walls at 40% infill.
+
+| Qty | Part | Mass |
 |---|---|---|
-| 2 | Aluminium link, 6061, machined or waterjet | See the cad/ folder |
-| 1 | Shoulder mount and harness interface | Takes the full reaction torque, so overbuild it |
-| 3 | Cuff, padded, quick release | Upper arm, forearm, torso |
-| - | Bearings, shoulder bolts, fasteners | Sized per the CAD |
+| 1 | Control box body | 0.128 kg |
+| 1 | Control box lid | 0.052 kg |
+| 1 | Hand pendant housing | 0.136 kg |
+| 1 | Upper arm cuff | 0.064 kg |
+| 1 | Forearm cuff | 0.028 kg |
+| 1 | Sling strap anchor | 0.014 kg |
+
+PETG rather than PLA throughout: these parts sit against a body, in a car, in
+sunlight, and PLA creeps under sustained load at temperatures the arm will
+see.
+
+## Structure and wearables
+
+| Qty | Item | Mass |
+|---|---|---|
+| 1 | Upper strut, 1 × 1/8 in 6061 aluminium flat bar | 0.050 kg |
+| 1 | Waist belt, 38 mm nylon webbing, side-release buckle | 0.094 kg |
+| 1 | Sling strap, 25 mm webbing | 0.044 kg |
+| 2 | Velcro cuff strap, 25 mm | 0.001 kg each |
+| 1 | Upper cuff pad, 6 mm EVA foam | 0.025 kg |
+| 1 | Forearm cuff pad, 5 mm EVA foam | 0.012 kg |
+| 1 | 6-core pendant cable | 0.045 kg |
+| — | M3–M6 fasteners, nylocs, countersunk screws | — |
+
+## Totals
+
+| | Mass |
+|---|---|
+| Upper arm module | 2.322 kg |
+| Harness and electronics | 0.749 kg |
+| Forearm module | 0.214 kg |
+| **Device** | **3.285 kg** |
+
+Most of it is the gearmotor, and most of that hangs at the elbow end of the
+upper arm module — carried by the sling, not by the wearer's shoulder joint.
+That is what the 25 mm sling strap and its printed anchor are reacting.
 
 ## Deliberately not here
 
-- A battery. Commission on a bench supply with a current limit. Add a battery
-  once the arm has behaved for a few hours, not before.
-- Wrist or pronation actuation. Out of scope; see design.md.
+- **A battery.** Commission on a bench supply with a current limit. Add a
+  battery once the arm has behaved for several hours.
+- **Limit switches.** See the open questions in [design.md](design.md); they
+  would improve this machine and are not in the current design.
+- **Shoulder actuation.** Out of scope. The sling carries the shoulder.

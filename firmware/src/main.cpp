@@ -1,109 +1,207 @@
-// Exoskeleton arm firmware entry point.
+// Powered elbow firmware.
 //
-// The control loop runs from a hardware timer at cfg::kControlHz so its
-// timing does not depend on how long the serial work in loop() takes. The
-// main loop owns everything that talks to the host.
+// The wearer holds UP or DOWN on the pendant and the elbow moves; everything
+// else here exists to make sure it stops when it should. There is no encoder,
+// so position is counted steps from the pose the arm was parked in at
+// power-on. See docs/operation.md before running it.
 #include <Arduino.h>
+#include <avr/wdt.h>
 
 #include "config.h"
-#include "joint.h"
-#include "kinematics.h"
-#include "protocol.h"
-#include "safety.h"
-#include "telemetry.h"
+#include "motion.h"
+#include "pendant.h"
+#include "stepper.h"
 
 namespace {
 
-Joint g_joints[cfg::kJointCount] = { Joint(0), Joint(1) };
-
-Safety    g_safety;
-Telemetry g_link;
-
-IntervalTimer g_control_timer;
-
-// Written by the host over the link, read by the control loop.
-volatile float g_assist_gain = cfg::kDefaultAssistGain;
-
-constexpr kin::ArmParams kArm = {
-    { cfg::kLinkLength[0], cfg::kLinkLength[1] },
-    { cfg::kLinkMass[0],   cfg::kLinkMass[1]   },
-    { cfg::kLinkCom[0],    cfg::kLinkCom[1]    },
+enum class State : uint8_t {
+    kFault,   // e-stop open, or waiting for the buttons to be let go
+    kIdle,
+    kMoving,
 };
 
-// Turns the measured interaction force at a joint into a velocity command.
-// Below the deadband the wearer is treated as not pushing, which keeps the
-// arm still when it is just being worn.
-float assistVelocity(float force_n, float gain) {
-    if (force_n > cfg::kForceDeadbandN) {
-        return (force_n - cfg::kForceDeadbandN) * gain;
-    }
-    if (force_n < -cfg::kForceDeadbandN) {
-        return (force_n + cfg::kForceDeadbandN) * gain;
-    }
-    return 0.0f;
+Stepper         g_stepper;
+Pendant         g_pendant;
+motion::Planner g_planner;
+
+State    g_state = State::kFault;
+uint32_t g_last_plan_us = 0;
+uint32_t g_last_status_ms = 0;
+uint32_t g_idle_since_ms = 0;
+bool     g_rezeroed = false;
+
+void setLeds(bool status, bool onboard) {
+    digitalWrite(cfg::kStatusLedPin, status ? HIGH : LOW);
+    digitalWrite(cfg::kOnboardLedPin, onboard ? HIGH : LOW);
 }
 
-void controlStep() {
-    const uint32_t now_ms = millis();
+// Solid while driving, slow blink when ready, fast blink on a fault.
+void updateLeds(uint32_t now_ms) {
+    switch (g_state) {
+    case State::kMoving:
+        setLeds(true, true);
+        break;
+    case State::kIdle: {
+        const bool on = (now_ms / 800) % 2 == 0;
+        setLeds(on, on);
+        break;
+    }
+    case State::kFault: {
+        const bool on = (now_ms / 120) % 2 == 0;
+        setLeds(on, on);
+        break;
+    }
+    }
+}
 
-    const bool safe = g_safety.check(g_joints, cfg::kJointCount, now_ms);
+float angleDeg(long steps) {
+    return static_cast<float>(steps) / cfg::kStepsPerDegree;
+}
 
-    float tau[cfg::kJointCount] = { 0.0f, 0.0f };
-    kin::gravityTorque(kArm, g_joints[0].position(), g_joints[1].position(), tau);
+void printStatus(uint32_t now_ms, long position) {
+    const char* state =
+        g_state == State::kFault ? "FAULT" : (g_state == State::kMoving ? "MOVING" : "IDLE");
 
-    if (safe) {
-        const proto::Mode mode = g_safety.mode();
+    Serial.print(F("t="));
+    Serial.print(now_ms);
+    Serial.print(F(" state="));
+    Serial.print(state);
+    Serial.print(F(" angle="));
+    Serial.print(angleDeg(position), 1);
+    Serial.print(F("deg steps="));
+    Serial.print(position);
+    Serial.print(F(" v="));
+    Serial.print(g_planner.velocity(), 0);
+    Serial.print(F(" estop="));
+    Serial.print(g_pendant.eStopOpen() ? F("OPEN") : F("closed"));
+    Serial.print(F(" drive="));
+    Serial.println(g_stepper.enabled() ? F("on") : F("off"));
+}
 
-        for (uint8_t i = 0; i < cfg::kJointCount; ++i) {
-            if (!g_joints[i].enabled()) g_joints[i].enable();
+// A re-zero redefines where the travel limits sit, so it is only offered
+// when the arm is stopped, and it is held for three seconds on purpose.
+void handleRezero(uint32_t now_ms) {
+    if (g_planner.moving()) return;
 
-            if (mode == proto::Mode::kAssist) {
-                g_joints[i].setVelocityTarget(
-                    assistVelocity(g_joints[i].force(), g_assist_gain));
-            } else if (mode == proto::Mode::kHold) {
-                g_joints[i].setVelocityTarget(0.0f);
-            }
-            // kPosition leaves the target where the host last set it.
-        }
+    if (g_pendant.bothHeldMs(now_ms) < cfg::kRezeroHoldMs) {
+        if (g_pendant.bothHeldMs(now_ms) == 0) g_rezeroed = false;
+        return;
     }
 
-    for (uint8_t i = 0; i < cfg::kJointCount; ++i) {
-        g_joints[i].update(cfg::kDt, tau[i]);
-    }
+    if (g_rezeroed) return;
+
+    g_stepper.setPosition(cfg::kMinSteps);
+    g_rezeroed = true;
+
+    Serial.println(F("rezeroed: this pose is now full extension"));
 }
 
 }  // namespace
 
 void setup() {
-    g_link.begin(921600);
-    g_link.bindAssistGain(&g_assist_gain);
+    Serial.begin(115200);
 
-    g_safety.begin();
-
-    for (uint8_t i = 0; i < cfg::kJointCount; ++i) {
-        g_joints[i].begin();
-
-        // No absolute encoders: the arm is parked against its lower hard
-        // stop at power-on and that pose defines the reference. See
-        // docs/operation.md before changing this.
-        g_joints[i].zeroAt(cfg::kMinAngle[i]);
-    }
-
-    g_control_timer.begin(controlStep, 1000000UL / cfg::kControlHz);
-    g_control_timer.priority(64);  // above the USB stack, below nothing else
-
-    g_link.sendLog("exo-arm ready; park at lower stop before enabling");
-}
-
-void loop() {
-    static uint32_t next_telemetry_ms = 0;
+    pinMode(cfg::kStatusLedPin, OUTPUT);
+    pinMode(cfg::kOnboardLedPin, OUTPUT);
 
     const uint32_t now_ms = millis();
 
-    g_link.poll(g_joints, cfg::kJointCount, &g_safety, now_ms);
+    g_pendant.begin(now_ms);
 
-    if (static_cast<int32_t>(now_ms - next_telemetry_ms) >= 0) {
-        next_telemetry_ms = now_ms + (1000UL / cfg::kTelemetryHz);
-        g_link.sendTelemetry(g_joints, cfg::kJointCount, g_safety, now_ms);
+    // Power-on pose is taken to be full extension. Nothing measures this, so
+    // parking the arm against its stop before switching on is part of the
+    // operating procedure, not a nicety.
+    g_stepper.begin(cfg::kMinSteps);
+    g_stepper.setLimits(cfg::kMinSteps, cfg::kMaxSteps);
+
+    g_planner.configure(cfg::kMaxSpeedSteps, cfg::kAccelSteps, cfg::kMinSteps, cfg::kMaxSteps);
+
+    g_last_plan_us = micros();
+    g_idle_since_ms = now_ms;
+
+    // Start in fault until the e-stop is seen closed and both buttons are up,
+    // so a stuck button cannot drive the arm the moment power arrives.
+    g_state = State::kFault;
+
+    Serial.println(F("exo-arm elbow ready"));
+    Serial.print(F("travel 0-"));
+    Serial.print(cfg::kMaxAngleDeg, 0);
+    Serial.print(F(" deg, "));
+    Serial.print(cfg::kStepsPerDegree, 1);
+    Serial.println(F(" steps/deg"));
+
+    wdt_enable(WDTO_1S);
+}
+
+void loop() {
+    wdt_reset();
+
+    const uint32_t now_ms = millis();
+    const uint32_t now_us = micros();
+
+    g_pendant.poll(now_ms);
+
+    // --- Interlocks --------------------------------------------------------
+    if (g_pendant.eStopOpen()) {
+        if (g_state != State::kFault) {
+            g_stepper.emergencyStop();
+            g_planner.stop();
+            g_state = State::kFault;
+            Serial.println(F("ESTOP"));
+        }
+        updateLeds(now_ms);
+        return;
     }
+
+    if (g_state == State::kFault) {
+        // The loop is closed again. Wait for both buttons to be released
+        // before handing control back, so releasing the mushroom while a
+        // button is held does not start the arm moving.
+        if (!g_pendant.upHeld() && !g_pendant.downHeld()) {
+            g_state = State::kIdle;
+            g_idle_since_ms = now_ms;
+            g_last_plan_us = now_us;
+            Serial.println(F("ready"));
+        }
+        updateLeds(now_ms);
+        return;
+    }
+
+    // --- Planner -----------------------------------------------------------
+    const uint32_t elapsed_us = now_us - g_last_plan_us;
+    if (elapsed_us < (1000000UL / cfg::kPlannerHz)) {
+        updateLeds(now_ms);
+        return;
+    }
+    g_last_plan_us = now_us;
+
+    const float dt = static_cast<float>(elapsed_us) * 1e-6f;
+    const long position = g_stepper.position();
+
+    handleRezero(now_ms);
+
+    g_planner.update(g_pendant.command(), position, dt);
+
+    if (g_planner.moving()) {
+        g_stepper.enable(true);
+        g_stepper.setVelocity(g_planner.velocity());
+        g_state = State::kMoving;
+        g_idle_since_ms = now_ms;
+    } else {
+        g_stepper.setVelocity(0.0f);
+        g_state = State::kIdle;
+
+        // The worm holds the elbow without current, so there is nothing to be
+        // gained from keeping the motor energised once it has settled.
+        if (g_stepper.enabled() && (now_ms - g_idle_since_ms) > cfg::kIdleDisableMs) {
+            g_stepper.enable(false);
+        }
+    }
+
+    if ((now_ms - g_last_status_ms) >= cfg::kStatusPeriodMs) {
+        g_last_status_ms = now_ms;
+        printStatus(now_ms, position);
+    }
+
+    updateLeds(now_ms);
 }

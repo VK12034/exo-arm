@@ -1,62 +1,90 @@
 # Wiring
 
-Teensy 4.1. All logic is 3.3 V and **not** 5 V tolerant, so anything coming
-from a 5 V part goes through a divider or a level shifter.
+Arduino Uno, 5 V logic. The pin assignments below are the firmware's, from
+`firmware/include/config.h`; change the two together.
 
 ## Pin map
 
-Mirrors `firmware/include/config.h`. Change them together.
+### TB6600 stepper driver
 
-### Motor drivers (Pololu G2 High-Power 24v13, one per joint)
+The TB6600's inputs are opto-isolated pairs. These pins drive the negative
+sides with the positive sides tied to 5 V, so a pin pulled **low** activates
+that input.
 
-| Signal | J0 shoulder | J1 elbow | Notes |
+| Signal | Uno pin | TB6600 | Notes |
 |---|---|---|---|
-| PWM | 2 | 6 | 20 kHz, 12-bit |
-| DIR | 3 | 7 | |
-| SLP | 4 | 8 | Active low; held low until the joint is enabled |
-| FLT | 5 | 9 | Open drain, internal pull-up, low on fault |
-| CS | A0 | A1 | 20 mV/A, analog |
+| Step | 3 | PUL− | 4 µs pulse, up to about 1.4 kHz at full speed |
+| Direction | 4 | DIR− | Settled before the next pulse by the firmware |
+| Enable | 5 | ENA− | Low energises the motor |
+| 5 V | 5V | PUL+, DIR+, ENA+ | Common positive |
 
-### Encoders (2048 CPR quadrature, on the motor shaft)
+Set the DIP switches for **1/8 microstepping** and a current appropriate to
+the motor. `cfg::kMicrosteps` must match the switches — nothing checks this,
+and a mismatch scales every angle in the firmware by the same wrong factor.
 
-| Signal | J0 | J1 |
+### Pendant
+
+Six-core cable to the hand unit, through a PG7 gland.
+
+| Signal | Uno pin | Wiring |
 |---|---|---|
-| A | 14 | 16 |
-| B | 15 | 17 |
+| UP button | 6 | Momentary to GND, internal pull-up |
+| DOWN button | 7 | Momentary to GND, internal pull-up |
+| E-stop | 2 | **Normally closed** to GND, internal pull-up |
+| GND | GND | Common return |
 
-Both channels need interrupt-capable pins. Use shielded cable and ground the
-shield at the Teensy end only; long unshielded encoder runs next to motor
-leads will give you phantom counts.
+Two cores spare. Use one as a second ground rather than leaving it floating.
 
-### Safety and sensing
+The e-stop must be the normally-closed contact of the latching mushroom. A
+normally-open contact would read as "safe" when the cable is cut, which is
+exactly backwards.
 
-| Signal | Pin | Notes |
+### Panel
+
+| Signal | Uno pin | Notes |
 |---|---|---|
-| E-stop loop | 20 | Normally closed to GND, internal pull-up |
-| Deadman grip | 21 | Active low, internal pull-up |
-| Status LED | 13 | On-board |
-| Force sense J0 | A2 | Load cell amp, mid-rail at zero force |
-| Force sense J1 | A3 | |
+| Status LED | 8 | Green LED on the control box face, with its series resistor |
+| Onboard LED | 13 | Mirrors the status LED, useful on the bench |
+
+## E-stop, in hardware as well as firmware
+
+The firmware reads the e-stop and stops. That is not enough on its own: it
+depends on the firmware working. The same loop must also break the **24 V
+supply to the TB6600**, through a relay or a contactor rated for it.
+
+```
+24 V ──[fuse]──┬──── E-STOP NC contact ────── TB6600 VCC
+               │
+               └──── 24 V → 5 V buck ──────── Arduino VIN
+```
+
+Wired this way the Arduino stays alive with the loop open, so it can see the
+fault, light the LED and refuse to resume — while the motor is dead
+regardless of what any code does.
+
+Do not power the Arduino from USB and the buck at the same time while the
+motor supply is live.
 
 ## Power
 
-    24 V supply --+-- driver J0 -- motor J0
-                  +-- driver J1 -- motor J1
-                  +-- 5 V buck  -- Teensy VIN
+| Item | Value |
+|---|---|
+| Supply | 24 V, at least 4 A for a NEMA 23 at full current |
+| Fuse | Inline, sized to the driver's current setting |
+| Bulk capacitance | Electrolytic across the TB6600 supply terminals, as close as the layout allows |
+| Logic | 24 V → 5 V buck to the Arduino VIN |
 
-- **Cut the Teensy VUSB-VIN trace.** Otherwise the 5 V rail and the USB host
-  fight each other whenever a laptop is plugged in.
-- One star ground at the supply. Motor return currents must not share a
-  conductor with encoder or analog ground, or the current-sense readings will
-  move whenever the motors do.
-- Electrolytic across each driver's supply terminals, as close as the layout
-  allows. The 24 V rail sags hard on a direction reversal.
-- The e-stop breaks the **driver supply**, not the logic supply. The Teensy
-  stays alive, sees the loop open and reports the fault; the motors are dead
-  regardless of what the firmware does.
+A stepper driver chops current continuously, and the 24 V rail sags hard on
+direction reversals. Commission on a current-limited bench supply before
+anything else.
 
-## Connectors
+## Cabling
 
-Anything that crosses a joint gets a locking connector and a service loop.
-The cable that will eventually fail is the one that flexes every cycle, so
-plan for replacing it rather than hoping.
+The motor cable crosses the elbow and flexes on every cycle. It is the cable
+that will eventually fail. Give it a service loop, strain-relieve both ends,
+and use a locking connector so replacing it is a five-minute job rather than
+a rebuild.
+
+Keep the motor cable away from the pendant cable. A TB6600 switching amps at
+the far end of a long run will couple into button lines, and a false button
+read is motion nobody asked for.

@@ -1,126 +1,85 @@
-// Build-time configuration: pin map, joint limits, control rates.
-// Everything a new build of the arm needs to change should live here.
+// Build-time configuration for the powered elbow.
+//
+// Mechanical figures come from the Fusion model via cad/BudgetExoArm.design.json.
+// Pin assignments are a wiring decision, not something the CAD fixes; they are
+// mirrored in docs/wiring.md and the two must be changed together.
 #pragma once
 
 #include <stdint.h>
 
 namespace cfg {
 
-// --- Control rates ---------------------------------------------------------
-constexpr uint32_t kControlHz   = 1000;
-constexpr uint32_t kTelemetryHz = 100;
-constexpr float    kDt          = 1.0f / static_cast<float>(kControlHz);
+// --- Pin map (Arduino Uno) -------------------------------------------------
+// The TB6600 opto inputs are driven in common-cathode wiring: PUL+, DIR+ and
+// ENA+ to 5 V, and these pins pulled low to activate.
+constexpr uint8_t kStepPin   = 3;
+constexpr uint8_t kDirPin    = 4;
+constexpr uint8_t kEnablePin = 5;
 
-// --- Joint count -----------------------------------------------------------
-// J0 = shoulder flexion/extension, J1 = elbow flexion/extension.
-constexpr uint8_t kJointCount = 2;
+// E-stop sits on pin 2 so it can also raise an external interrupt if the loop
+// is ever extended to need one.
+constexpr uint8_t kEStopPin = 2;
+constexpr uint8_t kUpPin    = 6;
+constexpr uint8_t kDownPin  = 7;
 
-// --- Motor driver pins (Pololu G2 High-Power, one per joint) ---------------
-// PWM drives magnitude, DIR sets direction, SLP is active-low sleep,
-// FLT is the driver's open-drain fault output, CS is analog current sense.
-struct DriverPins {
-    uint8_t pwm;
-    uint8_t dir;
-    uint8_t slp;
-    uint8_t flt;
-    uint8_t cs;
-};
+constexpr uint8_t kStatusLedPin = 8;   // green LED on the control box face
+constexpr uint8_t kOnboardLedPin = 13;
 
-constexpr DriverPins kDriver[kJointCount] = {
-    {  2,  3,  4,  5, A0 },  // J0 shoulder
-    {  6,  7,  8,  9, A1 },  // J1 elbow
-};
+// The TB6600 enable input is active low in this wiring: pulling ENA low
+// energises the motor.
+constexpr bool kEnableActiveLow = true;
 
-// --- Quadrature encoder pins (both must be interrupt-capable on Teensy) ----
-struct EncoderPins {
-    uint8_t a;
-    uint8_t b;
-};
+// --- Drivetrain ------------------------------------------------------------
+// NEMA 23 (23HS30) through an NMRV030 worm, 15:1, driving the elbow directly.
+constexpr uint16_t kMotorStepsPerRev = 200;
+constexpr uint8_t  kMicrosteps       = 8;     // TB6600 DIP switches
+constexpr uint8_t  kGearRatio        = 15;
 
-constexpr EncoderPins kEncoder[kJointCount] = {
-    { 14, 15 },  // J0
-    { 16, 17 },  // J1
-};
+constexpr float kStepsPerOutputRev =
+    static_cast<float>(kMotorStepsPerRev) * kMicrosteps * kGearRatio;  // 24000
+constexpr float kStepsPerDegree = kStepsPerOutputRev / 360.0f;         // 66.667
 
-// --- Discrete safety I/O ---------------------------------------------------
-constexpr uint8_t kEStopPin    = 20;  // NC loop to GND: open == stop
-constexpr uint8_t kDeadmanPin  = 21;  // operator grip switch, active low
-constexpr uint8_t kStatusLed   = 13;
+// Set true if the elbow flexes when DIR is low rather than high. Verify on the
+// bench with the arm unworn before anyone puts it on: see docs/commissioning.md.
+constexpr bool kInvertDirection = false;
 
-// --- Interaction force sensing (load cell amp, one per joint) --------------
-constexpr uint8_t kForceSensePin[kJointCount] = { A2, A3 };
+// --- Travel ----------------------------------------------------------------
+// Zero is full extension, the pose the arm is parked in at power-on. Positive
+// is flexion. The upper limit is set inside the wearer's comfortable range,
+// not at the mechanism's hard stop.
+constexpr float kMinAngleDeg = 0.0f;
+constexpr float kMaxAngleDeg = 135.0f;
 
-// --- Mechanics -------------------------------------------------------------
-// Counts per output revolution = encoder CPR * gear ratio * quadrature.
-constexpr float kEncoderCpr[kJointCount]  = { 2048.0f, 2048.0f };
-constexpr float kGearRatio[kJointCount]   = {   99.5f,   71.2f };
-constexpr float kCountsPerRad[kJointCount] = {
-    kEncoderCpr[0] * kGearRatio[0] * 4.0f / 6.28318530718f,
-    kEncoderCpr[1] * kGearRatio[1] * 4.0f / 6.28318530718f,
-};
+constexpr long kMinSteps = static_cast<long>(kMinAngleDeg * kStepsPerDegree);
+constexpr long kMaxSteps = static_cast<long>(kMaxAngleDeg * kStepsPerDegree);
 
-// Link lengths, metres. Shoulder joint to elbow joint, elbow to wrist cuff.
-constexpr float kLinkLength[kJointCount] = { 0.280f, 0.255f };
+// --- Motion profile --------------------------------------------------------
+// Deliberately slow. This is a limb, and the worm means a command error cannot
+// be corrected by the wearer pushing back.
+constexpr float kMaxSpeedDegPerSec = 20.0f;
+constexpr float kAccelDegPerSec2   = 45.0f;
 
-// Mass of each link plus its share of the cuff and actuator, kg, and the
-// distance from the proximal joint to that link's centre of mass, metres.
-constexpr float kLinkMass[kJointCount]   = { 0.84f, 0.52f };
-constexpr float kLinkCom[kJointCount]    = { 0.145f, 0.120f };
+constexpr float kMaxSpeedSteps = kMaxSpeedDegPerSec * kStepsPerDegree;
+constexpr float kAccelSteps    = kAccelDegPerSec2 * kStepsPerDegree;
 
-// --- Soft joint limits, radians --------------------------------------------
-// Set inside the mechanical hard stops with margin for overshoot.
-constexpr float kMinAngle[kJointCount] = { -0.35f,  0.00f };
-constexpr float kMaxAngle[kJointCount] = {  2.60f,  2.35f };
+// --- Timing ----------------------------------------------------------------
+constexpr uint16_t kTickHz        = 10000;  // step-generator interrupt rate
+constexpr uint16_t kPlannerHz     = 1000;   // velocity updates in the main loop
+constexpr uint16_t kDebounceMs    = 25;
+constexpr uint16_t kStatusPeriodMs = 500;
 
-// Travel limit enforcement starts this far from the limit, so the joint is
-// ramped to a stop rather than hitting the clamp at speed.
-constexpr float kLimitMarginRad = 0.12f;
+// The worm is self-locking, so the elbow holds its angle with the motor
+// de-energised. Dropping the current after a pause keeps the motor and driver
+// cool and saves the wearer carrying the noise and heat of a holding current.
+constexpr uint16_t kIdleDisableMs = 3000;
 
-// --- Actuation limits ------------------------------------------------------
-constexpr float kMaxVelocity[kJointCount] = { 2.0f, 2.6f };   // rad/s
-constexpr float kMaxCurrent[kJointCount]  = { 6.0f, 4.5f };   // A, per joint
-constexpr float kMaxDutySlew              = 4.0f;             // 1/s, full scale
-constexpr float kTorqueConstant[kJointCount] = { 0.0214f, 0.0185f }; // Nm/A
+// Holding both buttons for this long re-zeroes the travel counter at the
+// current pose. Needed because step loss has nothing to correct it, but it
+// also defeats the soft limits, so it is deliberately awkward to trigger.
+constexpr uint16_t kRezeroHoldMs = 3000;
 
-// Current sense scaling for the G2 driver: 20 mV/A into a 3.3 V, 10-bit ADC.
-constexpr float kCurrentSenseAmpsPerCount = (3.3f / 1023.0f) / 0.020f;
+// TB6600 wants at least 2.2 us of pulse width; 4 us gives margin without
+// meaningfully lengthening the interrupt.
+constexpr uint8_t kStepPulseUs = 4;
 
-// --- Default gains ---------------------------------------------------------
-// Tuned per docs/tuning.md; overridable at runtime over the serial link.
-struct Gains {
-    float kp;
-    float ki;
-    float kd;
-};
-
-// Gravity feed-forward is applied as a duty term rather than through a full
-// motor model. The scale is measured per joint during commissioning: see
-// docs/tuning.md, "Measuring the gravity feed-forward scale".
-constexpr float kGravityFfDutyPerNm[kJointCount] = { 0.072f, 0.095f };
-
-// Velocity is differentiated from encoder counts, so it needs filtering
-// before it is usable as a derivative term or a telemetry value.
-constexpr float kVelocityCutoffHz = 40.0f;
-constexpr float kCurrentCutoffHz  = 60.0f;
-constexpr float kForceCutoffHz    = 12.0f;
-
-// Force sensor scaling: amplifier output is centred at mid-rail and swings
-// symmetrically, so counts are offset then scaled to newtons.
-constexpr float kForceZeroCounts     = 511.5f;
-constexpr float kForceNewtonsPerCount = 0.185f;
-
-constexpr Gains kDefaultGains[kJointCount] = {
-    { 9.0f, 1.8f, 0.22f },  // J0
-    { 7.5f, 1.4f, 0.16f },  // J1
-};
-
-// --- Assist behaviour ------------------------------------------------------
-// Admittance mode converts measured interaction force into a velocity
-// command: v = gain * force, clamped to kMaxVelocity.
-constexpr float kDefaultAssistGain = 0.04f;   // (rad/s) per newton
-constexpr float kForceDeadbandN    = 1.5f;
-
-// --- Watchdog --------------------------------------------------------------
-// Host link must be seen at least this often while in an active mode.
-constexpr uint32_t kHostTimeoutMs = 500;
-}
+}  // namespace cfg
