@@ -1,0 +1,3978 @@
+{
+  "design_name": "BudgetExoArm (~recovered)",
+  "units": {
+    "length": "mm",
+    "mass": "kg",
+    "angle": "rad"
+  },
+  "fusion_default_length_unit": "mm",
+  "parameters": [
+    {
+      "name": "d141",
+      "expression": "-27.00 deg",
+      "value": -0.47123889803846897,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d142",
+      "expression": "68.00 deg",
+      "value": 1.1868238913561442,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d1",
+      "expression": "-560.00 mm",
+      "value": -56.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d2",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d3",
+      "expression": "-440.00 mm",
+      "value": -44.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d4",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d5",
+      "expression": "-300.00 mm",
+      "value": -30.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d6",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d7",
+      "expression": "-160.00 mm",
+      "value": -16.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d8",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d9",
+      "expression": "-60.00 mm",
+      "value": -6.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d10",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d11",
+      "expression": "50.00 mm",
+      "value": 5.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d12",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d13",
+      "expression": "100.00 mm",
+      "value": 10.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d14",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d15",
+      "expression": "-15.00 mm",
+      "value": -1.5,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d16",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d17",
+      "expression": "-120.00 mm",
+      "value": -12.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d18",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d19",
+      "expression": "-230.00 mm",
+      "value": -23.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d20",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d21",
+      "expression": "-315.00 mm",
+      "value": -31.5,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d22",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d23",
+      "expression": "-330.00 mm",
+      "value": -33.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d24",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d25",
+      "expression": "-420.00 mm",
+      "value": -42.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d26",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d27",
+      "expression": "-510.00 mm",
+      "value": -51.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d28",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d29",
+      "expression": "-590.00 mm",
+      "value": -59.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d30",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d31",
+      "expression": "-602.00 mm",
+      "value": -60.2,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d32",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d33",
+      "expression": "-640.00 mm",
+      "value": -64.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d34",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d35",
+      "expression": "-690.00 mm",
+      "value": -69.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d36",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d37",
+      "expression": "-725.00 mm",
+      "value": -72.5,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d38",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d39",
+      "expression": "-10.00 mm",
+      "value": -1.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d40",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d41",
+      "expression": "-120.00 mm",
+      "value": -12.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d42",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d43",
+      "expression": "-230.00 mm",
+      "value": -23.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d44",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d45",
+      "expression": "-310.00 mm",
+      "value": -31.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d46",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d47",
+      "expression": "-5.00 mm",
+      "value": -0.5,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d48",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d49",
+      "expression": "70.00 mm",
+      "value": 7.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d50",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d51",
+      "expression": "160.00 mm",
+      "value": 16.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d52",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d53",
+      "expression": "250.00 mm",
+      "value": 25.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d54",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d55",
+      "expression": "262.00 mm",
+      "value": 26.200000000000003,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d56",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d57",
+      "expression": "300.00 mm",
+      "value": 30.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d58",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d59",
+      "expression": "345.00 mm",
+      "value": 34.5,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d60",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d61",
+      "expression": "375.00 mm",
+      "value": 37.5,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d62",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d63",
+      "expression": "-450.00 mm",
+      "value": -45.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d64",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d65",
+      "expression": "38.00 mm",
+      "value": 3.8000000000000003,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d66",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d69",
+      "expression": "0",
+      "value": 0.0,
+      "unit": "",
+      "comment": ""
+    },
+    {
+      "name": "d70",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d72",
+      "expression": "1",
+      "value": 1.0,
+      "unit": "",
+      "comment": ""
+    },
+    {
+      "name": "d75",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d76",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d81",
+      "expression": "1",
+      "value": 1.0,
+      "unit": "",
+      "comment": ""
+    },
+    {
+      "name": "d82",
+      "expression": "1",
+      "value": 1.0,
+      "unit": "",
+      "comment": ""
+    },
+    {
+      "name": "d83",
+      "expression": "5.00 mm",
+      "value": 0.5,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d84",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d137",
+      "expression": "1",
+      "value": 1.0,
+      "unit": "",
+      "comment": ""
+    },
+    {
+      "name": "d138",
+      "expression": "1",
+      "value": 1.0,
+      "unit": "",
+      "comment": ""
+    },
+    {
+      "name": "d139",
+      "expression": "6.00 mm",
+      "value": 0.6000000000000001,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d140",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d85",
+      "expression": "72.00 mm",
+      "value": 7.2,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d86",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d87",
+      "expression": "12.00 mm",
+      "value": 1.2000000000000002,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d88",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d89",
+      "expression": "68.80 mm",
+      "value": 6.88,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d90",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d91",
+      "expression": "3.20 mm",
+      "value": 0.32000000000000006,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d92",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d99",
+      "expression": "72.00 mm",
+      "value": 7.2,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d100",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d101",
+      "expression": "8.00 mm",
+      "value": 0.8,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d102",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d107",
+      "expression": "72.00 mm",
+      "value": 7.2,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d108",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d109",
+      "expression": "8.00 mm",
+      "value": 0.8,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d110",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d111",
+      "expression": "72.00 mm",
+      "value": 7.2,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d112",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d113",
+      "expression": "8.00 mm",
+      "value": 0.8,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d114",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d121",
+      "expression": "62.00 mm",
+      "value": 6.2,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d122",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d123",
+      "expression": "4.80 mm",
+      "value": 0.48,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d124",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d125",
+      "expression": "88.00 mm",
+      "value": 8.8,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d126",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d127",
+      "expression": "10.00 mm",
+      "value": 1.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d128",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d129",
+      "expression": "74.30 mm",
+      "value": 7.43,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d130",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d131",
+      "expression": "12.00 mm",
+      "value": 1.2000000000000002,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d132",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d143",
+      "expression": "62.00 mm",
+      "value": 6.2,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d144",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d145",
+      "expression": "4.80 mm",
+      "value": 0.48,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d146",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d147",
+      "expression": "62.00 mm",
+      "value": 6.2,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d148",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d149",
+      "expression": "4.80 mm",
+      "value": 0.48,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d150",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d93",
+      "expression": "50.00 mm",
+      "value": 5.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d94",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d95",
+      "expression": "3.20 mm",
+      "value": 0.32000000000000006,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d96",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d115",
+      "expression": "50.00 mm",
+      "value": 5.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d116",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d117",
+      "expression": "3.20 mm",
+      "value": 0.32000000000000006,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d118",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d133",
+      "expression": "67.80 mm",
+      "value": 6.78,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d134",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d135",
+      "expression": "4.80 mm",
+      "value": 0.48,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d136",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    }
+  ],
+  "components": [
+    {
+      "name": "BudgetExoArm (~recovered)",
+      "id": "0a0e8fa6-3277-4d2e-9c1f-703a0260e1a5",
+      "description": "",
+      "part_number": "2026-09-25-13-44-36-213",
+      "physical": {
+        "mass_kg": 10.019241169855503,
+        "volume_mm3": 45744601.58752885,
+        "area_mm2": 1784398.1665812782,
+        "centre_of_mass_mm": {
+          "x": -11.322849757847106,
+          "y": -119.2281715309109,
+          "z": -221.70831839320087
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -171.33927896140963,
+          "y": -442.4983032616413,
+          "z": -725.0296566248714
+        },
+        "max_mm": {
+          "x": 387.02,
+          "y": 130.52999999999997,
+          "z": 377.02
+        },
+        "size_mm": {
+          "x": 558.3592789614096,
+          "y": 573.0283032616412,
+          "z": 1102.0496566248714
+        }
+      },
+      "body_count": 0,
+      "is_root": true
+    },
+    {
+      "name": "Ref - Wearer Torso",
+      "id": "6424230e-1bf5-4dbc-aecc-196f07653de4",
+      "description": "",
+      "part_number": "2026-09-25-13-44-36-957",
+      "physical": {
+        "mass_kg": 6.213083226029639,
+        "volume_mm3": 40875547.53966869,
+        "area_mm2": 1050754.3189990355,
+        "centre_of_mass_mm": {
+          "x": -4.727107482250403,
+          "y": -207.00232052879525,
+          "z": -170.67905555249123
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -118.96214427329923,
+          "y": -442.4983032616413,
+          "z": -725.0296566248714
+        },
+        "max_mm": {
+          "x": 109.30536318928809,
+          "y": 55.00999999999998,
+          "z": 377.02
+        },
+        "size_mm": {
+          "x": 228.26750746258733,
+          "y": 497.5083032616413,
+          "z": 1102.0496566248714
+        }
+      },
+      "body_count": 8
+    },
+    {
+      "name": "Ref - Wearer Upper Arm",
+      "id": "cb31742b-70c8-4849-ac7a-8926367efbb0",
+      "description": "",
+      "part_number": "2026-09-25-13-44-41-103",
+      "physical": {
+        "mass_kg": 0.33625531543623494,
+        "volume_mm3": 2212206.022606809,
+        "area_mm2": 118203.89183757098,
+        "centre_of_mass_mm": {
+          "x": 6.257382160110195e-09,
+          "y": 1.430862899272027e-08,
+          "z": -170.01737387887903
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -50.245465745882626,
+          "y": -50.53322925697912,
+          "z": -368.01
+        },
+        "max_mm": {
+          "x": 50.01679841575205,
+          "y": 50.277215471819304,
+          "z": -9.983201584250097
+        },
+        "size_mm": {
+          "x": 100.26226416163468,
+          "y": 100.81044472879842,
+          "z": 358.0267984157499
+        }
+      },
+      "body_count": 2
+    },
+    {
+      "name": "Ref - Wearer Forearm",
+      "id": "8994c1c4-3b2b-4801-b0dc-9c1e30fe1411",
+      "description": "",
+      "part_number": "2026-09-25-13-44-42-442",
+      "physical": {
+        "mass_kg": 0.18509820597878676,
+        "volume_mm3": 1217751.3551235974,
+        "area_mm2": 92547.40358592533,
+        "centre_of_mass_mm": {
+          "x": 142.20549664470064,
+          "y": -0.12252201261421249,
+          "z": -329.56974339591727
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -5.019239671159896,
+          "y": -41.237451999446115,
+          "z": -376.3908156023563
+        },
+        "max_mm": {
+          "x": 387.01,
+          "y": 41.05052373169862,
+          "z": -279.97999999999996
+        },
+        "size_mm": {
+          "x": 392.0292396711599,
+          "y": 82.28797573114474,
+          "z": 96.41081560235634
+        }
+      },
+      "body_count": 4
+    },
+    {
+      "name": "Harness + Electronics",
+      "id": "9d857564-e554-407d-824c-28d90b60a285",
+      "description": "",
+      "part_number": "2026-09-25-13-45-26-334",
+      "physical": {
+        "mass_kg": 0.7492541895577293,
+        "volume_mm3": 705572.6699618277,
+        "area_mm2": 314905.89026052575,
+        "centre_of_mass_mm": {
+          "x": -59.92265990812679,
+          "y": -198.61619096909158,
+          "z": -423.6496648896309
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -171.3292789614096,
+          "y": -349.04171855451347,
+          "z": -562.6373645091351
+        },
+        "max_mm": {
+          "x": 138.1804042220648,
+          "y": 81.17232538168523,
+          "z": 73.58816015852092
+        },
+        "size_mm": {
+          "x": 309.5096831834744,
+          "y": 430.21404393619866,
+          "z": 636.225524667656
+        }
+      },
+      "body_count": 30
+    },
+    {
+      "name": "Upper Arm Module",
+      "id": "c94dd75e-966d-4d56-a50e-77f8490deafd",
+      "description": "",
+      "part_number": "2026-09-25-13-47-21-260",
+      "physical": {
+        "mass_kg": 2.3217815078779296,
+        "volume_mm3": 645439.0013980572,
+        "area_mm2": 163443.3205335006,
+        "centre_of_mass_mm": {
+          "x": -31.909459042116396,
+          "y": 98.10402334433023,
+          "z": -282.01011184598315
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -94.82938994738097,
+          "y": -47.62000000000001,
+          "z": -384.0199999999999
+        },
+        "max_mm": {
+          "x": 54.02000000000001,
+          "y": 130.51999999999998,
+          "z": -57.97999999999995
+        },
+        "size_mm": {
+          "x": 148.84938994738098,
+          "y": 178.14,
+          "z": 326.03999999999996
+        }
+      },
+      "body_count": 27
+    },
+    {
+      "name": "Forearm Module",
+      "id": "e5216b97-c669-4c8f-a56c-b4ad30a3d2ba",
+      "description": "",
+      "part_number": "2026-09-25-13-47-48-261",
+      "physical": {
+        "mass_kg": 0.2137687249751709,
+        "volume_mm3": 88084.9987698715,
+        "area_mm2": 44543.341364719614,
+        "centre_of_mass_mm": {
+          "x": 40.16332771464413,
+          "y": 58.976939527762646,
+          "z": -330.0144644282705
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -22.519999999999996,
+          "y": -34.22,
+          "z": -371.02
+        },
+        "max_mm": {
+          "x": 214.02000000000004,
+          "y": 126.02000000000001,
+          "z": -288.97999999999996
+        },
+        "size_mm": {
+          "x": 236.54000000000002,
+          "y": 160.24,
+          "z": 82.04
+        }
+      },
+      "body_count": 11
+    }
+  ],
+  "bodies": [
+    {
+      "occurrence": "/Ref - Wearer Torso:1",
+      "component": "Ref - Wearer Torso",
+      "body": "Torso",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 4.829456602230147,
+        "volume_mm3": 31772740.80414571,
+        "area_mm2": 611998.339655214,
+        "centre_of_mass_mm": {
+          "x": -5.614805690907065,
+          "y": -190.00000003856738,
+          "z": -222.48301347356352
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -118.33842033245142,
+          "y": -362.0049549744564,
+          "z": -560.0
+        },
+        "max_mm": {
+          "x": 108.33842033245139,
+          "y": -17.99504502554356,
+          "z": 100.0
+        },
+        "size_mm": {
+          "x": 226.6768406649028,
+          "y": 344.0099099489128,
+          "z": 660.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Torso:1",
+      "component": "Ref - Wearer Torso",
+      "body": "Head + Neck",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.6488113729929531,
+        "volume_mm3": 4268495.874953639,
+        "area_mm2": 154811.44261283125,
+        "centre_of_mass_mm": {
+          "x": -5.90256741804378,
+          "y": -189.99999999999997,
+          "z": 250.62307297081225
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -96.00000000000001,
+          "y": -282.0,
+          "z": 78.2676288279028
+        },
+        "max_mm": {
+          "x": 88.0,
+          "y": -97.99999999999997,
+          "z": 377.0
+        },
+        "size_mm": {
+          "x": 184.00000000000003,
+          "y": 184.00000000000006,
+          "z": 298.7323711720972
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Torso:1",
+      "component": "Ref - Wearer Torso",
+      "body": "Right Shoulder",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.105930315488843,
+        "volume_mm3": 696909.9703213357,
+        "area_mm2": 38013.2711084365,
+        "centre_of_mass_mm": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -55.0,
+          "y": -55.0,
+          "z": -55.0
+        },
+        "max_mm": {
+          "x": 55.0,
+          "y": 55.0,
+          "z": 55.0
+        },
+        "size_mm": {
+          "x": 110.0,
+          "y": 110.0,
+          "z": 110.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Torso:1",
+      "component": "Ref - Wearer Torso",
+      "body": "Left Shoulder",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.105930315488843,
+        "volume_mm3": 696909.9703213357,
+        "area_mm2": 38013.2711084365,
+        "centre_of_mass_mm": {
+          "x": 0.0,
+          "y": -380.0,
+          "z": 0.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -55.0,
+          "y": -435.0,
+          "z": -55.0
+        },
+        "max_mm": {
+          "x": 55.0,
+          "y": -325.0,
+          "z": 55.0
+        },
+        "size_mm": {
+          "x": 110.0,
+          "y": 110.0,
+          "z": 110.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Torso:1",
+      "component": "Ref - Wearer Torso",
+      "body": "Left Elbow",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.040748551112162,
+        "volume_mm3": 268082.573106329,
+        "area_mm2": 20106.192982974677,
+        "centre_of_mass_mm": {
+          "x": 0.0,
+          "y": -392.0,
+          "z": -324.99999999999994
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -40.0,
+          "y": -432.0,
+          "z": -365.0
+        },
+        "max_mm": {
+          "x": 40.0,
+          "y": -352.0,
+          "z": -285.0
+        },
+        "size_mm": {
+          "x": 80.0,
+          "y": 80.0,
+          "z": 80.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Torso:1",
+      "component": "Ref - Wearer Torso",
+      "body": "Left Upper Arm",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.29368025524048713,
+        "volume_mm3": 1932106.9423716262,
+        "area_mm2": 97828.82596847783,
+        "centre_of_mass_mm": {
+          "x": -1.949298901233054e-09,
+          "y": -392.0000000024876,
+          "z": -153.09499201817775
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -50.00000000000001,
+          "y": -442.0,
+          "z": -315.0
+        },
+        "max_mm": {
+          "x": 49.99999999999999,
+          "y": -342.0000000000001,
+          "z": -15.0
+        },
+        "size_mm": {
+          "x": 100.0,
+          "y": 99.99999999999993,
+          "z": 300.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Torso:1",
+      "component": "Ref - Wearer Torso",
+      "body": "Left Forearm",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.15452853175261724,
+        "volume_mm3": 1016635.0773198503,
+        "area_mm2": 64442.96174150432,
+        "centre_of_mass_mm": {
+          "x": 8.000000010371723,
+          "y": -391.99999999577216,
+          "z": -439.86280866117124
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -33.02404532378312,
+          "y": -433.0000000000001,
+          "z": -590.0
+        },
+        "max_mm": {
+          "x": 49.02404532378312,
+          "y": -350.99999999999994,
+          "z": -330.0
+        },
+        "size_mm": {
+          "x": 82.04809064756624,
+          "y": 82.00000000000017,
+          "z": 260.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Torso:1",
+      "component": "Ref - Wearer Torso",
+      "body": "Left Hand",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0339972817235873,
+        "volume_mm3": 223666.32712886386,
+        "area_mm2": 25540.013821160832,
+        "centre_of_mass_mm": {
+          "x": 10.000000205273441,
+          "y": -391.9999732117424,
+          "z": -658.9529599886248
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -35.60391895579797,
+          "y": -412.0,
+          "z": -725.0
+        },
+        "max_mm": {
+          "x": 55.603918955797965,
+          "y": -372.0000000000001,
+          "z": -602.0
+        },
+        "size_mm": {
+          "x": 91.20783791159595,
+          "y": 39.99999999999993,
+          "z": 122.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Upper Arm:1",
+      "component": "Ref - Wearer Upper Arm",
+      "body": "Right Upper Arm",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.2955067643240729,
+        "volume_mm3": 1944123.4495004802,
+        "area_mm2": 98097.6988545963,
+        "centre_of_mass_mm": {
+          "x": 7.1202363738294905e-09,
+          "y": 1.628170023929047e-08,
+          "z": -148.23254898644373
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -50.00000000000001,
+          "y": -50.0,
+          "z": -310.0
+        },
+        "max_mm": {
+          "x": 49.99999999999999,
+          "y": 50.0,
+          "z": -10.0
+        },
+        "size_mm": {
+          "x": 100.0,
+          "y": 100.0,
+          "z": 300.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Upper Arm:1",
+      "component": "Ref - Wearer Upper Arm",
+      "body": "Right Elbow",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.040748551112162,
+        "volume_mm3": 268082.573106329,
+        "area_mm2": 20106.192982974677,
+        "centre_of_mass_mm": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": -328.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -40.0,
+          "y": -40.0,
+          "z": -368.00000000000006
+        },
+        "max_mm": {
+          "x": 40.0,
+          "y": 40.0,
+          "z": -288.00000000000006
+        },
+        "size_mm": {
+          "x": 80.0,
+          "y": 80.0,
+          "z": 80.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Forearm:1",
+      "component": "Ref - Wearer Forearm",
+      "body": "Right Forearm",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.14963965347606642,
+        "volume_mm3": 984471.4044478055,
+        "area_mm2": 62939.728398105115,
+        "centre_of_mass_mm": {
+          "x": 101.02394949479518,
+          "y": 7.781135635905907e-09,
+          "z": -329.99999999897574
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -5.0,
+          "y": -41.00137106581195,
+          "z": -371.16054183083753
+        },
+        "max_mm": {
+          "x": 250.0,
+          "y": 41.00137106581195,
+          "z": -288.8394581691626
+        },
+        "size_mm": {
+          "x": 255.0,
+          "y": 82.0027421316239,
+          "z": 82.32108366167498
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Forearm:1",
+      "component": "Ref - Wearer Forearm",
+      "body": "Right Hand",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.031962909669983816,
+        "volume_mm3": 210282.30046041988,
+        "area_mm2": 24122.63497168728,
+        "centre_of_mass_mm": {
+          "x": 314.7813919787836,
+          "y": -7.1090692223107054e-09,
+          "z": -330.0000003690786
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 262.0,
+          "y": -20.0,
+          "z": -375.6257373195509
+        },
+        "max_mm": {
+          "x": 375.0,
+          "y": 20.0,
+          "z": -284.3742626804491
+        },
+        "size_mm": {
+          "x": 112.99999999999997,
+          "y": 40.0,
+          "z": 91.25147463910182
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Forearm:1",
+      "component": "Ref - Wearer Forearm",
+      "body": "Right Thumb",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0023954319527081714,
+        "volume_mm3": 15759.42074150113,
+        "area_mm2": 3675.4828476652074,
+        "centre_of_mass_mm": {
+          "x": 305.11625914696145,
+          "y": -9.46743890566437,
+          "z": -296.7534963455071
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 278.07146289243735,
+          "y": -22.0,
+          "z": -315.2988894287909
+        },
+        "max_mm": {
+          "x": 332.0,
+          "y": 3.9044056654411996,
+          "z": -280.0
+        },
+        "size_mm": {
+          "x": 53.92853710756267,
+          "y": 25.904405665441203,
+          "z": 35.298889428790936
+        }
+      }
+    },
+    {
+      "occurrence": "/Ref - Wearer Forearm:1",
+      "component": "Ref - Wearer Forearm",
+      "body": "Fingertips",
+      "material": "Fabric",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0011002108800283745,
+        "volume_mm3": 7238.229473870885,
+        "area_mm2": 1809.5573684677215,
+        "centre_of_mass_mm": {
+          "x": 375.00000000000006,
+          "y": 0.0,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 363.0,
+          "y": -12.000000000000002,
+          "z": -342.0
+        },
+        "max_mm": {
+          "x": 387.0,
+          "y": 12.000000000000002,
+          "z": -318.0
+        },
+        "size_mm": {
+          "x": 24.000000000000057,
+          "y": 24.000000000000004,
+          "z": 24.00000000000002
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Belt Side-Release Buckle",
+      "material": "Lumped - webbing + buckle (150 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.01214590443724183,
+        "volume_mm3": 10387.999999999973,
+        "area_mm2": 4899.999999999993,
+        "centre_of_mass_mm": {
+          "x": 92.6604042220648,
+          "y": -190.0,
+          "z": -431.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 89.1604042220648,
+          "y": -212.0,
+          "z": -454.0
+        },
+        "max_mm": {
+          "x": 96.1604042220648,
+          "y": -168.0,
+          "z": -408.00000000000006
+        },
+        "size_mm": {
+          "x": 6.999999999999993,
+          "y": 43.999999999999986,
+          "z": 45.99999999999994
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Control Box Body (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.12786119999999943,
+        "volume_mm3": 142067.99999999936,
+        "area_mm2": 96344.0,
+        "centre_of_mass_mm": {
+          "x": -139.89095815728766,
+          "y": -190.0,
+          "z": -420.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -159.3092789614096,
+          "y": -268.0,
+          "z": -478.0
+        },
+        "max_mm": {
+          "x": -101.3092789614096,
+          "y": -112.0,
+          "z": -362.0
+        },
+        "size_mm": {
+          "x": 58.00000000000001,
+          "y": 156.0,
+          "z": 115.99999999999994
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Control Box Lid (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.05183999999999982,
+        "volume_mm3": 57599.999999999796,
+        "area_mm2": 40079.99999999999,
+        "centre_of_mass_mm": {
+          "x": -160.80927896140958,
+          "y": -189.99999999999997,
+          "z": -420.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -162.30927896140958,
+          "y": -270.0,
+          "z": -480.0
+        },
+        "max_mm": {
+          "x": -159.3092789614096,
+          "y": -110.0,
+          "z": -360.0
+        },
+        "size_mm": {
+          "x": 2.9999999999999893,
+          "y": 160.0,
+          "z": 120.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "M3 Lid Screw",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 8.590916470316836e-05,
+        "volume_mm3": 76.96902001295423,
+        "area_mm2": 120.95131716320768,
+        "centre_of_mass_mm": {
+          "x": -163.30927896140963,
+          "y": -262.0,
+          "z": -473.99999999963404
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -164.30927896140963,
+          "y": -265.50000000000006,
+          "z": -477.50000000000006
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -258.5,
+          "z": -470.50000000000006
+        },
+        "size_mm": {
+          "x": 2.0000000000000284,
+          "y": 7.000000000000028,
+          "z": 7.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "M3 Lid Screw (1)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 8.590916470316836e-05,
+        "volume_mm3": 76.96902001295423,
+        "area_mm2": 120.95131716320768,
+        "centre_of_mass_mm": {
+          "x": -163.30927896140963,
+          "y": -262.0,
+          "z": -365.99999999963404
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -164.30927896140963,
+          "y": -265.50000000000006,
+          "z": -369.5
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -258.5,
+          "z": -362.5
+        },
+        "size_mm": {
+          "x": 2.0000000000000284,
+          "y": 7.000000000000028,
+          "z": 7.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "M3 Lid Screw (2)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 8.590916470316836e-05,
+        "volume_mm3": 76.96902001295423,
+        "area_mm2": 120.95131716320768,
+        "centre_of_mass_mm": {
+          "x": -163.30927896140963,
+          "y": -118.0,
+          "z": -473.99999999963404
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -164.30927896140963,
+          "y": -121.5,
+          "z": -477.50000000000006
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -114.50000000000001,
+          "z": -470.50000000000006
+        },
+        "size_mm": {
+          "x": 2.0000000000000284,
+          "y": 6.999999999999993,
+          "z": 7.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "M3 Lid Screw (3)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 8.590916470316836e-05,
+        "volume_mm3": 76.96902001295423,
+        "area_mm2": 120.95131716320768,
+        "centre_of_mass_mm": {
+          "x": -163.30927896140963,
+          "y": -118.0,
+          "z": -365.99999999963404
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -164.30927896140963,
+          "y": -121.5,
+          "z": -369.5
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -114.50000000000001,
+          "z": -362.5
+        },
+        "size_mm": {
+          "x": 2.0000000000000284,
+          "y": 6.999999999999993,
+          "z": 7.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Vent Rib",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.00013393830092477786,
+        "volume_mm3": 120.00000000000128,
+        "area_mm2": 308.0000000000001,
+        "centre_of_mass_mm": {
+          "x": -162.80927896140963,
+          "y": -160.0,
+          "z": -395.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -163.30927896140963,
+          "y": -162.0,
+          "z": -410.0
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -158.0,
+          "z": -380.0
+        },
+        "size_mm": {
+          "x": 1.0000000000000142,
+          "y": 3.999999999999986,
+          "z": 30.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Vent Rib (1)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.00013393830092477786,
+        "volume_mm3": 120.00000000000128,
+        "area_mm2": 308.0000000000001,
+        "centre_of_mass_mm": {
+          "x": -162.80927896140963,
+          "y": -170.0,
+          "z": -395.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -163.30927896140963,
+          "y": -172.0,
+          "z": -410.0
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -168.0,
+          "z": -380.0
+        },
+        "size_mm": {
+          "x": 1.0000000000000142,
+          "y": 3.999999999999986,
+          "z": 30.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Vent Rib (2)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.00013393830092477786,
+        "volume_mm3": 120.00000000000128,
+        "area_mm2": 308.0000000000001,
+        "centre_of_mass_mm": {
+          "x": -162.80927896140963,
+          "y": -180.00000000000003,
+          "z": -395.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -163.30927896140963,
+          "y": -182.0,
+          "z": -410.0
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -178.0,
+          "z": -380.0
+        },
+        "size_mm": {
+          "x": 1.0000000000000142,
+          "y": 3.999999999999986,
+          "z": 30.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Vent Rib (3)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.00013393830092477786,
+        "volume_mm3": 120.00000000000128,
+        "area_mm2": 308.0000000000001,
+        "centre_of_mass_mm": {
+          "x": -162.80927896140963,
+          "y": -190.0,
+          "z": -395.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -163.30927896140963,
+          "y": -192.0,
+          "z": -410.0
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -188.0,
+          "z": -380.0
+        },
+        "size_mm": {
+          "x": 1.0000000000000142,
+          "y": 3.999999999999986,
+          "z": 30.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Vent Rib (4)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.00013393830092477786,
+        "volume_mm3": 120.00000000000128,
+        "area_mm2": 308.0000000000001,
+        "centre_of_mass_mm": {
+          "x": -162.80927896140963,
+          "y": -200.00000000000003,
+          "z": -395.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -163.30927896140963,
+          "y": -202.0,
+          "z": -410.0
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -198.0,
+          "z": -380.0
+        },
+        "size_mm": {
+          "x": 1.0000000000000142,
+          "y": 3.999999999999986,
+          "z": 30.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Status LED (green)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.00011220788859189313,
+        "volume_mm3": 100.53096491487878,
+        "area_mm2": 150.7964473723108,
+        "centre_of_mass_mm": {
+          "x": -163.30927896140963,
+          "y": -234.99999999999997,
+          "z": -454.99999999958163
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -164.30927896140963,
+          "y": -239.0,
+          "z": -459.0
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -231.0,
+          "z": -451.0
+        },
+        "size_mm": {
+          "x": 2.0000000000000284,
+          "y": 7.999999999999972,
+          "z": 7.999999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Power Rocker Switch",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0018483485527619192,
+        "volume_mm3": 1656.000000000004,
+        "area_mm2": 972.0000000000011,
+        "centre_of_mass_mm": {
+          "x": -165.70058330923572,
+          "y": -210.0,
+          "z": -455.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -171.3092789614096,
+          "y": -219.0,
+          "z": -462.0
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -201.0,
+          "z": -448.0
+        },
+        "size_mm": {
+          "x": 8.999999999999986,
+          "y": 17.99999999999997,
+          "z": 14.000000000000057
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "DC Barrel Jack (24 V in)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0007731824823285098,
+        "volume_mm3": 692.7211801165832,
+        "area_mm2": 471.23889803846987,
+        "centre_of_mass_mm": {
+          "x": -165.45213610426674,
+          "y": -130.00000000000003,
+          "z": -454.9999999994014
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -169.30927896140963,
+          "y": -136.0,
+          "z": -461.0
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -124.0,
+          "z": -449.0
+        },
+        "size_mm": {
+          "x": 7.000000000000028,
+          "y": 11.999999999999993,
+          "z": 12.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Motor Cable Gland (PG7)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0017251962871003492,
+        "volume_mm3": 1545.6635855662544,
+        "area_mm2": 785.3981633974507,
+        "centre_of_mass_mm": {
+          "x": -129.30927896209906,
+          "y": -128.0,
+          "z": -356.7804878048781
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -136.3092789614096,
+          "y": -135.0,
+          "z": -362.0
+        },
+        "max_mm": {
+          "x": -122.30927896140962,
+          "y": -121.00000000000001,
+          "z": -350.0
+        },
+        "size_mm": {
+          "x": 13.999999999999986,
+          "y": 13.999999999999986,
+          "z": 12.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Pendant Cable Gland (PG7)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0017251962871003307,
+        "volume_mm3": 1545.663585566238,
+        "area_mm2": 785.3981633974466,
+        "centre_of_mass_mm": {
+          "x": -129.30927896209906,
+          "y": -273.219512195122,
+          "z": -440.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -136.3092789614096,
+          "y": -280.0,
+          "z": -447.0
+        },
+        "max_mm": {
+          "x": -122.30927896140962,
+          "y": -268.00000000000006,
+          "z": -433.0
+        },
+        "size_mm": {
+          "x": 13.999999999999986,
+          "y": 11.999999999999957,
+          "z": 14.000000000000057
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Arduino Uno (inside)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.00789343053450013,
+        "volume_mm3": 7071.999999999976,
+        "area_mm2": 7551.999999999999,
+        "centre_of_mass_mm": {
+          "x": -152.30927896140963,
+          "y": -216.0,
+          "z": -444.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -153.3092789614096,
+          "y": -250.0,
+          "z": -470.00000000000006
+        },
+        "max_mm": {
+          "x": -151.30927896140963,
+          "y": -182.00000000000003,
+          "z": -418.00000000000006
+        },
+        "size_mm": {
+          "x": 1.999999999999993,
+          "y": 67.99999999999997,
+          "z": 52.00000000000003
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "TB6600 Stepper Driver (inside)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.19688930235942134,
+        "volume_mm3": 176400.0,
+        "area_mm2": 20456.0,
+        "centre_of_mass_mm": {
+          "x": -135.3092789614096,
+          "y": -150.00000000000003,
+          "z": -421.0000000000001
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -153.3092789614096,
+          "y": -175.0,
+          "z": -470.0
+        },
+        "max_mm": {
+          "x": -117.3092789614096,
+          "y": -125.0,
+          "z": -372.0
+        },
+        "size_mm": {
+          "x": 36.000000000000014,
+          "y": 50.0,
+          "z": 97.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Hand Pendant Housing (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.13607999999999998,
+        "volume_mm3": 151200.0,
+        "area_mm2": 19647.999999999996,
+        "centre_of_mass_mm": {
+          "x": 106.16040422206481,
+          "y": -267.0,
+          "z": -486.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 92.16040422206481,
+          "y": -292.0,
+          "z": -540.0
+        },
+        "max_mm": {
+          "x": 120.16040422206481,
+          "y": -242.00000000000003,
+          "z": -432.0
+        },
+        "size_mm": {
+          "x": 28.000000000000007,
+          "y": 50.0,
+          "z": 107.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "UP Button (green, momentary)",
+      "material": "Lumped - pendant w/ switches (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0012430833842690355,
+        "volume_mm3": 1724.7343668208719,
+        "area_mm2": 923.6282401554004,
+        "centre_of_mass_mm": {
+          "x": 123.7997484843599,
+          "y": -267.00000000000006,
+          "z": -454.99999999912313
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 120.1604042220648,
+          "y": -276.0,
+          "z": -464.0
+        },
+        "max_mm": {
+          "x": 128.1604042220648,
+          "y": -258.00000000000006,
+          "z": -446.0
+        },
+        "size_mm": {
+          "x": 8.000000000000025,
+          "y": 17.99999999999997,
+          "z": 17.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "DOWN Button (black, momentary)",
+      "material": "Lumped - pendant w/ switches (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0012430833842690355,
+        "volume_mm3": 1724.7343668208719,
+        "area_mm2": 923.6282401554004,
+        "centre_of_mass_mm": {
+          "x": 123.7997484843599,
+          "y": -267.00000000000006,
+          "z": -481.99999999912313
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 120.1604042220648,
+          "y": -276.0,
+          "z": -491.0
+        },
+        "max_mm": {
+          "x": 128.1604042220648,
+          "y": -258.00000000000006,
+          "z": -473.00000000000006
+        },
+        "size_mm": {
+          "x": 8.000000000000025,
+          "y": 17.99999999999997,
+          "z": 17.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "E-Stop Collar",
+      "material": "Lumped - pendant w/ switches (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.002421683159733643,
+        "volume_mm3": 3360.000000000011,
+        "area_mm2": 2642.0000000000027,
+        "centre_of_mass_mm": {
+          "x": 121.6604042220648,
+          "y": -267.0,
+          "z": -517.5
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 120.1604042220648,
+          "y": -283.00000000000006,
+          "z": -535.0
+        },
+        "max_mm": {
+          "x": 123.16040422206481,
+          "y": -251.0,
+          "z": -500.0
+        },
+        "size_mm": {
+          "x": 3.000000000000007,
+          "y": 32.00000000000003,
+          "z": 35.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "E-Stop Mushroom (latching, NC)",
+      "material": "Lumped - pendant w/ switches (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.005090075496970149,
+        "volume_mm3": 7062.30028526971,
+        "area_mm2": 2519.557308179016,
+        "centre_of_mass_mm": {
+          "x": 132.66574230035675,
+          "y": -267.0,
+          "z": -517.0000000009323
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 123.16040422206481,
+          "y": -282.0,
+          "z": -532.0
+        },
+        "max_mm": {
+          "x": 138.1604042220648,
+          "y": -252.00000000000003,
+          "z": -502.0
+        },
+        "size_mm": {
+          "x": 15.000000000000018,
+          "y": 30.0,
+          "z": 30.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Pendant Cable (6-core)",
+      "material": "Lumped - cables (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.04527305551049308,
+        "volume_mm3": 7585.571507156742,
+        "area_mm2": 6107.717970125515,
+        "centre_of_mass_mm": {
+          "x": -25.252863772777133,
+          "y": -315.6241755243386,
+          "z": -521.7231170412726
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -143.66899879669432,
+          "y": -348.90653047125386,
+          "z": -562.5602357961887
+        },
+        "max_mm": {
+          "x": 109.18764316307808,
+          "y": -260.84241150254525,
+          "z": -438.94368635170173
+        },
+        "size_mm": {
+          "x": 252.8566419597724,
+          "y": 88.06411896870858,
+          "z": 123.61654944448702
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Sling Strap (25 mm webbing)",
+      "material": "Lumped - webbing + buckle (150 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.04381709606567414,
+        "volume_mm3": 37475.34786578521,
+        "area_mm2": 36143.488359379146,
+        "centre_of_mass_mm": {
+          "x": -77.72582572364591,
+          "y": -123.49864137041621,
+          "z": -116.58924973189029
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -126.52073892654494,
+          "y": -300.15887032615484,
+          "z": -411.2841687009731
+        },
+        "max_mm": {
+          "x": 13.189610611968146,
+          "y": 81.14464324233336,
+          "z": 71.86729262654424
+        },
+        "size_mm": {
+          "x": 139.71034953851307,
+          "y": 381.3035135684882,
+          "z": 483.1514613275174
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Waist Belt (38 mm nylon webbing)",
+      "material": "Lumped - webbing + buckle (150 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.09407261464106947,
+        "volume_mm3": 80457.27067430656,
+        "area_mm2": 61192.58954330653,
+        "centre_of_mass_mm": {
+          "x": -6.859228359621888,
+          "y": -190.00002224309466,
+          "z": -430.9419755223215
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -100.60927896140964,
+          "y": -323.27840960358714,
+          "z": -450.0
+        },
+        "max_mm": {
+          "x": 90.96040422206482,
+          "y": -56.72159039641251,
+          "z": -412.0
+        },
+        "size_mm": {
+          "x": 191.56968318347447,
+          "y": 266.5568192071746,
+          "z": 37.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Belt Loop",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.007931500968424344,
+        "volume_mm3": 7106.108630909602,
+        "area_mm2": 4373.697651553865,
+        "centre_of_mass_mm": {
+          "x": -99.97364731339026,
+          "y": -190.0000000000065,
+          "z": -467.91219688365794
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -102.30927896140962,
+          "y": -254.0,
+          "z": -474.00000000000006
+        },
+        "max_mm": {
+          "x": -97.30927896140962,
+          "y": -126.0,
+          "z": -462.0
+        },
+        "size_mm": {
+          "x": 5.0,
+          "y": 127.99999999999999,
+          "z": 12.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Belt Loop (1)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.007228367567600072,
+        "volume_mm3": 6476.146868543357,
+        "area_mm2": 4270.946006812381,
+        "centre_of_mass_mm": {
+          "x": -100.13755352011798,
+          "y": -190.00000000001307,
+          "z": -372.1383492337095
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -102.30927896140962,
+          "y": -254.0,
+          "z": -378.00000000000006
+        },
+        "max_mm": {
+          "x": -97.30927896140962,
+          "y": -126.0,
+          "z": -366.0
+        },
+        "size_mm": {
+          "x": 5.0,
+          "y": 127.99999999999999,
+          "z": 12.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Pendant Belt Clip",
+      "material": "Lumped - pendant w/ switches (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0010263323867442484,
+        "volume_mm3": 1423.9999999999911,
+        "area_mm2": 1639.9999999999952,
+        "centre_of_mass_mm": {
+          "x": 91.8795053456603,
+          "y": -267.0,
+          "z": -424.2584269662922
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 90.16040422206481,
+          "y": -276.0,
+          "z": -452.0
+        },
+        "max_mm": {
+          "x": 94.1604042220648,
+          "y": -258.00000000000006,
+          "z": -405.0
+        },
+        "size_mm": {
+          "x": 3.999999999999986,
+          "y": 17.99999999999997,
+          "z": 47.00000000000003
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M5 Nylock Nut (2)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0010735176284236345,
+        "volume_mm3": 136.75383801574964,
+        "area_mm2": 244.5732978869488,
+        "centre_of_mass_mm": {
+          "x": 3.3776724944339773e-10,
+          "y": 82.00000000000001,
+          "z": -290.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.618802153517006,
+          "y": 80.00000000000001,
+          "z": -294.0
+        },
+        "max_mm": {
+          "x": 4.618802153517006,
+          "y": 84.0,
+          "z": -286.0
+        },
+        "size_mm": {
+          "x": 9.237604307034012,
+          "y": 3.999999999999986,
+          "z": 7.999999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M5 Nylock Nut (1)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0010735176284236373,
+        "volume_mm3": 136.75383801574998,
+        "area_mm2": 244.57329788694898,
+        "centre_of_mass_mm": {
+          "x": 3.3775101263365565e-10,
+          "y": 82.00000000000001,
+          "z": -265.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.618802153517006,
+          "y": 80.00000000000001,
+          "z": -269.0
+        },
+        "max_mm": {
+          "x": 4.618802153517006,
+          "y": 84.0,
+          "z": -261.0
+        },
+        "size_mm": {
+          "x": 9.237604307034012,
+          "y": 3.999999999999986,
+          "z": 7.999999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M5 Nylock Nut",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0010735176284236434,
+        "volume_mm3": 136.75383801575074,
+        "area_mm2": 244.57329788694867,
+        "centre_of_mass_mm": {
+          "x": 3.3778044185130977e-10,
+          "y": 82.00000000000001,
+          "z": -240.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.618802153517006,
+          "y": 80.00000000000001,
+          "z": -244.0
+        },
+        "max_mm": {
+          "x": 4.618802153517006,
+          "y": 84.0,
+          "z": -236.0
+        },
+        "size_mm": {
+          "x": 9.237604307034012,
+          "y": 3.999999999999986,
+          "z": 7.999999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M6 Flat-Head Screw (countersunk) (3)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0005334776184172786,
+        "volume_mm3": 67.95893228245588,
+        "area_mm2": 196.03538158400258,
+        "centre_of_mass_mm": {
+          "x": -17.6776695301889,
+          "y": 71.6,
+          "z": -360.6186217849305
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -22.87766952966367,
+          "y": 71.20000000000002,
+          "z": -365.8186217847898
+        },
+        "max_mm": {
+          "x": -12.477669529663672,
+          "y": 72.0,
+          "z": -355.4186217847897
+        },
+        "size_mm": {
+          "x": 10.4,
+          "y": 0.799999999999983,
+          "z": 10.400000000000063
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M6 Flat-Head Screw (countersunk) (2)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0005334776184172786,
+        "volume_mm3": 67.95893228245588,
+        "area_mm2": 196.03538158400255,
+        "centre_of_mass_mm": {
+          "x": 30.618621784264512,
+          "y": 71.6,
+          "z": -347.67766952980446
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 25.418621784789735,
+          "y": 71.20000000000002,
+          "z": -352.8776695296637
+        },
+        "max_mm": {
+          "x": 35.818621784789734,
+          "y": 72.0,
+          "z": -342.4776695296637
+        },
+        "size_mm": {
+          "x": 10.4,
+          "y": 0.799999999999983,
+          "z": 10.400000000000063
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M6 Flat-Head Screw (countersunk) (1)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0005334776184172785,
+        "volume_mm3": 67.95893228245586,
+        "area_mm2": 196.03538158400258,
+        "centre_of_mass_mm": {
+          "x": -30.618621785314943,
+          "y": 71.6,
+          "z": -312.3223304704771
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -35.81862178478972,
+          "y": 71.20000000000002,
+          "z": -317.5223304703363
+        },
+        "max_mm": {
+          "x": -25.418621784789718,
+          "y": 72.0,
+          "z": -307.1223304703363
+        },
+        "size_mm": {
+          "x": 10.4,
+          "y": 0.799999999999983,
+          "z": 10.399999999999991
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M6 Flat-Head Screw (countersunk)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0005334776184172786,
+        "volume_mm3": 67.95893228245588,
+        "area_mm2": 196.03538158400258,
+        "centre_of_mass_mm": {
+          "x": 17.677669529138463,
+          "y": 71.6,
+          "z": -299.381378215351
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 12.47766952966369,
+          "y": 71.20000000000002,
+          "z": -304.58137821521024
+        },
+        "max_mm": {
+          "x": 22.877669529663688,
+          "y": 72.0,
+          "z": -294.18137821521026
+        },
+        "size_mm": {
+          "x": 10.4,
+          "y": 0.799999999999983,
+          "z": 10.399999999999991
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Motor Lead Exit",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.006891222214432163,
+        "volume_mm3": 1528.7999999999927,
+        "area_mm2": 828.7999999999982,
+        "centre_of_mass_mm": {
+          "x": -89.23054590913597,
+          "y": 102.00000000000001,
+          "z": -236.92304433020186
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -94.80938994738098,
+          "y": 95.00000000000001,
+          "z": -244.69391939012513
+        },
+        "max_mm": {
+          "x": -83.65170187089097,
+          "y": 109.0,
+          "z": -229.15216927027853
+        },
+        "size_mm": {
+          "x": 11.157688076490011,
+          "y": 13.999999999999986,
+          "z": 15.541750119846611
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Motor Rear Cap",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.11583662640898378,
+        "volume_mm3": 25698.058913725778,
+        "area_mm2": 8311.572519265475,
+        "centre_of_mass_mm": {
+          "x": -60.57783886295776,
+          "y": 102.00000000000001,
+          "z": -219.8315267053718
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -88.82808277294139,
+          "y": 73.80000000000001,
+          "z": -231.0840209228566
+        },
+        "max_mm": {
+          "x": -32.27931380941776,
+          "y": 130.20000000000002,
+          "z": -206.1797901153708
+        },
+        "size_mm": {
+          "x": 56.54876896352363,
+          "y": 56.400000000000006,
+          "z": 24.90423080748581
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "NEMA 23 Stepper Body (76 mm, 1.9 N-m)",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.8540415417541459,
+        "volume_mm3": 189466.92885614897,
+        "area_mm2": 19362.971271661903,
+        "centre_of_mass_mm": {
+          "x": -51.753850757693854,
+          "y": 102.00000000000001,
+          "z": -252.7630986396376
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -86.75753041212121,
+          "y": 73.80000000000001,
+          "z": -289.03957050020074
+        },
+        "max_mm": {
+          "x": -16.750171103266503,
+          "y": 130.20000000000002,
+          "z": -216.4866267790745
+        },
+        "size_mm": {
+          "x": 70.00735930885472,
+          "y": 56.400000000000006,
+          "z": 72.55294372112627
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Motor Front Cap",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.11387220556721876,
+        "volume_mm3": 25262.25718081971,
+        "area_mm2": 8055.218558732545,
+        "centre_of_mass_mm": {
+          "x": -42.95400322420817,
+          "y": 102.00000000000003,
+          "z": -285.60457673346593
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -71.22838770596996,
+          "y": 73.80000000000001,
+          "z": -296.76697711051327
+        },
+        "max_mm": {
+          "x": -14.679618742446348,
+          "y": 130.20000000000002,
+          "z": -274.4421763564186
+        },
+        "size_mm": {
+          "x": 56.54876896352362,
+          "y": 56.400000000000006,
+          "z": 22.32480075409466
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "NEMA 23 Input Flange",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.14547363992708748,
+        "volume_mm3": 32272.95446296329,
+        "area_mm2": 8655.860192377193,
+        "centre_of_mass_mm": {
+          "x": -40.62463181828548,
+          "y": 102.0,
+          "z": -294.29790917006756
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -69.44761309303652,
+          "y": 73.50000000000001,
+          "z": -306.5038810869347
+        },
+        "max_mm": {
+          "x": -11.801650543534423,
+          "y": 130.5,
+          "z": -282.09193725320034
+        },
+        "size_mm": {
+          "x": 57.645962549502094,
+          "y": 56.99999999999999,
+          "z": 24.41194383373439
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Worm End Cap",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.011102263119546318,
+        "volume_mm3": 2463.008640414437,
+        "area_mm2": 1583.3626974092608,
+        "centre_of_mass_mm": {
+          "x": -18.107374894555573,
+          "y": 102.00000000000006,
+          "z": -378.33345605724196
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -32.14797455261818,
+          "y": 88.0,
+          "z": -383.8887743412299
+        },
+        "max_mm": {
+          "x": -4.066775236114157,
+          "y": 116.00000000000001,
+          "z": -372.77813777320307
+        },
+        "size_mm": {
+          "x": 28.081199316504026,
+          "y": 28.000000000000007,
+          "z": 11.110636568026848
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Output Oil Seal Ring",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.005862674657515668,
+        "volume_mm3": 1300.6193585862256,
+        "area_mm2": 1589.645882716435,
+        "centre_of_mass_mm": {
+          "x": -2.165997004183748e-09,
+          "y": 79.00000000000003,
+          "z": -330.0000000005804
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -16.0,
+          "y": 78.0,
+          "z": -346.0
+        },
+        "max_mm": {
+          "x": 16.0,
+          "y": 80.0,
+          "z": -314.0
+        },
+        "size_mm": {
+          "x": 32.0,
+          "y": 1.999999999999993,
+          "z": 32.00000000000003
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Output Bore Cover",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.008794011986273552,
+        "volume_mm3": 1950.9290378793496,
+        "area_mm2": 1734.1591447815674,
+        "centre_of_mass_mm": {
+          "x": -2.165991313443565e-09,
+          "y": 125.50000000000004,
+          "z": -330.0000000005805
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -16.0,
+          "y": 124.0,
+          "z": -346.0
+        },
+        "max_mm": {
+          "x": 16.0,
+          "y": 127.00000000000001,
+          "z": -314.0
+        },
+        "size_mm": {
+          "x": 32.0,
+          "y": 3.000000000000007,
+          "z": 32.00000000000003
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Worm Gearbox NMRV030 Housing (15:1)",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.8889987276050809,
+        "volume_mm3": 197222.09101257825,
+        "area_mm2": 23819.08066394185,
+        "centre_of_mass_mm": {
+          "x": -12.657723899965344,
+          "y": 102.00000000000001,
+          "z": -333.39162689701186
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -57.68312729226517,
+          "y": 80.0,
+          "z": -381.3191662615862
+        },
+        "max_mm": {
+          "x": 33.068111527572924,
+          "y": 124.00000000000003,
+          "z": -294.209976444565
+        },
+        "size_mm": {
+          "x": 90.75123881983811,
+          "y": 44.00000000000002,
+          "z": 87.10918981702122
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Upper Velcro Strap (25 mm)",
+      "material": "Lumped - foam + velcro (40 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.001509739453922622,
+        "volume_mm3": 3456.285291568202,
+        "area_mm2": 5276.218515877377,
+        "centre_of_mass_mm": {
+          "x": -5.139497146644031e-15,
+          "y": -39.29345459051399,
+          "z": -182.99999999999983
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -40.367089377045886,
+          "y": -47.60000000000001,
+          "z": -196.0
+        },
+        "max_mm": {
+          "x": 40.367089377045886,
+          "y": -24.482270007574066,
+          "z": -170.0
+        },
+        "size_mm": {
+          "x": 80.73417875409177,
+          "y": 23.11772999242594,
+          "z": 26.000000000000014
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M5x25 SHCS (1)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0018421517996740884,
+        "volume_mm3": 234.66901906676287,
+        "area_mm2": 255.28581903070634,
+        "centre_of_mass_mm": {
+          "x": -5.540913417556959e-10,
+          "y": 74.13101196953211,
+          "z": -195.00000000000003
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.25,
+          "y": 72.00000000000001,
+          "z": -199.25
+        },
+        "max_mm": {
+          "x": 4.25,
+          "y": 76.5,
+          "z": -190.75
+        },
+        "size_mm": {
+          "x": 8.5,
+          "y": 4.499999999999993,
+          "z": 8.500000000000014
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M5x25 SHCS",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0018421517996740884,
+        "volume_mm3": 234.66901906676287,
+        "area_mm2": 255.28581903070634,
+        "centre_of_mass_mm": {
+          "x": -5.540913417556959e-10,
+          "y": 74.13101196953211,
+          "z": -170.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.25,
+          "y": 72.00000000000001,
+          "z": -174.25
+        },
+        "max_mm": {
+          "x": 4.25,
+          "y": 76.5,
+          "z": -165.75
+        },
+        "size_mm": {
+          "x": 8.5,
+          "y": 4.499999999999993,
+          "z": 8.500000000000014
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M5x20 SHCS (3)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0017530621225045056,
+        "volume_mm3": 223.32001560566954,
+        "area_mm2": 249.94511151960384,
+        "centre_of_mass_mm": {
+          "x": -4.670516587315407e-10,
+          "y": 66.76577309109389,
+          "z": -95.00000000000001
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.25,
+          "y": 64.5,
+          "z": -99.25
+        },
+        "max_mm": {
+          "x": 4.25,
+          "y": 68.8,
+          "z": -90.75
+        },
+        "size_mm": {
+          "x": 8.5,
+          "y": 4.299999999999997,
+          "z": 8.500000000000014
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M5x20 SHCS (2)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0017530621225045056,
+        "volume_mm3": 223.32001560566954,
+        "area_mm2": 249.94511151960384,
+        "centre_of_mass_mm": {
+          "x": -4.670522801620815e-10,
+          "y": 66.76577309109389,
+          "z": -290.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.25,
+          "y": 64.5,
+          "z": -294.25
+        },
+        "max_mm": {
+          "x": 4.25,
+          "y": 68.8,
+          "z": -285.75
+        },
+        "size_mm": {
+          "x": 8.5,
+          "y": 4.299999999999997,
+          "z": 8.500000000000014
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M5x20 SHCS (1)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0017530621225045056,
+        "volume_mm3": 223.32001560566954,
+        "area_mm2": 249.94511151960384,
+        "centre_of_mass_mm": {
+          "x": -4.670522801620815e-10,
+          "y": 66.76577309109389,
+          "z": -265.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.25,
+          "y": 64.5,
+          "z": -269.25
+        },
+        "max_mm": {
+          "x": 4.25,
+          "y": 68.8,
+          "z": -260.75
+        },
+        "size_mm": {
+          "x": 8.5,
+          "y": 4.299999999999997,
+          "z": 8.500000000000014
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "M5x20 SHCS",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0017530621225045056,
+        "volume_mm3": 223.32001560566954,
+        "area_mm2": 249.94511151960384,
+        "centre_of_mass_mm": {
+          "x": -4.670522801620815e-10,
+          "y": 66.76577309109389,
+          "z": -240.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.25,
+          "y": 64.5,
+          "z": -244.25
+        },
+        "max_mm": {
+          "x": 4.25,
+          "y": 68.8,
+          "z": -235.75
+        },
+        "size_mm": {
+          "x": 8.5,
+          "y": 4.299999999999997,
+          "z": 8.500000000000014
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Upper Cuff Pad (6 mm EVA foam)",
+      "material": "Lumped - foam + velcro (40 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.02504154592552603,
+        "volume_mm3": 57328.25398160469,
+        "area_mm2": 27886.522507359907,
+        "centre_of_mass_mm": {
+          "x": -6.940799769574951e-14,
+          "y": 19.230708637681918,
+          "z": -182.99999999999997
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -50.50000000000001,
+          "y": -26.76092284377685,
+          "z": -214.00000000000003
+        },
+        "max_mm": {
+          "x": 50.50000000000001,
+          "y": 50.50000000000001,
+          "z": -152.0
+        },
+        "size_mm": {
+          "x": 101.00000000000001,
+          "y": 77.26092284377685,
+          "z": 62.00000000000003
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Upper Arm Cuff (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.06404838717440191,
+        "volume_mm3": 71164.87463822434,
+        "area_mm2": 34471.47881525582,
+        "centre_of_mass_mm": {
+          "x": 3.5624547841616125e-12,
+          "y": 32.84320703085947,
+          "z": -183.00611567933925
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -54.0,
+          "y": -28.61564026859307,
+          "z": -216.0
+        },
+        "max_mm": {
+          "x": 54.0,
+          "y": 68.79999999999998,
+          "z": -150.0
+        },
+        "size_mm": {
+          "x": 108.0,
+          "y": 97.41564026859307,
+          "z": 66.00000000000001
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Sling Strap Anchor (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.014148000000000004,
+        "volume_mm3": 15720.000000000005,
+        "area_mm2": 5284.0,
+        "centre_of_mass_mm": {
+          "x": 0.0,
+          "y": 78.0,
+          "z": -82.97862595419845
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -16.0,
+          "y": 72.00000000000001,
+          "z": -104.0
+        },
+        "max_mm": {
+          "x": 16.0,
+          "y": 84.0,
+          "z": -57.999999999999986
+        },
+        "size_mm": {
+          "x": 32.0,
+          "y": 11.999999999999993,
+          "z": 46.000000000000014
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Upper Strut (1 x 1/8 in 6061 flat bar)",
+      "material": "Aluminum 6061",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.05010990663548903,
+        "volume_mm3": 18559.224679810755,
+        "area_mm2": 13556.216259984585,
+        "centre_of_mass_mm": {
+          "x": -7.065524780632357e-12,
+          "y": 70.39999999999999,
+          "z": -189.5289106896555
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -12.7,
+          "y": 68.8,
+          "z": -309.70000000000005
+        },
+        "max_mm": {
+          "x": 12.7,
+          "y": 72.0,
+          "z": -70.30000000000001
+        },
+        "size_mm": {
+          "x": 25.4,
+          "y": 3.200000000000003,
+          "z": 239.4
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "M5 Set Screw",
+      "material": "ABS Plastic",
+      "visible": true,
+      "physical": {
+        "mass_kg": 7.284567965511216e-05,
+        "volume_mm3": 68.72233929727562,
+        "area_mm2": 94.2477796076927,
+        "centre_of_mass_mm": {
+          "x": -3.558761870193457,
+          "y": 65.0,
+          "z": -316.71851988852984
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -6.426509764811717,
+          "y": 62.5,
+          "z": -319.05593769728745
+        },
+        "max_mm": {
+          "x": -0.6910139755075839,
+          "y": 67.5,
+          "z": -314.38110207976314
+        },
+        "size_mm": {
+          "x": 5.735495789304133,
+          "y": 5.0,
+          "z": 4.674835617524309
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Keyed Shaft Hub, 14 mm bore (steel)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.11536730319511675,
+        "volume_mm3": 14696.47174460086,
+        "area_mm2": 5745.045421182193,
+        "centre_of_mass_mm": {
+          "x": 0.04432942385062449,
+          "y": 59.98332013490422,
+          "z": -330.16537305615884
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -22.5,
+          "y": 53.2,
+          "z": -352.5
+        },
+        "max_mm": {
+          "x": 22.5,
+          "y": 71.0,
+          "z": -307.5
+        },
+        "size_mm": {
+          "x": 45.0,
+          "y": 17.799999999999994,
+          "z": 45.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Shaft Key 5x5",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.002826000000000052,
+        "volume_mm3": 360.00000000000665,
+        "area_mm2": 349.0,
+        "centre_of_mass_mm": {
+          "x": -1.8764380769932887,
+          "y": 63.99999999999999,
+          "z": -322.99703775940424
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.873595494196614,
+          "y": 56.00000000000001,
+          "z": -325.81741848131094
+        },
+        "max_mm": {
+          "x": 1.1207193402100657,
+          "y": 72.0,
+          "z": -320.1766570374975
+        },
+        "size_mm": {
+          "x": 5.99431483440668,
+          "y": 15.999999999999996,
+          "z": 5.64076144381346
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Output Shaft 14 mm keyed (NMRV030 single output)",
+      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.04912708675973315,
+        "volume_mm3": 10898.71838423489,
+        "area_mm2": 3533.877389521449,
+        "centre_of_mass_mm": {
+          "x": 0.026023475779018146,
+          "y": 90.4409080745987,
+          "z": -330.09712093533096
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -7.000000000000002,
+          "y": 54.0,
+          "z": -337.0
+        },
+        "max_mm": {
+          "x": 7.000000000000002,
+          "y": 126.00000000000001,
+          "z": -323.0
+        },
+        "size_mm": {
+          "x": 14.000000000000004,
+          "y": 72.00000000000001,
+          "z": 14.000000000000057
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Forearm Velcro Strap (25 mm)",
+      "material": "Lumped - foam + velcro (40 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.001078385324230438,
+        "volume_mm3": 2468.7752082629863,
+        "area_mm2": 3789.5275113409834,
+        "centre_of_mass_mm": {
+          "x": 193.00000000000009,
+          "y": -28.068753879112922,
+          "z": -330.0000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 180.0,
+          "y": -34.2,
+          "z": -359.0032448885498
+        },
+        "max_mm": {
+          "x": 206.0,
+          "y": -17.38135186684912,
+          "z": -300.9967551114502
+        },
+        "size_mm": {
+          "x": 26.000000000000014,
+          "y": 16.818648133150884,
+          "z": 58.006489777099546
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "M5x16 SHCS (1)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0017530621225045058,
+        "volume_mm3": 223.32001560566954,
+        "area_mm2": 249.94511151960384,
+        "centre_of_mass_mm": {
+          "x": 201.9999999994444,
+          "y": 55.23422690890611,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 197.75000000000003,
+          "y": 53.2,
+          "z": -334.25
+        },
+        "max_mm": {
+          "x": 206.25000000000003,
+          "y": 57.5,
+          "z": -325.75
+        },
+        "size_mm": {
+          "x": 8.500000000000014,
+          "y": 4.299999999999997,
+          "z": 8.499999999999943
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "M5x16 SHCS",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0017530621225045058,
+        "volume_mm3": 223.32001560566954,
+        "area_mm2": 249.94511151960384,
+        "centre_of_mass_mm": {
+          "x": 183.99999999944453,
+          "y": 55.23422690890611,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 179.75,
+          "y": 53.2,
+          "z": -334.25
+        },
+        "max_mm": {
+          "x": 188.25000000000003,
+          "y": 57.5,
+          "z": -325.75
+        },
+        "size_mm": {
+          "x": 8.500000000000014,
+          "y": 4.299999999999997,
+          "z": 8.499999999999943
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Forearm Cuff Pad (5 mm EVA foam)",
+      "material": "Lumped - foam + velcro (40 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.012370329296320915,
+        "volume_mm3": 28319.712442860036,
+        "area_mm2": 13198.396158347141,
+        "centre_of_mass_mm": {
+          "x": 193.0000000000001,
+          "y": 13.963339527832076,
+          "z": -330.0000000000001
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 174.00000000000006,
+          "y": -19.871972408745183,
+          "z": -367.5
+        },
+        "max_mm": {
+          "x": 212.00000000000003,
+          "y": 37.5,
+          "z": -292.5
+        },
+        "size_mm": {
+          "x": 37.99999999999997,
+          "y": 57.37197240874519,
+          "z": 75.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Forearm Cuff (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.027526160031438134,
+        "volume_mm3": 30584.622257153485,
+        "area_mm2": 16989.855140937438,
+        "centre_of_mass_mm": {
+          "x": 192.999999999997,
+          "y": 22.919919721558554,
+          "z": -329.99999999999966
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 172.0,
+          "y": -21.7266898335614,
+          "z": -371.0
+        },
+        "max_mm": {
+          "x": 214.00000000000003,
+          "y": 50.0,
+          "z": -289.0
+        },
+        "size_mm": {
+          "x": 42.00000000000003,
+          "y": 71.72668983356141,
+          "z": 82.00000000000003
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "M4x12 SHCS (1)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0009472452218336625,
+        "volume_mm3": 120.66818112530733,
+        "area_mm2": 171.7508703717539,
+        "centre_of_mass_mm": {
+          "x": 15.999999999610612,
+          "y": 48.34881199170786,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 12.5,
+          "y": 46.5,
+          "z": -333.5
+        },
+        "max_mm": {
+          "x": 19.5,
+          "y": 50.0,
+          "z": -326.5
+        },
+        "size_mm": {
+          "x": 7.000000000000002,
+          "y": 3.4999999999999964,
+          "z": 7.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "M4x12 SHCS",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0009472452218336625,
+        "volume_mm3": 120.66818112530733,
+        "area_mm2": 171.7508703717539,
+        "centre_of_mass_mm": {
+          "x": -16.000000000389388,
+          "y": 48.34881199170786,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -19.5,
+          "y": 46.5,
+          "z": -333.5
+        },
+        "max_mm": {
+          "x": -12.5,
+          "y": 50.0,
+          "z": -326.5
+        },
+        "size_mm": {
+          "x": 7.000000000000002,
+          "y": 3.4999999999999964,
+          "z": 7.000000000000028
+        }
+      }
+    }
+  ],
+  "joints": [],
+  "exports": {
+    "step": "C:/Users/vishn/Downloads/exoarm-export\\BudgetExoArm_(~recovered).step",
+    "stl": "C:/Users/vishn/Downloads/exoarm-export\\BudgetExoArm_(~recovered).stl"
+  }
+}

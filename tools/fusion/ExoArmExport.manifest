@@ -1,0 +1,10 @@
+{
+  "autodeskProduct": "Fusion360",
+  "type": "script",
+  "author": "Vishnu Konga",
+  "description": {
+    "": "Reads the exoskeleton design and writes design.json, bodies.csv, STEP and STL for the exo-arm repository."
+  },
+  "supportedOS": "windows|mac",
+  "editEnabled": true
+}

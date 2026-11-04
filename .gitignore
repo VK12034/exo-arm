@@ -15,9 +15,10 @@ venv/
 build/
 dist/
 
-# Telemetry captures
+# Telemetry captures. Exported CAD data is checked in deliberately.
 *.csv
 !docs/**/*.csv
+!cad/**/*.csv
 
 # CAD scratch
 cad/**/*.bak
