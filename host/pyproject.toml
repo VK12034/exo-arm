@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "exoarm"
+version = "0.1.0"
+description = "Host-side control and telemetry tools for the exo-arm exoskeleton"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Vishnu Konga" }]
+
+dependencies = [
+    "pyserial>=3.5",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.7"]
+dev = ["pytest>=7.4", "ruff>=0.4"]
+
+[project.scripts]
+exoarm = "exoarm.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["exoarm*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
