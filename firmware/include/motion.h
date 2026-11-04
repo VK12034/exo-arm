@@ -54,7 +54,15 @@ public:
 
         // Begin decelerating early enough to stop inside the limit, whatever
         // the wearer is asking for. Motion away from a limit is never damped.
-        const float margin = stoppingDistance(velocity_, accel_);
+        //
+        // The margin carries one more tick's travel than the ideal stopping
+        // distance. Deceleration happens in discrete steps, so the distance
+        // actually covered while slowing is about half a tick's travel more
+        // than the continuous figure, and the decision itself is taken a tick
+        // before the motion it governs. Using the ideal distance alone
+        // overshoots the limit by a few steps every time.
+        const float speed  = velocity_ < 0.0f ? -velocity_ : velocity_;
+        const float margin = stoppingDistance(velocity_, accel_) + speed * dt;
 
         if (velocity_ > 0.0f && static_cast<float>(max_steps_ - position) <= margin) {
             desired = 0.0f;
@@ -63,13 +71,25 @@ public:
             desired = 0.0f;
         }
 
+        const float previous = velocity_;
         const float step = accel_ * dt;
+
         if (desired > velocity_) {
             velocity_ += step;
             if (velocity_ > desired) velocity_ = desired;
         } else if (desired < velocity_) {
             velocity_ -= step;
             if (velocity_ < desired) velocity_ = desired;
+        }
+
+        // A reversal must put at least one update at exactly zero. The step
+        // generator only moves the direction line while it is stopped, so a
+        // velocity that jumps straight from positive to negative would have
+        // it change direction with pulses still in flight. Nothing guarantees
+        // the ramp lands on zero by itself.
+        if ((previous > 0.0f && velocity_ < 0.0f) ||
+            (previous < 0.0f && velocity_ > 0.0f)) {
+            velocity_ = 0.0f;
         }
 
         // Below a step a second there is nothing useful left to emit, and
