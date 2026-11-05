@@ -11,13 +11,13 @@
 
 namespace {
 
-// The real machine: 20 deg/s and 45 deg/s^2 at 66.667 steps per degree,
-// travelling from full extension to 135 degrees of flexion.
-constexpr float kStepsPerDeg = 66.6667f;
+// The real machine: 20 deg/s and 45 deg/s^2 at 133.333 steps per degree,
+// travelling from the home switch to the 88 degree soft limit.
+constexpr float kStepsPerDeg = 133.3333f;
 constexpr float kMaxSpeed    = 20.0f * kStepsPerDeg;
 constexpr float kAccel       = 45.0f * kStepsPerDeg;
 constexpr long  kMinSteps    = 0;
-constexpr long  kMaxSteps    = static_cast<long>(135.0f * kStepsPerDeg);
+constexpr long  kMaxSteps    = static_cast<long>(88.0f * kStepsPerDeg);
 
 constexpr float kDt = 0.001f;
 
@@ -79,7 +79,7 @@ void test_flex_reaches_but_does_not_exceed_max_speed(void) {
 
 void test_extend_drives_negative(void) {
     motion::Planner planner = makePlanner();
-    run(planner, motion::Command::kExtend, 5000, 2000);
+    run(planner, motion::Command::kExtend, 8000, 2000);
 
     TEST_ASSERT_FLOAT_WITHIN(1.0f, -kMaxSpeed, planner.velocity());
     TEST_ASSERT_EQUAL_INT(-1, planner.direction());
@@ -197,7 +197,7 @@ void test_tick_increment_clamps_at_one_step_per_tick(void) {
 }
 
 void test_tick_increment_at_the_real_top_speed(void) {
-    // 20 deg/s is about 1333 steps/s, comfortably under the tick rate.
+    // 20 deg/s is about 2667 steps/s, comfortably under the tick rate.
     const uint32_t increment = motion::tickIncrement(kMaxSpeed, 10000);
 
     TEST_ASSERT_TRUE(increment > 0u);
@@ -381,7 +381,7 @@ void test_load_filter_smooths_the_reading(void) {
 namespace {
 
 // Half a degree of tolerance, five degrees before it is treated as lost
-// steps, at the real 66.667 steps per degree.
+// steps, at the real 133.333 steps per degree.
 constexpr long kHomeSteps = 0;
 constexpr long kTolerance = static_cast<long>(0.5f * kStepsPerDeg);
 constexpr long kFaultSteps = static_cast<long>(5.0f * kStepsPerDeg);
@@ -736,9 +736,9 @@ void test_journal_footprint_fits_the_uno(void) {
 
 namespace {
 
-// The switch sits at 138 degrees, three degrees past the 135 degree soft
+// The switch sits at 91 degrees, three degrees past the 88 degree soft
 // limit, with two degrees of tolerance on the span measurement.
-constexpr long kFlexSteps     = static_cast<long>(138.0f * kStepsPerDeg);
+constexpr long kFlexSteps     = static_cast<long>(91.0f * kStepsPerDeg);
 constexpr long kSpanTolerance = static_cast<long>(2.0f * kStepsPerDeg);
 constexpr long kMinPlausible  = kFlexSteps / 2;
 

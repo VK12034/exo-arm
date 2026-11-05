@@ -518,9 +518,10 @@ void loop() {
         g_stepper.setVelocity(0.0f);
         g_state = State::kIdle;
 
-        // The worm holds the elbow without current, so there is nothing to be
-        // gained from keeping the motor energised once it has settled.
-        if (g_stepper.enabled() && (now_ms - g_idle_since_ms) > cfg::kIdleDisableMs) {
+        // Holding current stays on unless the bench test has shown the
+        // drivetrain holds a loaded arm without it. See config.h.
+        if (cfg::kDeenergiseWhenIdle && g_stepper.enabled() &&
+            (now_ms - g_idle_since_ms) > cfg::kIdleDisableMs) {
             g_stepper.enable(false);
         }
     }
