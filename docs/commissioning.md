@@ -125,9 +125,16 @@ homed: zero set at the extension switch, counter was out by 7 steps (0.11 deg)
 ```
 
 A handful of steps is the healthy answer, and under half a degree it will say
-nothing at all. Do this five or six times and write the figures down. They
-are the baseline: a build that reports a tenth of a degree per trip now and
-whole degrees in a month is losing steps, and the cause is mechanical.
+nothing at all. Do this five or six times. You do not need to write the
+figures down: anything over half a degree goes into the EEPROM log and is
+printed at the next power-on, tagged with its session. That is the baseline.
+A build reporting a tenth of a degree per trip now and whole degrees in a
+month is losing steps, and the cause is mechanical.
+
+Power cycle once here and confirm the log comes back with what you just did
+in it. If it prints `initialised empty` every time, the EEPROM is not
+retaining, and the drift trend is the one diagnostic this machine has for
+step loss.
 
 **On deliberately provoking the fault.** Resist the temptation to fake a
 drift with the re-zero gesture. Asserting a zero sets the soft minimum to

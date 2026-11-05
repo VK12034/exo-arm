@@ -40,6 +40,39 @@ So an unhomed arm is slow and short of range, not unsafe. If it never homes
 however far you extend it, the switch or its wiring is the problem, and
 `home=` in the status line will be stuck at `open`.
 
+## The power-on log
+
+The arm keeps a short history in EEPROM and prints it as part of the startup
+banner:
+
+```
+log: session 14, 3 events, oldest first:
+  s11 drift 41 steps (0.62 deg)
+  s12 overload at 73.4 deg
+  s13 drift 96 steps (1.44 deg)
+```
+
+`session` counts power-ons. Each line is tagged with the session it happened
+in, so the gaps tell you as much as the entries.
+
+| Entry | Meaning |
+|---|---|
+| `drift N steps` | A homing correction of more than half a degree. The trend across sessions is the point |
+| `overload at X deg` | The arm faulted pushing against something, at that angle |
+| `current collapse at X deg` | Stall or disconnected motor fault, at that angle |
+| `home switch disagreed, counter read X deg` | More than 5° of lost steps found at the switch |
+
+Routine e-stop presses are **not** logged. They are normal operation and
+would crowd out the entries that matter.
+
+The last 16 events are kept; older ones fall off. Reading the log at power-on
+is the only way to get at it, by design: a serial command to dump it would
+mean this firmware accepting serial input, and the parser is the thing worth
+not having. See [design.md](design.md).
+
+`log: session 1, initialised empty` on a board you have used before means the
+EEPROM was wiped or the format changed. The history is gone; the arm is fine.
+
 ## Status LED
 
 | Pattern | Meaning |

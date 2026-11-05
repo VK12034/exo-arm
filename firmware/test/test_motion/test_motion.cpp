@@ -4,6 +4,7 @@
 
 #include "debounce.h"
 #include "homing.h"
+#include "journal.h"
 #include "load.h"
 #include "motion.h"
 
@@ -521,6 +522,214 @@ void test_homing_reset_returns_to_unhomed(void) {
     TEST_ASSERT_TRUE(Homing::Source::kNone == homing.source());
 }
 
+
+// --- Journal ---------------------------------------------------------------
+
+namespace {
+
+// Stands in for the Uno's EEPROM. Writes are counted so the update semantics
+// can be checked: EEPROM cells wear out on writes, so a byte that already
+// holds the wanted value must not be rewritten.
+constexpr int kFakeEepromSize = 1024;
+uint8_t g_fake_eeprom[kFakeEepromSize];
+int     g_fake_writes = 0;
+
+uint8_t fakeRead(int address) { return g_fake_eeprom[address]; }
+
+void fakeWrite(int address, uint8_t value) {
+    g_fake_eeprom[address] = value;
+    ++g_fake_writes;
+}
+
+// Fresh EEPROM from the factory reads 0xFF, which is what the magic check has
+// to reject.
+void wipeFakeEeprom(uint8_t fill) {
+    for (int i = 0; i < kFakeEepromSize; ++i) g_fake_eeprom[i] = fill;
+    g_fake_writes = 0;
+}
+
+Journal openJournal() {
+    Journal journal;
+    journal.begin(fakeRead, fakeWrite, 0);
+    return journal;
+}
+
+}  // namespace
+
+void test_journal_formats_a_blank_store(void) {
+    wipeFakeEeprom(0xFF);
+
+    Journal journal;
+    TEST_ASSERT_TRUE(journal.begin(fakeRead, fakeWrite, 0));
+    TEST_ASSERT_EQUAL_INT(0, journal.count());
+    TEST_ASSERT_EQUAL_INT(1, journal.sessions());
+}
+
+void test_journal_does_not_reformat_a_valid_store(void) {
+    wipeFakeEeprom(0xFF);
+    openJournal();
+
+    Journal second;
+    TEST_ASSERT_FALSE(second.begin(fakeRead, fakeWrite, 0));
+}
+
+// The session number is what makes a drift trend readable, so it has to
+// survive a power cycle and advance exactly once per boot.
+void test_journal_counts_sessions_across_power_cycles(void) {
+    wipeFakeEeprom(0xFF);
+
+    openJournal();
+    openJournal();
+    Journal third = openJournal();
+
+    TEST_ASSERT_EQUAL_INT(3, third.sessions());
+}
+
+void test_journal_saturates_the_session_counter(void) {
+    wipeFakeEeprom(0xFF);
+    openJournal();
+
+    g_fake_eeprom[4] = 0xFF;
+    g_fake_eeprom[5] = 0xFF;
+
+    Journal journal = openJournal();
+    TEST_ASSERT_EQUAL_INT(0xFFFF, journal.sessions());
+}
+
+void test_journal_records_and_reads_back_a_drift(void) {
+    wipeFakeEeprom(0xFF);
+    Journal journal = openJournal();
+
+    journal.recordDrift(-164);
+
+    Journal::Record record;
+    TEST_ASSERT_EQUAL_INT(1, journal.count());
+    TEST_ASSERT_TRUE(journal.entry(0, record));
+    TEST_ASSERT_TRUE(Journal::Event::kDrift == record.event);
+    TEST_ASSERT_EQUAL_INT32(-164, record.value);
+    TEST_ASSERT_EQUAL_INT(1, record.session);
+}
+
+void test_journal_records_a_fault_with_its_position(void) {
+    wipeFakeEeprom(0xFF);
+    Journal journal = openJournal();
+
+    journal.recordFault(Journal::Event::kFaultOverload, 4200);
+
+    Journal::Record record;
+    TEST_ASSERT_TRUE(journal.entry(0, record));
+    TEST_ASSERT_TRUE(Journal::Event::kFaultOverload == record.event);
+    TEST_ASSERT_EQUAL_INT32(4200, record.value);
+}
+
+// kNone is the empty-slot marker, so recording it would punch a hole in the
+// ring rather than add an entry.
+void test_journal_ignores_an_empty_event(void) {
+    wipeFakeEeprom(0xFF);
+    Journal journal = openJournal();
+
+    journal.recordFault(Journal::Event::kNone, 10);
+    TEST_ASSERT_EQUAL_INT(0, journal.count());
+}
+
+void test_journal_survives_a_power_cycle(void) {
+    wipeFakeEeprom(0xFF);
+    {
+        Journal journal = openJournal();
+        journal.recordDrift(33);
+        journal.recordFault(Journal::Event::kFaultCollapse, 900);
+    }
+
+    Journal journal = openJournal();
+    TEST_ASSERT_EQUAL_INT(2, journal.count());
+
+    Journal::Record record;
+    TEST_ASSERT_TRUE(journal.entry(1, record));
+    TEST_ASSERT_TRUE(Journal::Event::kFaultCollapse == record.event);
+    TEST_ASSERT_EQUAL_INT32(900, record.value);
+}
+
+void test_journal_reads_oldest_first(void) {
+    wipeFakeEeprom(0xFF);
+    Journal journal = openJournal();
+
+    journal.recordDrift(1);
+    journal.recordDrift(2);
+    journal.recordDrift(3);
+
+    Journal::Record record;
+    for (int16_t expected = 1; expected <= 3; ++expected) {
+        TEST_ASSERT_TRUE(journal.entry(static_cast<uint8_t>(expected - 1), record));
+        TEST_ASSERT_EQUAL_INT32(expected, record.value);
+    }
+}
+
+// Once the ring is full the oldest records go, not the newest. A log that
+// drops the most recent fault would be worse than no log.
+void test_journal_ring_keeps_the_newest_records(void) {
+    wipeFakeEeprom(0xFF);
+    Journal journal = openJournal();
+
+    const int total = Journal::kCapacity + 3;
+    for (int i = 1; i <= total; ++i) {
+        journal.recordDrift(static_cast<int16_t>(i));
+    }
+
+    TEST_ASSERT_EQUAL_INT(Journal::kCapacity, journal.count());
+
+    Journal::Record record;
+    TEST_ASSERT_TRUE(journal.entry(0, record));
+    TEST_ASSERT_EQUAL_INT32(total - Journal::kCapacity + 1, record.value);
+
+    TEST_ASSERT_TRUE(journal.entry(Journal::kCapacity - 1, record));
+    TEST_ASSERT_EQUAL_INT32(total, record.value);
+}
+
+void test_journal_entry_reports_the_end(void) {
+    wipeFakeEeprom(0xFF);
+    Journal journal = openJournal();
+    journal.recordDrift(5);
+
+    Journal::Record record;
+    TEST_ASSERT_TRUE(journal.entry(0, record));
+    TEST_ASSERT_FALSE(journal.entry(1, record));
+}
+
+// EEPROM endurance is finite, so rewriting a byte that already holds the
+// wanted value is a bug and not merely wasteful.
+void test_journal_does_not_rewrite_unchanged_bytes(void) {
+    wipeFakeEeprom(0xFF);
+    Journal journal = openJournal();
+    journal.recordDrift(7);
+
+    g_fake_writes = 0;
+    journal.recordDrift(7);
+
+    // The event byte and the value are already right from the record before,
+    // so only the session, the ring index and whatever genuinely differs can
+    // account for any write at all.
+    TEST_ASSERT_TRUE(g_fake_writes < 5);
+}
+
+void test_journal_clamps_a_corrupt_ring_index(void) {
+    wipeFakeEeprom(0xFF);
+    openJournal();
+
+    g_fake_eeprom[3] = 200;  // beyond kCapacity
+
+    Journal journal = openJournal();
+    journal.recordDrift(99);
+
+    Journal::Record record;
+    TEST_ASSERT_TRUE(journal.entry(0, record));
+    TEST_ASSERT_EQUAL_INT32(99, record.value);
+}
+
+void test_journal_footprint_fits_the_uno(void) {
+    // The Uno has 1 KB. Anything approaching that is a design error here.
+    TEST_ASSERT_TRUE(Journal::kFootprint < 256);
+}
+
 int main(int, char**) {
     UNITY_BEGIN();
 
@@ -573,6 +782,21 @@ int main(int, char**) {
     RUN_TEST(test_operator_zero_is_recorded_as_asserted);
     RUN_TEST(test_switch_supersedes_an_operator_zero);
     RUN_TEST(test_homing_reset_returns_to_unhomed);
+
+    RUN_TEST(test_journal_formats_a_blank_store);
+    RUN_TEST(test_journal_does_not_reformat_a_valid_store);
+    RUN_TEST(test_journal_counts_sessions_across_power_cycles);
+    RUN_TEST(test_journal_saturates_the_session_counter);
+    RUN_TEST(test_journal_records_and_reads_back_a_drift);
+    RUN_TEST(test_journal_records_a_fault_with_its_position);
+    RUN_TEST(test_journal_ignores_an_empty_event);
+    RUN_TEST(test_journal_survives_a_power_cycle);
+    RUN_TEST(test_journal_reads_oldest_first);
+    RUN_TEST(test_journal_ring_keeps_the_newest_records);
+    RUN_TEST(test_journal_entry_reports_the_end);
+    RUN_TEST(test_journal_does_not_rewrite_unchanged_bytes);
+    RUN_TEST(test_journal_clamps_a_corrupt_ring_index);
+    RUN_TEST(test_journal_footprint_fits_the_uno);
 
     return UNITY_END();
 }

@@ -7,10 +7,12 @@
 // the arm runs slowly and on restricted travel. See docs/operation.md before
 // running it.
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <avr/wdt.h>
 
 #include "config.h"
 #include "homing.h"
+#include "journal.h"
 #include "load.h"
 #include "motion.h"
 #include "pendant.h"
@@ -30,6 +32,7 @@ motion::Planner g_planner;
 LoadMonitor     g_load;
 Homing          g_homing;
 Debounced       g_home_switch;
+Journal         g_journal;
 
 State    g_state = State::kFault;
 uint32_t g_last_plan_us = 0;
@@ -46,6 +49,11 @@ float readAmps() {
     const float amps = static_cast<float>(counts) * cfg::kAmpsPerCount;
     return amps < 0.0f ? -amps : amps;
 }
+
+// Handed to the journal so its logic stays free of Arduino headers and the
+// host tests can back it with a plain array.
+uint8_t eepromRead(int address) { return EEPROM.read(address); }
+void eepromWrite(int address, uint8_t value) { EEPROM.write(address, value); }
 
 // The switch closes to ground, so a LOW reading is contact. Debounced like
 // any other mechanical contact: a lever switch bounces, and a bounce here
@@ -114,6 +122,69 @@ void reportZero() {
     Serial.println();
 }
 
+// Printed once, at power-on, because there is no other way to read it and
+// adding a serial command to ask would mean accepting serial input.
+void printJournal(bool formatted) {
+    Serial.print(F("log: session "));
+    Serial.print(g_journal.sessions());
+
+    if (formatted) {
+        Serial.println(F(", initialised empty"));
+        return;
+    }
+
+    const uint8_t held = g_journal.count();
+    if (held == 0) {
+        Serial.println(F(", nothing recorded"));
+        return;
+    }
+
+    Serial.print(F(", "));
+    Serial.print(held);
+    Serial.println(F(" events, oldest first:"));
+
+    Journal::Record record;
+    for (uint8_t i = 0; i < held; ++i) {
+        if (!g_journal.entry(i, record)) break;
+
+        Serial.print(F("  s"));
+        Serial.print(record.session);
+        Serial.print(F(" "));
+
+        switch (record.event) {
+        case Journal::Event::kDrift:
+            Serial.print(F("drift "));
+            Serial.print(record.value);
+            Serial.print(F(" steps ("));
+            Serial.print(angleDeg(record.value), 2);
+            Serial.println(F(" deg)"));
+            break;
+
+        case Journal::Event::kFaultOverload:
+            Serial.print(F("overload at "));
+            Serial.print(angleDeg(record.value), 1);
+            Serial.println(F(" deg"));
+            break;
+
+        case Journal::Event::kFaultCollapse:
+            Serial.print(F("current collapse at "));
+            Serial.print(angleDeg(record.value), 1);
+            Serial.println(F(" deg"));
+            break;
+
+        case Journal::Event::kFaultDrift:
+            Serial.print(F("home switch disagreed, counter read "));
+            Serial.print(angleDeg(record.value), 1);
+            Serial.println(F(" deg"));
+            break;
+
+        case Journal::Event::kNone:
+            Serial.println(F("(empty)"));
+            break;
+        }
+    }
+}
+
 void printStatus(uint32_t now_ms, long position) {
     const char* state =
         g_state == State::kFault ? "FAULT" : (g_state == State::kMoving ? "MOVING" : "IDLE");
@@ -160,10 +231,21 @@ void calibrateCurrentZero() {
     Serial.println(F(" counts"));
 }
 
-void enterFault(const __FlashStringHelper* reason) {
+// The event code is what gets written to the log, and kNone means do not
+// write one. Routine e-stop presses pass kNone: they are normal operation,
+// the wearer knows they pressed it, and recording them would crowd the ring
+// and spend EEPROM writes on something nobody needs told.
+void enterFault(const __FlashStringHelper* reason, Journal::Event event) {
     g_stepper.emergencyStop();
     g_planner.stop();
     g_state = State::kFault;
+
+    if (event != Journal::Event::kNone) {
+        long position = g_stepper.position();
+        if (position > 32767L) position = 32767L;
+        if (position < -32768L) position = -32768L;
+        g_journal.recordFault(event, static_cast<int16_t>(position));
+    }
 
     Serial.print(F("FAULT: "));
     Serial.println(reason);
@@ -201,6 +283,10 @@ void setup() {
 
     pinMode(cfg::kStatusLedPin, OUTPUT);
     pinMode(cfg::kOnboardLedPin, OUTPUT);
+
+    // Opened before anything can fault, so a fault during start-up is still
+    // recorded.
+    const bool journal_formatted = g_journal.begin(eepromRead, eepromWrite, 0);
 
     const uint32_t now_ms = millis();
 
@@ -246,6 +332,7 @@ void setup() {
     Serial.print(F(" deg at "));
     Serial.print(cfg::kHomingSpeedDegPerSec, 0);
     Serial.println(F(" deg/s until the extension switch is reached"));
+    printJournal(journal_formatted);
 
     wdt_enable(WDTO_1S);
 }
@@ -262,7 +349,7 @@ void loop() {
     // --- Interlocks --------------------------------------------------------
     if (g_pendant.eStopOpen()) {
         if (g_state != State::kFault) {
-            enterFault(F("estop"));
+            enterFault(F("estop"), Journal::Event::kNone);
         }
         updateLeds(now_ms);
         return;
@@ -303,13 +390,20 @@ void loop() {
         applyTravelLimits();
         position = g_stepper.position();
         reportZero();
+
+        // Only the corrections worth reporting are worth a write. A couple of
+        // steps is rounding, and the log is for the trend.
+        if (g_homing.driftSignificant()) {
+            g_journal.recordDrift(static_cast<int16_t>(g_homing.drift()));
+        }
         break;
 
     case Homing::Action::kFault:
         // Back to restricted travel before anything else happens, because
         // the far limit is no longer where it was believed to be either.
         applyTravelLimits();
-        enterFault(F("home switch disagrees with the step counter - steps lost"));
+        enterFault(F("home switch disagrees with the step counter - steps lost"),
+                   Journal::Event::kFaultDrift);
         updateLeds(now_ms);
         return;
 
@@ -328,7 +422,9 @@ void loop() {
 
     if (g_load.tripped()) {
         enterFault(g_load.overload() ? F("overload - the arm is pushing against something")
-                                     : F("current collapse - possible stall or motor disconnected"));
+                                     : F("current collapse - possible stall or motor disconnected"),
+                   g_load.overload() ? Journal::Event::kFaultOverload
+                                     : Journal::Event::kFaultCollapse);
         updateLeds(now_ms);
         return;
     }

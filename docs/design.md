@@ -129,6 +129,33 @@ asserted pose, which is what a switchless build needs and which also means a
 wrong assertion cannot be walked back without a power cycle. Keeping the soft
 minimum was worth more than that recovery path.
 
+### The power-on log
+
+Two things used to vanish at the wrong moment. A fault reason, because the
+wearer switches off to get the arm away from themselves and the LED stops
+blinking. And the homing drift figure, which only means anything as a trend
+and which commissioning used to ask you to keep on paper.
+
+Both now go to EEPROM: the last 16 events, each tagged with a session number,
+printed at power-on.
+
+Printed at power-on and nowhere else, which is the part worth explaining. The
+obvious interface is a serial command to dump the log, and that was rejected.
+This firmware accepts no serial input at all, and that is a property rather
+than an omission: the serial port is output only, so there is no parser, no
+command table, and no path into the machine that is not a button. Reading a
+log is harmless; the code that would read the request for it is what
+shouldn't exist. Printing unconditionally at boot costs nothing and keeps
+that property intact.
+
+Writes are rare by construction, which is what makes EEPROM reasonable on a
+part rated for 100k cycles per cell. A drift record needs a trip to the home
+switch and a correction worth reporting. A fault record needs a fault.
+Routine e-stop presses are deliberately not recorded: normal operation, and
+logging them would both crowd the ring and spend the write budget. Every byte
+goes through update semantics, so a byte already holding the right value is
+not rewritten.
+
 ### Idle behaviour
 
 After three seconds without motion the driver is de-energised. The worm holds

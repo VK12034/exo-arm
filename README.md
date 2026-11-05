@@ -78,6 +78,12 @@ bind faults it out.
 That last one is inferred rather than measured, and `docs/safety.md` is
 explicit about what it cannot catch. A shaft encoder would make it exact.
 
+Faults and homing corrections go to EEPROM and are printed at the next
+power-on, because a fault reason is gone by the time the wearer has switched
+off and the drift figure only means anything as a trend. There is no serial
+command to read it: this firmware accepts no serial input at all, and keeping
+that true was worth more than a nicer interface.
+
 ## Safety model
 
 The e-stop loop is normally closed to ground. A pressed mushroom, an
@@ -110,8 +116,8 @@ omissions: the travel hard stops and the home switch bracket are specified in
 the docs but not modelled, and [docs/safety.md](docs/safety.md) explains why
 that matters more than it sounds.
 
-The firmware is written and its planning, step-rate, debounce, load and
-homing logic are covered by 45 host unit tests, but **it has never been run
+The firmware is written and its planning, step-rate, debounce, load, homing
+and logging logic are covered by 59 host unit tests, but **it has never been run
 on hardware**. The pin assignments in `firmware/include/config.h` are a
 proposal, not a built wiring loom, and the direction sense has not been
 verified against a real motor. Work through

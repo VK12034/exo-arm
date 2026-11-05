@@ -131,8 +131,9 @@ here has been run against hardware.
       grub screw on the keyed shaft
 - [ ] Confirm the arm is parked at full extension before power-on, and that
       the monitor prints `homed:` rather than leaving `zero=UNHOMED`
-- [ ] Note the size of any correction the homing message reports. Degrees,
-      repeatedly, means the machine is losing steps
+- [ ] Read the power-on log. Any fault from the last session is in it, and so
+      is the drift trend. Degrees of correction, repeatedly, means the machine
+      is losing steps
 
 ## First time it is worn
 
