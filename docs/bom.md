@@ -31,7 +31,7 @@ current and a plan for what happens when it is lost.
 | 2 | PG7 cable gland | 0.002 kg each |
 | 1 | Relay or contactor for the e-stop supply break | — | Rated for the driver's current |
 | 1 | ACS712-20A current sensor module | 0.005 kg | In the 24 V feed to the driver, for load monitoring |
-| 1 | Lever microswitch, **normally open** | 0.002 kg | Home switch at the extension end of travel. Polarity is deliberate: see [wiring.md](wiring.md) |
+| 2 | Lever microswitch, **normally open** | 0.002 kg each | Home switch at full extension, overrun switch past the flexion limit. Polarity is deliberate: see [wiring.md](wiring.md) |
 
 ## Power
 
@@ -55,12 +55,16 @@ PETG, FDM, 4 walls at 40% infill.
 | 1 | Forearm cuff | 0.028 kg |
 | 1 | Sling strap anchor | 0.014 kg |
 | 2 | Travel hard stop | **not designed** |
-| 1 | Home switch bracket | **not designed** |
+| 2 | Switch bracket | **not designed** |
 
-The last two are in no sense ready to print. They are listed because
+The last two rows are in no sense ready to print. They are listed because
 [safety.md](safety.md) and [wiring.md](wiring.md) both depend on them and the
 Fusion model does not contain them. Designing them is outstanding work, and
 the arm should not be worn before they are fitted.
+
+The brackets are not interchangeable: the home switch must close one to two
+degrees before the extension stop, the overrun switch at about 138°, three
+degrees past the flexion soft limit.
 
 PETG rather than PLA throughout: these parts sit against a body, in a car, in
 sunlight, and PLA creeps under sustained load at temperatures the arm will

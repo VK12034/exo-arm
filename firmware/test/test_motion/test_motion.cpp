@@ -7,6 +7,7 @@
 #include "journal.h"
 #include "load.h"
 #include "motion.h"
+#include "overrun.h"
 
 namespace {
 
@@ -730,6 +731,128 @@ void test_journal_footprint_fits_the_uno(void) {
     TEST_ASSERT_TRUE(Journal::kFootprint < 256);
 }
 
+
+// --- Overrun guard ---------------------------------------------------------
+
+namespace {
+
+// The switch sits at 138 degrees, three degrees past the 135 degree soft
+// limit, with two degrees of tolerance on the span measurement.
+constexpr long kFlexSteps     = static_cast<long>(138.0f * kStepsPerDeg);
+constexpr long kSpanTolerance = static_cast<long>(2.0f * kStepsPerDeg);
+constexpr long kMinPlausible  = kFlexSteps / 2;
+
+OverrunGuard makeGuard() {
+    OverrunGuard guard;
+    guard.configure(kFlexSteps, kSpanTolerance, kMinPlausible);
+    guard.reset();
+    return guard;
+}
+
+}  // namespace
+
+void test_overrun_quiet_while_the_switch_is_open(void) {
+    OverrunGuard guard = makeGuard();
+
+    TEST_ASSERT_TRUE(OverrunGuard::Action::kNone == guard.update(false, 0));
+    TEST_ASSERT_TRUE(OverrunGuard::Action::kNone == guard.update(false, kMaxSteps));
+}
+
+void test_overrun_fires_when_the_switch_is_reached(void) {
+    OverrunGuard guard = makeGuard();
+
+    TEST_ASSERT_TRUE(OverrunGuard::Action::kOverrun ==
+                     guard.update(true, kFlexSteps));
+    TEST_ASSERT_TRUE(guard.measured());
+    TEST_ASSERT_EQUAL_INT32(kFlexSteps, guard.span());
+}
+
+// Reaching it once is a fault; holding it closed afterwards must not keep
+// re-faulting while the wearer extends back out of it.
+void test_overrun_fires_once_per_closure(void) {
+    OverrunGuard guard = makeGuard();
+    guard.update(true, kFlexSteps);
+
+    TEST_ASSERT_TRUE(OverrunGuard::Action::kNone == guard.update(true, kFlexSteps));
+    TEST_ASSERT_TRUE(OverrunGuard::Action::kNone == guard.update(true, kFlexSteps - 50));
+}
+
+void test_overrun_rearms_after_the_switch_opens(void) {
+    OverrunGuard guard = makeGuard();
+    guard.update(true, kFlexSteps);
+    guard.update(false, kMaxSteps);
+
+    TEST_ASSERT_TRUE(OverrunGuard::Action::kOverrun ==
+                     guard.update(true, kFlexSteps));
+}
+
+// A switch at the flexion end cannot be reached while the counter reads near
+// zero. Shorted, on the wrong pin, or the span would be meaningless anyway.
+void test_overrun_rejects_an_implausible_closure(void) {
+    OverrunGuard guard = makeGuard();
+
+    TEST_ASSERT_TRUE(OverrunGuard::Action::kImplausible == guard.update(true, 0));
+    TEST_ASSERT_FALSE(guard.measured());
+}
+
+void test_overrun_treats_a_boot_time_closure_as_implausible(void) {
+    // Position starts at nominal zero, so a switch already closed at power-on
+    // must be caught rather than read as a 0 step span.
+    OverrunGuard guard = makeGuard();
+
+    TEST_ASSERT_TRUE(OverrunGuard::Action::kImplausible == guard.update(true, 0));
+}
+
+void test_overrun_span_agrees_when_the_siting_is_right(void) {
+    OverrunGuard guard = makeGuard();
+    guard.update(true, kFlexSteps + 40);  // inside two degrees
+
+    TEST_ASSERT_FALSE(guard.spanSignificant());
+    TEST_ASSERT_EQUAL_INT32(40, guard.spanError());
+}
+
+void test_overrun_span_error_is_signed(void) {
+    OverrunGuard guard = makeGuard();
+    guard.update(true, kFlexSteps - 500);
+
+    TEST_ASSERT_EQUAL_INT32(-500, guard.spanError());
+    TEST_ASSERT_TRUE(guard.spanSignificant());
+}
+
+// The case this measurement exists for: the TB6600 set to 1/16 while
+// config.h says 1/8 makes every commanded step half a real step, so the arm
+// travels only half as far before the switch and the span reads half.
+void test_overrun_span_catches_a_microstep_mismatch(void) {
+    OverrunGuard guard = makeGuard();
+    guard.update(true, kFlexSteps / 2);
+
+    TEST_ASSERT_TRUE(guard.measured());
+    TEST_ASSERT_TRUE(guard.spanSignificant());
+
+    // Half the span is far outside any tolerance that could absorb it.
+    const long error = guard.spanError();
+    TEST_ASSERT_TRUE(error < -kSpanTolerance * 4);
+}
+
+void test_overrun_reset_clears_the_measurement(void) {
+    OverrunGuard guard = makeGuard();
+    guard.update(true, kFlexSteps);
+    guard.reset();
+
+    TEST_ASSERT_FALSE(guard.measured());
+    TEST_ASSERT_EQUAL_INT32(0, guard.span());
+}
+
+// The switch is three degrees past the soft limit, and the planner comes to
+// rest at the limit. A normal full-flexion stop must not touch it.
+void test_overrun_switch_sits_clear_of_a_normal_stop(void) {
+    motion::Planner planner = makePlanner();
+    const long end = run(planner, motion::Command::kFlex, kMaxSteps - 2000, 4000);
+
+    TEST_ASSERT_TRUE(end <= kMaxSteps);
+    TEST_ASSERT_TRUE(end < kFlexSteps);
+}
+
 int main(int, char**) {
     UNITY_BEGIN();
 
@@ -797,6 +920,18 @@ int main(int, char**) {
     RUN_TEST(test_journal_does_not_rewrite_unchanged_bytes);
     RUN_TEST(test_journal_clamps_a_corrupt_ring_index);
     RUN_TEST(test_journal_footprint_fits_the_uno);
+
+    RUN_TEST(test_overrun_quiet_while_the_switch_is_open);
+    RUN_TEST(test_overrun_fires_when_the_switch_is_reached);
+    RUN_TEST(test_overrun_fires_once_per_closure);
+    RUN_TEST(test_overrun_rearms_after_the_switch_opens);
+    RUN_TEST(test_overrun_rejects_an_implausible_closure);
+    RUN_TEST(test_overrun_treats_a_boot_time_closure_as_implausible);
+    RUN_TEST(test_overrun_span_agrees_when_the_siting_is_right);
+    RUN_TEST(test_overrun_span_error_is_signed);
+    RUN_TEST(test_overrun_span_catches_a_microstep_mismatch);
+    RUN_TEST(test_overrun_reset_clears_the_measurement);
+    RUN_TEST(test_overrun_switch_sits_clear_of_a_normal_stop);
 
     return UNITY_END();
 }

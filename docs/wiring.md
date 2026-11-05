@@ -78,6 +78,38 @@ Mount the lever so it closes about 1–2° before the hard stop and stays closed
 all the way to it, rather than closing exactly at the stop. A switch that
 closes only at the very end can be driven past before the firmware reacts.
 
+### Overrun switch
+
+A second lever microswitch, sited **past** the flexion soft limit rather than
+at it.
+
+| Signal | Uno pin | Wiring |
+|---|---|---|
+| Overrun switch | 10 | **Normally open**, closing to GND, internal pull-up |
+
+Same polarity as the home switch, same reasoning. Mount it at about **138°**,
+three degrees beyond the 135° soft limit, and before the flexion hard stop.
+
+This one is not a limit. The planner stops at 135° and the step generator
+refuses to pulse past it on its own arithmetic, so reaching this switch means
+both of those failed. That is why it faults rather than merely stopping.
+
+Siting it is a compromise in both directions:
+
+- **Too close to the soft limit** and a normal full-flexion stop brushes it,
+  which means nuisance faults and a safety device that gets disconnected.
+  Three degrees is several times any plausible overshoot.
+- **Too far past it** and the arm travels further into trouble before anything
+  notices, with less room left before the hard stop.
+
+Note the failure mode. A broken home switch announces itself within a session,
+because the arm never homes and says so. A broken overrun switch is silent
+until the day it is needed, and that day is already a bad one. Step 7 of
+[commissioning.md](commissioning.md) is the only thing that proves it works,
+so do it rather than assuming.
+
+There is no bracket for this one either. See [bom.md](bom.md).
+
 ### Panel
 
 | Signal | Uno pin | Notes |
@@ -86,8 +118,7 @@ closes only at the very end can be driven past before the firmware reacts.
 | Onboard LED | 13 | Mirrors the status LED, useful on the bench |
 | Current sense | A0 | ACS712-20A output, 100 mV/A about a mid-rail zero |
 
-Pins 10 to 12 and A1 to A5 are unused. A flexion-end limit switch would be
-the obvious next claim on one of them.
+Pins 11, 12 and A1 to A5 are unused.
 
 ### Current sensor
 

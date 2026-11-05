@@ -38,6 +38,14 @@ constexpr uint8_t kCurrentSensePin = A0;
 constexpr uint8_t kHomeSwitchPin = 9;
 constexpr bool kHomeSwitchClosesToGround = true;
 
+// Lever switch sited just past the flexion soft limit. Same polarity and the
+// same reasoning: a break reads open, which costs a check rather than
+// inventing one. This switch should never be reached in normal use, so unlike
+// the home switch a broken one is invisible until it is needed. Step 6 of
+// docs/commissioning.md is the only thing that proves it works.
+constexpr uint8_t kFlexSwitchPin = 10;
+constexpr bool kFlexSwitchClosesToGround = true;
+
 // The TB6600 enable input is active low in this wiring: pulling ENA low
 // energises the motor.
 constexpr bool kEnableActiveLow = true;
@@ -102,6 +110,33 @@ constexpr long kHomeToleranceSteps = static_cast<long>(0.5f * kStepsPerDegree);
 // where it is believed to be. Re-zeroing would hide that, so it faults.
 constexpr long kHomeDriftFaultSteps = static_cast<long>(5.0f * kStepsPerDegree);
 
+// --- Overrun switch --------------------------------------------------------
+// Where the flexion switch sits, past kMaxAngleDeg. Reaching it means the
+// planner and the step generator's own clamp both failed to stop at the soft
+// limit, so it faults rather than merely stopping.
+//
+// Far enough past the limit that a normal stop does not brush it: the planner
+// comes to rest at 135 degrees and the clamp refuses to pulse beyond it, so
+// 3 degrees is several times any plausible overshoot.
+constexpr float kFlexSwitchAngleDeg = 138.0f;
+constexpr long  kFlexSwitchSteps =
+    static_cast<long>(kFlexSwitchAngleDeg * kStepsPerDegree);
+
+// The switch is at a fixed place on the machine, so the step count when it
+// closes measures the home-to-flexion span. Compared against
+// kFlexSwitchSteps, that is the only check available on whether the TB6600's
+// microstep DIP switches agree with kMicrosteps: disagree and the span is out
+// by the ratio between them, which no tolerance would absorb.
+//
+// Two degrees allows for switch hysteresis, lever flex and the usual rounding
+// without absorbing anything that matters.
+constexpr long kSpanToleranceSteps = static_cast<long>(2.0f * kStepsPerDegree);
+
+// A closure below this says the switch is shorted or on the wrong pin rather
+// than that the arm is at the flexion end. Half the span is well clear of any
+// plausible siting error.
+constexpr long kFlexMinPlausibleSteps = kFlexSwitchSteps / 2;
+
 // --- Motion profile --------------------------------------------------------
 // Deliberately slow. This is a limb, and the worm means a command error cannot
 // be corrected by the wearer pushing back.
@@ -143,7 +178,7 @@ constexpr float kAmpsPerCount = (5.0f / 1024.0f) / 0.100f;
 constexpr uint8_t kCurrentZeroSamples = 64;
 
 // Every threshold here is a placeholder until it is measured on the bench.
-// docs/commissioning.md step 9 says to record the real figures; these are
+// docs/commissioning.md step 10 says to record the real figures; these are
 // sized for a NEMA 23 at roughly 2 A per phase off a 24 V supply.
 constexpr float    kOverloadAmps  = 2.5f;   // sustained draw that means binding
 constexpr uint16_t kOverloadMs    = 400;

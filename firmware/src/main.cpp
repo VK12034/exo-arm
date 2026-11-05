@@ -15,6 +15,7 @@
 #include "journal.h"
 #include "load.h"
 #include "motion.h"
+#include "overrun.h"
 #include "pendant.h"
 #include "stepper.h"
 
@@ -33,6 +34,8 @@ LoadMonitor     g_load;
 Homing          g_homing;
 Debounced       g_home_switch;
 Journal         g_journal;
+OverrunGuard    g_overrun;
+Debounced       g_flex_switch;
 
 State    g_state = State::kFault;
 uint32_t g_last_plan_us = 0;
@@ -61,6 +64,11 @@ void eepromWrite(int address, uint8_t value) { EEPROM.write(address, value); }
 bool readHomeSwitchRaw() {
     const int level = digitalRead(cfg::kHomeSwitchPin);
     return cfg::kHomeSwitchClosesToGround ? (level == LOW) : (level == HIGH);
+}
+
+bool readFlexSwitchRaw() {
+    const int level = digitalRead(cfg::kFlexSwitchPin);
+    return cfg::kFlexSwitchClosesToGround ? (level == LOW) : (level == HIGH);
 }
 
 // Travel and speed both depend on whether zero has been established. An
@@ -178,11 +186,50 @@ void printJournal(bool formatted) {
             Serial.println(F(" deg"));
             break;
 
+        case Journal::Event::kFaultOverrun:
+            // The span is the measurement; print it next to what it should
+            // have been, because the comparison is the whole point.
+            Serial.print(F("soft limit overrun, span measured "));
+            Serial.print(record.value);
+            Serial.print(F(" steps ("));
+            Serial.print(angleDeg(record.value), 1);
+            Serial.print(F(" deg), expected "));
+            Serial.print(cfg::kFlexSwitchSteps);
+            Serial.println(F(" steps"));
+            break;
+
+        case Journal::Event::kFaultSwitch:
+            Serial.print(F("switch closed implausibly, counter read "));
+            Serial.print(angleDeg(record.value), 1);
+            Serial.println(F(" deg"));
+            break;
+
         case Journal::Event::kNone:
             Serial.println(F("(empty)"));
             break;
         }
     }
+}
+
+// The span is the only figure on this machine that can be checked against a
+// physical distance, so when it is measured it is worth spelling out what a
+// disagreement would mean.
+void reportOverrun() {
+    Serial.print(F("span measured "));
+    Serial.print(g_overrun.span());
+    Serial.print(F(" steps, expected "));
+    Serial.print(cfg::kFlexSwitchSteps);
+
+    if (!g_overrun.spanSignificant()) {
+        Serial.println(F(" - agrees"));
+        return;
+    }
+
+    Serial.print(F(" - out by "));
+    Serial.print(g_overrun.spanError());
+    Serial.println(F(" steps"));
+    Serial.println(F("  check kMicrosteps against the TB6600 DIP switches, "
+                     "then the switch siting"));
 }
 
 void printStatus(uint32_t now_ms, long position) {
@@ -203,6 +250,8 @@ void printStatus(uint32_t now_ms, long position) {
     Serial.print(g_pendant.eStopOpen() ? F("OPEN") : F("closed"));
     Serial.print(F(" home="));
     Serial.print(g_home_switch.state() ? F("closed") : F("open"));
+    Serial.print(F(" flex="));
+    Serial.print(g_flex_switch.state() ? F("CLOSED") : F("open"));
     Serial.print(F(" zero="));
     switch (g_homing.source()) {
     case Homing::Source::kSwitch:   Serial.print(F("switch")); break;
@@ -308,6 +357,14 @@ void setup() {
     g_homing.reset();
     applyTravelLimits();
 
+    pinMode(cfg::kFlexSwitchPin, INPUT_PULLUP);
+    g_flex_switch.configure(cfg::kDebounceMs);
+    g_flex_switch.reset(readFlexSwitchRaw(), now_ms);
+
+    g_overrun.configure(cfg::kFlexSwitchSteps, cfg::kSpanToleranceSteps,
+                        cfg::kFlexMinPlausibleSteps);
+    g_overrun.reset();
+
     calibrateCurrentZero();
     g_load.configure(cfg::kOverloadAmps, cfg::kOverloadMs,
                      cfg::kCollapseAmps, cfg::kCollapseMs,
@@ -345,6 +402,7 @@ void loop() {
 
     g_pendant.poll(now_ms);
     g_home_switch.update(readHomeSwitchRaw(), now_ms);
+    g_flex_switch.update(readFlexSwitchRaw(), now_ms);
 
     // --- Interlocks --------------------------------------------------------
     if (g_pendant.eStopOpen()) {
@@ -368,6 +426,28 @@ void loop() {
         }
         updateLeds(now_ms);
         return;
+    }
+
+    // --- Overrun -----------------------------------------------------------
+    // Checked on every pass rather than at planner rate, because this is the
+    // case where the planner and the step clamp have both already failed.
+    switch (g_overrun.update(g_flex_switch.state(), g_stepper.position())) {
+    case OverrunGuard::Action::kOverrun:
+        enterFault(F("flexion switch reached - both soft limits were passed"),
+                   Journal::Event::kFaultOverrun);
+        reportOverrun();
+        updateLeds(now_ms);
+        return;
+
+    case OverrunGuard::Action::kImplausible:
+        enterFault(F("flexion switch closed with the counter near zero - "
+                     "shorted switch, wrong pin, or parked at full flexion"),
+                   Journal::Event::kFaultSwitch);
+        updateLeds(now_ms);
+        return;
+
+    case OverrunGuard::Action::kNone:
+        break;
     }
 
     // --- Planner -----------------------------------------------------------

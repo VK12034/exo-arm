@@ -75,6 +75,14 @@ enable before anything else runs, both buttons at once reads as stop rather
 than as a guess, and the supply current is watched while the arm drives so a
 bind faults it out.
 
+A second switch sits three degrees past the flexion limit, and it is not a
+limit. Reaching it means the planner and the step clamp both failed, so it
+faults. It also earns its keep when nothing is wrong: the step count at the
+moment it closes measures the distance from the home switch, which is the
+only figure on this machine that can be checked against a physical length,
+and so the only available check on whether the driver's microstep switches
+agree with `config.h`.
+
 That last one is inferred rather than measured, and `docs/safety.md` is
 explicit about what it cannot catch. A shaft encoder would make it exact.
 
@@ -116,11 +124,11 @@ omissions: the travel hard stops and the home switch bracket are specified in
 the docs but not modelled, and [docs/safety.md](docs/safety.md) explains why
 that matters more than it sounds.
 
-The firmware is written and its planning, step-rate, debounce, load, homing
-and logging logic are covered by 59 host unit tests, but **it has never been run
-on hardware**. The pin assignments in `firmware/include/config.h` are a
-proposal, not a built wiring loom, and the direction sense has not been
-verified against a real motor. Work through
+The firmware is written and its planning, step-rate, debounce, load, homing,
+overrun and logging logic are covered by 70 host unit tests, but **it has
+never been run on hardware**. The pin assignments in
+`firmware/include/config.h` are a proposal, not a built wiring loom, and the
+direction sense has not been verified against a real motor. Work through
 [docs/commissioning.md](docs/commissioning.md) before the arm is worn.
 
 ## License

@@ -34,6 +34,8 @@ public:
         kFaultOverload = 2,  // value is position in steps
         kFaultCollapse = 3,
         kFaultDrift    = 4,  // switch and counter disagreed beyond tolerance
+        kFaultOverrun  = 5,  // flexion switch reached, value is the measured span
+        kFaultSwitch   = 6,  // a switch closed where it physically cannot
     };
 
     struct Record {
@@ -72,7 +74,8 @@ public:
         }
 
         next_ = byteAt(3);
-        if (next_ >= kCapacity) next_ = 0;  // corrupt index, not worth faulting over
+        // A corrupt index is not worth faulting over; restart the ring.
+        if (next_ >= kCapacity) next_ = 0;
 
         sessions_ = word(4);
         if (sessions_ < 0xFFFF) ++sessions_;  // saturate rather than wrap to zero

@@ -7,12 +7,16 @@ a test of the firmware as much as of the build.
 Keep the supply current-limited throughout. A limit of about 1 A is enough to
 move the arm unloaded and not enough to do damage when something is wrong.
 
-**Before step 5, note that the mechanical hard stops and the home switch
-bracket are not in the CAD.** Steps 5 and 6 are written as though they are
-fitted, because that is the intended machine. On a build that does not have
-them yet, the soft limits are the only thing stopping the arm at either end,
-so run those steps uncoupled or with the arm clear of anything it could
-damage, and do not treat "it stopped" as evidence that a backstop worked.
+**Before step 5, note that the mechanical hard stops and the switch brackets
+are not in the CAD.** Steps 5, 6 and 7 are written as though they are fitted,
+because that is the intended machine. On a build that does not have them yet,
+the soft limits and the two switches are the only things stopping the arm at
+either end, so run those steps uncoupled or with the arm clear of anything it
+could damage, and do not treat "it stopped" as evidence that a backstop
+worked.
+
+Step 7 defeats the flexion soft limit on purpose. Read its warning before
+starting it, not during.
 
 ## 1. Driver alone, motor disconnected
 
@@ -167,7 +171,74 @@ If it reaches a hard stop, stop and work out why before continuing. The park
 is no longer a candidate once the arm has homed, so it is the steps-per-degree
 or steps being lost.
 
-## 7. Interlocks under motion
+## 7. Overrun switch and the span
+
+The flexion switch is not a travel limit. It sits three degrees past
+`kMaxAngleDeg`, so reaching it means the planner failed to decelerate at the
+soft limit **and** the step generator's independent clamp failed to stop
+pulsing past it. It is the first thing on this machine that catches the
+firmware being wrong rather than an assumption going stale.
+
+Which also makes it the hardest thing to test, because you have to make the
+firmware wrong on purpose.
+
+**Uncouple the forearm module first.** This step deliberately defeats the
+flexion soft limit, on a machine whose hard stops are not built. With the
+forearm off, a runaway turns a shaft. With it on, it does not.
+
+First, the switch on its own, before any of that. Press the lever by hand
+with the arm stopped mid-travel. The monitor must fault:
+
+```
+FAULT: flexion switch reached - both soft limits were passed
+span measured 9201 steps, expected 9200 - agrees
+```
+
+If `flex=` in the status line reads `CLOSED` with nothing touching it, the
+switch is shorted or on the wrong pin. If pressing the lever does nothing at
+all, it is not wired. That one matters more here than for the home switch: a
+broken home switch is obvious within a session because the arm never homes,
+but a broken overrun switch is invisible until the day it is needed.
+
+A closure while the counter reads near zero reports differently, and should,
+because at that point the switch is telling you about itself:
+
+```
+FAULT: flexion switch closed with the counter near zero - shorted switch, wrong pin, or parked at full flexion
+```
+
+### Measuring the span
+
+Now the part worth the trouble. The switch is at a fixed place on the
+machine, so the step count when it closes is the distance from the home
+switch to here, measured rather than calculated. It is the only number on
+this arm that can be checked against a physical length.
+
+1. Home the arm against the extension switch.
+2. Raise `kMaxAngleDeg` to 145 in `config.h` and reflash, so the planner will
+   drive past the switch.
+3. Hold UP and let it run until it faults.
+4. Read the span from the fault message, or at the next power-on from the log.
+5. **Put `kMaxAngleDeg` back to 135 and reflash.** Do not leave it raised.
+
+Expect agreement within two degrees. A disagreement is worth more than it
+looks:
+
+| Span reads | Means |
+|---|---|
+| ≈ expected | Microstepping, gear ratio and switch siting all agree |
+| ≈ half | TB6600 is set to 1/16 and `kMicrosteps` says 1/8 |
+| ≈ double | TB6600 is set to 1/4 |
+| A few degrees out | Switch siting, or lever flex. Adjust the switch, not the constant |
+| Shrinking over repeat runs | Steps being lost on the way up |
+
+The halved and doubled cases are the ones step 4 could only check with a
+protractor by eye. This is the firmware checking it, and it is the only
+mechanism in the build that can: nothing else compares a step count against a
+distance. If the span disagrees by a factor, fix the DIP switches rather than
+`kMicrosteps`, because every speed and acceleration figure was chosen for 1/8.
+
+## 8. Interlocks under motion
 
 Each of these, with the arm moving:
 
@@ -182,14 +253,14 @@ Each of these, with the arm moving:
 The last one is the test people skip. A severed pendant cable must read as
 stop, and that is only true if the e-stop contact is normally closed.
 
-## 8. Idle behaviour
+## 9. Idle behaviour
 
 Leave the arm stopped mid-travel for five seconds. The motor should go quiet
 and the holding current drop away, and **the elbow must not sag**. If it
 sags, the worm is not holding and the whole safety argument for this design
 does not apply to your gearbox. Stop and reconsider the ratio.
 
-## 9. Speed, loaded
+## 10. Speed, loaded
 
 With a representative weight in the cuff, run the full travel. 20°/s should
 feel unhurried. If the motor stalls or skips — a buzz without motion — reduce
@@ -218,7 +289,7 @@ cries wolf gets disabled; set too high they catch nothing.
 Obstruct the arm by hand against a bench, not against a person, and keep it
 brief.
 
-## 10. Load monitoring
+## 11. Load monitoring
 
 With the thresholds set, confirm both trips fire:
 
@@ -232,7 +303,7 @@ The third is the one that decides whether the thresholds are usable. A
 monitor that trips during normal use will be turned off, and then it protects
 nothing.
 
-## 11. First wear
+## 12. First wear
 
 Follow the checklist in [safety.md](safety.md). Short presses, not long ones.
 Someone else on the e-stop.

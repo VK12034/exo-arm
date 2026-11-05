@@ -22,7 +22,7 @@ Everything below follows from that.
 
 | Hazard | Mitigation |
 |---|---|
-| Driven past the elbow's working range | Planner decelerates to rest at the soft limit; step generator refuses to pulse past it independently. Mechanical hard stops behind both are assumed throughout this page but are **not in the CAD** — see Known gaps |
+| Driven past the elbow's working range | Planner decelerates to rest at the soft limit; step generator refuses to pulse past it independently; overrun switch three degrees past the flexion limit faults the arm if both of those fail. Mechanical hard stops behind all three are assumed throughout this page but are **not in the CAD** — see Known gaps |
 | Runaway from a firmware fault | E-stop breaks the driver supply in hardware, not through the firmware |
 | Motion on power-up from a stuck button | Firmware boots into fault and will not leave it until the e-stop is closed and both buttons are released |
 | Accumulated step loss moving the limits | Home switch at the extension end re-references the counter every time the arm reaches it; a disagreement beyond 5° faults rather than being corrected quietly. Re-zero gesture as a fallback |
@@ -76,10 +76,18 @@ page:
   What has changed is that the error is now caught and measured instead of
   compounding forever, and that a large one faults rather than being
   silently corrected.
-- **Only one end of travel is physical.** Zero is a switch. The 135° flexion
-  limit is still arithmetic from that switch, so it is only as good as the
-  counter in between. A second switch at the flexion end would fix this and
-  is not fitted.
+- **Both ends now have a switch, but they do different jobs.** Zero is
+  measured at the home switch every time the wearer extends onto it. The
+  flexion end has an overrun switch three degrees past the soft limit, which
+  is a check on the firmware rather than a limit: reaching it means the
+  planner and the step clamp both failed. What there is still no physical
+  reference for is the soft limit itself, at 135°, which remains arithmetic.
+- **The overrun switch fails silently.** A broken home switch is obvious
+  within a session, because the arm never homes and the status line says so.
+  A broken overrun switch reads exactly like one that has never needed to
+  fire. Nothing distinguishes them until it is needed, which is why step 7 of
+  [commissioning.md](commissioning.md) exists and why it should be repeated
+  after any work on the loom.
 - **The home switch is a single contact with no cross-check.** It is wired
   normally open so that a break reads as "not home" and merely costs range
   (see [wiring.md](wiring.md)), and a contact jammed closed while the counter

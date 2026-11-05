@@ -61,6 +61,8 @@ in, so the gaps tell you as much as the entries.
 | `overload at X deg` | The arm faulted pushing against something, at that angle |
 | `current collapse at X deg` | Stall or disconnected motor fault, at that angle |
 | `home switch disagreed, counter read X deg` | More than 5° of lost steps found at the switch |
+| `soft limit overrun, span measured N steps` | The flexion switch was reached, so both soft limits failed. The span is also a microstepping check |
+| `switch closed implausibly, counter read X deg` | A switch closed where it physically cannot be. Wiring |
 
 Routine e-stop presses are **not** logged. They are normal operation and
 would crowd out the entries that matter.
@@ -80,6 +82,21 @@ EEPROM was wiped or the format changed. The history is gone; the arm is fine.
 | Fast blink, about 4 Hz | Fault: e-stop open, or waiting for the buttons to be released |
 | Slow blink, about 0.6 Hz | Ready, motor idle |
 | Solid | Moving |
+
+## The two switches
+
+They look alike and do unrelated jobs.
+
+| | Home switch | Overrun switch |
+|---|---|---|
+| Where | At full extension, 0° | Past the flexion limit, about 138° |
+| Reached | Every session, on purpose | Never, if everything is working |
+| On contact | Sets zero, restores full travel | Faults the arm |
+| Status field | `home=` | `flex=` |
+| If it breaks | Obvious: the arm never homes | Invisible until it is needed |
+
+`flex=CLOSED` in normal use is not a thing that should ever happen. If you see
+it, stop.
 
 ## Moving the arm
 
@@ -104,7 +121,7 @@ The motor de-energises three seconds after the arm stops moving. The elbow
 holds its angle anyway: the worm is self-locking. Expect the arm to go quiet
 and stay exactly where it was.
 
-If it sags when the motor drops out, stop using it and re-read step 8 of
+If it sags when the motor drops out, stop using it and re-read step 9 of
 [commissioning.md](commissioning.md).
 
 ## Re-zeroing
@@ -161,7 +178,7 @@ comes up unhomed, which is free to seek again.
 115200 baud, a line every half second:
 
 ```
-t=12480 state=MOVING angle=42.3deg steps=2820 v=1333 estop=closed home=open zero=switch amps=1.18 drive=on
+t=12480 state=MOVING angle=42.3deg steps=2820 v=1333 estop=closed home=open flex=open zero=switch amps=1.18 drive=on
 ```
 
 | Field | Meaning |
@@ -172,6 +189,7 @@ t=12480 state=MOVING angle=42.3deg steps=2820 v=1333 estop=closed home=open zero
 | `v` | Commanded velocity, steps per second |
 | `estop` | `OPEN` or `closed` |
 | `home` | Home switch contact: `closed` means the arm is on it |
+| `flex` | Overrun switch. Should always read `open`; `CLOSED` is shouted because it means trouble |
 | `zero` | `switch` if measured, `asserted` if set by hand, `UNHOMED` if neither |
 | `amps` | Filtered supply current to the driver |
 | `drive` | Whether the motor is energised |
@@ -189,6 +207,8 @@ reaches the switch.
 | Angle drifts from reality | Steps lost. Extend to the home switch to re-reference |
 | `zero=UNHOMED` persists | Arm has not reached the switch, or the switch is not wired. Check `home=` |
 | `FAULT: home switch disagrees` | More than 5° of lost steps. Re-home and find out why |
+| `FAULT: flexion switch reached` | Both soft limits were passed. This is a firmware or configuration fault, not wear. Stop and find out why before using the arm |
+| `FAULT: flexion switch closed with the counter near zero` | Shorted switch, wrong pin, or the arm was parked at full flexion |
 | Buzz without motion | Stall. Reduce speed, check for a mechanical bind, check driver current |
 | `FAULT: overload` | The arm is working against something. Find out what before clearing it |
 | `FAULT: current collapse` | Motor disconnected, or the rotor lost synchronism. Check the motor cable first |

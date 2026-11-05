@@ -186,17 +186,25 @@ carries anything, and a stepper that stalls loses position silently.
   contains no travel stop and no switch mount. The firmware layers are real
   and tested; the physical one is an intention. It is the largest
   inconsistency between the documentation and the design.
-- Only the extension end is physical. The home switch references zero; the
-  135° flexion limit is still counted steps from it, so it is only as good as
-  the counter between one homing and the next. A second switch there would
-  make both ends real, and pins 10 to 12 are free for it.
+- The 135° soft limit itself has no physical reference. Both ends of travel
+  now carry a switch, but neither is at the limit: the home switch defines
+  zero, and the overrun switch sits three degrees past the flexion limit as a
+  check on the firmware. Between them the limit is still arithmetic.
+- The overrun switch cannot be distinguished from a working one that has
+  never fired. It is the one component here whose failure is invisible in
+  normal use.
 - The home switch is a single contact with nothing to cross-check it. The
   normally-open wiring means a break costs range rather than inventing a
   zero, and a contact stuck closed far into flexion faults, but a lever bent
   so that it closes early would be believed.
 - Microstepping is set by DIP switches on the TB6600 and assumed to be 1/8 in
-  `config.h`. Nothing checks that the two agree; if they do not, every angle
-  is wrong by the same factor.
+  `config.h`. The home-to-overrun span now checks this, because it is the one
+  figure that compares a step count against a physical distance: a driver set
+  to 1/16 against a firmware expecting 1/8 halves the measured span, which no
+  tolerance absorbs. But the check only runs when the overrun switch is
+  reached, which takes the deliberate procedure in step 7 of
+  [commissioning.md](commissioning.md). It is a commissioning check, not a
+  running one.
 - Load monitoring infers rather than measures. Supply current tracks
   mechanical power, so a bind shows as a sustained rise and a lost rotor as a
   collapse, but a slow bind below the threshold is invisible and a collapse
