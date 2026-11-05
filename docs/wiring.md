@@ -19,8 +19,16 @@ that input.
 | 5 V | 5V | PUL+, DIR+, ENA+ | Common positive |
 
 Set the DIP switches for **1/8 microstepping** and a current appropriate to
-the motor. `cfg::kMicrosteps` must match the switches — nothing checks this,
-and a mismatch scales every angle in the firmware by the same wrong factor.
+the motor. `cfg::kMicrosteps` must match the switches. Step 7 of
+[commissioning.md](commissioning.md) checks that it does, by measuring the
+home-to-overrun span, but nothing checks it while the arm is running, and a
+mismatch scales every angle in the firmware by the same wrong factor.
+
+The current setting is also the only torque limit this machine has. Stepper
+torque follows phase current, and the TB6600 holds phase current at whatever
+these switches say, so this is what decides how hard the arm can push. The
+firmware cannot reduce it: see the torque entry in
+[safety.md](safety.md#known-gaps). Set it no higher than the arm needs.
 
 ### Pendant
 

@@ -100,8 +100,36 @@ page:
   0° before the switch can be reached. That is the benign direction — it
   costs range rather than overrunning a limit — but it means a clean homing
   message is not proof the counter is right.
-- **No torque limit.** The drivetrain can deliver roughly seven times the
-  static load. Nothing in the firmware prevents it being applied to an arm.
+- **No torque limit, and the firmware cannot provide one.** The drivetrain
+  can deliver roughly seven times the static load, and nothing stops that
+  being applied to an arm.
+
+  This one deserves spelling out, because the obvious software fix does not
+  work. A TB6600 regulates phase current to whatever its DIP switches are
+  set to, and a stepper's torque follows its phase current. So the force the
+  motor can push with is fixed in hardware. It does not fall when the
+  firmware commands a lower speed, and slowing down does not ease off
+  against an obstruction: stepper torque rises as speed drops, so a slow
+  command pushes at least as hard as a fast one.
+
+  Which means there is no software lever between "stepping" and "stopped".
+  The overload fault is a trip, not a limit: it detects that too much force
+  is already being applied and cuts the drive. Everything up to the
+  threshold, for as long as the grace period lasts, goes into the wearer.
+
+  The real fixes, none of them firmware:
+
+  - **A mechanical torque limiter** between the worm output and the forearm,
+    sized to slip below the injury threshold. This is the standard answer for
+    a non-backdrivable actuator worn by a person, and it is the only one that
+    works when the firmware is wrong, which is the case that matters.
+  - **A lower driver current setting.** The DIP switches trade peak torque
+    for capability directly, and seven times the static load is far more than
+    this machine needs. See step 10 of [commissioning.md](commissioning.md).
+    Cheap, available now, and partial: it lowers the ceiling rather than
+    limiting the force below it.
+  - **A driver whose current is software-settable**, which would make a real
+    limit possible and is a different machine from this one.
 - **The physical backstops do not exist yet.** This page has always treated
   mechanical hard stops as the last line behind the soft limits, and the home
   switch now assumes one to be sited against. Neither is in the Fusion model:

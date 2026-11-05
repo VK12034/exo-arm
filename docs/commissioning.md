@@ -289,6 +289,38 @@ cries wolf gets disabled; set too high they catch nothing.
 Obstruct the arm by hand against a bench, not against a person, and keep it
 brief.
 
+### Setting the current down, deliberately
+
+While you are at the DIP switches, this is the one place the arm's peak force
+can be reduced, and it is worth doing on purpose rather than leaving at
+whatever the switches came set to.
+
+Stepper torque follows phase current, and the TB6600 holds phase current at
+whatever the switches say, so that setting decides how hard the arm can push.
+The firmware cannot reduce it: there is no state between stepping and
+stopped, which is why the overload monitor is a trip rather than a limit. It
+notices too much force is already going in and cuts the drive. Everything up
+to the threshold reaches the wearer.
+
+The drivetrain delivers roughly 20 N·m against a static load of about 2.8,
+which is sevenfold. The arm does not need sevenfold.
+
+1. Find the lowest current setting that moves the arm, loaded, through full
+   travel without skipping. Note it.
+2. Go up one step from there, for worm losses as it wears and for a carried
+   load.
+3. Stay there. Do not set it higher because there is headroom on the driver.
+
+The trade is honest and runs both ways: lower current means a smaller stall
+margin, so more lost steps, which the home switch will show you as growing
+drift. Higher current means a harder push into whatever the arm meets. Pick
+from measurement rather than from the datasheet, and redo the thresholds
+above afterwards, because they move with it.
+
+A mechanical torque limiter on the output is the only fix that still holds
+when the firmware is wrong. It is not in this design. See
+[safety.md](safety.md).
+
 ## 11. Load monitoring
 
 With the thresholds set, confirm both trips fire:

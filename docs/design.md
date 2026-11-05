@@ -178,6 +178,23 @@ The margin is roughly sevenfold. That is not over-engineering: worm
 efficiency falls with wear and temperature, the load rises if the wearer
 carries anything, and a stepper that stalls loses position silently.
 
+It is also the figure that cannot be reduced in software, and the reason is
+worth recording where the numbers are. A TB6600 regulates phase current to
+its DIP setting, and stepper torque follows phase current, so those 20 N·m
+are available at every commanded speed. Torque in fact rises as speed falls,
+so commanding the arm slowly does not make it push more gently. There is no
+firmware state between stepping and stopped, which makes the overload monitor
+a trip rather than a limit: it notices that too much force is already going
+in and cuts the drive.
+
+The lever that does exist is the DIP current setting, which scales peak
+torque directly. Dropping it from seven times the static load to two or three
+keeps ample margin for worm losses and a carried load while lowering the
+worst case considerably, at the cost of a smaller stall margin and therefore
+more lost steps. That trade is a bench measurement, not a decision to be made
+from CAD. A mechanical torque limiter on the output is the only fix that
+holds when the firmware is wrong.
+
 ## Open questions
 
 - The mechanical hard stops are not designed. Both this document and
