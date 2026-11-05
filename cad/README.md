@@ -71,10 +71,13 @@ So the arm never fully straightens, and travel is about 96° between the stops.
 The firmware's zero is the home switch, not a straight arm: add about 23.5° to
 a firmware angle to get true flexion.
 
-The hard stops are 10 mm steel spacers on the upper strut, each 30 mm from the
-pivot, and the forearm strut's edge strikes them. The rubber bumper sleeves sit
-at y 72.6 to 76.6, above the strut's plane, so as modelled they do not touch
-it. The stops are therefore steel on aluminium until that is resolved.
+The hard stops are 7 mm steel spacers in 10 mm OD rubber sleeves on the upper strut,
+each 30 mm from the pivot, and the forearm strut's edge strikes the rubber. The
+sleeves keep the same 10 mm contact as the original spacers, so the stop angles did
+not change, though the rubber will compress a little under load. The original
+sleeves above the strut's plane remain in the model as `Spacer End Cap, not a bumper`,
+because removing them also removes the spacers imported with them. Leave them off the
+build.
 
 ## Switch mounts
 
@@ -101,15 +104,35 @@ would close at the target angle. Real switches differ, so
 [commissioning](../docs/commissioning.md) measures both closing points on the
 built arm, and those measurements decide.
 
+## Chain guard
+
+A printed PETG channel around the chain and both sprockets, y 73.6 to 90, with 2 mm
+walls. It is held by two pillars at x = ±8, z = −276 with M3 screws through the upper
+strut. There is no cover under the gearbox plate, which roofs that end, and the
+forearm strut passes underneath the walls. The rigidity of a 2 mm channel on two
+pillars is a guess until one is printed.
+
+## Encoder mount
+
+A printed cup on the two M5 sprocket bolts turns with the forearm and carries a 6 ×
+2.5 mm diametric magnet on the elbow axis, clear of the stationary M8 nut. An AS5600
+board on an arm from the chain guard sits above it with a 1.5 mm gap. Those M5 bolts
+need about 6 mm more thread to take a second nut over the cup.
+
+Checked at 10 elbow angles from 22° to 117° with the guard, cup and sleeves in place:
+no clashes involving them, and the stop gaps were unchanged. Printed tolerances and
+the guard's stiffness could still close the 1.5 mm gap or misalign the magnet.
+
 ## Mass
 
 | Component | Mass (kg) | Bodies | Notes |
 |---|---|---|---|
-| Upper Arm Module | 2.910 | 42 | Gearmotor 2.19, chain 0.27, struts, cuff, 15T sprocket |
+| Upper Arm Module | 2.907 | 44 | Gearmotor 2.19, chain 0.27, struts, cuff, 15T sprocket |
 | Harness + Electronics | 0.765 | 31 | Waist belt, control box, pendant. Carried by the torso |
-| Forearm Module | 0.426 | 17 | 30T sprocket 0.256, strut, cuff |
+| Forearm Module | 0.430 | 19 | 30T sprocket 0.256, strut, cuff, magnet cup |
+| Chain Guard | 0.044 | 2 | Guard and encoder board |
 | Switch Mounts | 0.013 | 10 | Added for the home and overrun switches |
-| **Device total** | **4.114** | 100 | |
+| **Device total** | **4.160** | 106 | |
 | Ref - Wearer Torso | 6.213 | 8 | Reference mannequin, not part of the device |
 | Ref - Wearer Upper Arm | 0.336 | 2 | Reference solid |
 | Ref - Wearer Forearm | 0.185 | 4 | Reference solid |
@@ -118,7 +141,7 @@ The `Ref - Wearer` bodies are shape references at an arbitrary density. Their
 masses are **not** anthropometric and must not be used for load calculations.
 Use published segment fractions against the wearer's own body mass instead.
 
-Bronze bushings and rubber sleeves are still assigned steel in the model. The
+Bronze bushings and the leftover end caps are still assigned steel in the model. The
 error is a few grams and does not affect any figure here.
 
 ## Drivetrain
@@ -133,13 +156,12 @@ error is a few grams and does not affect any figure here.
 | Ideal output | 57 N·m calculated, before worm and chain losses |
 | Assist | 1/4 in shock cord, 3 loops, between the upper arm and a pin on the forearm |
 
-Worm efficiency has not been measured, so usable torque is not stated here.
-The ideal figure is the one that matters for what the structure might see.
+Catalogue efficiencies give 30 to 43 N·m at the elbow at full motor torque. See
+[loads](../docs/loads.md).
 
-**Self-locking is unverified.** Nothing shows this gearbox holds a loaded arm
-without motor current, and a 15:1 worm may well back-drive. The chain stage does
-not change that, and a chain failure would release the forearm whatever the worm
-does. See [safety](../docs/safety.md).
+**The worm is probably not self-locking.** Motovario lists the NMRV030 at 15:1 with a
+static efficiency of 0.55, above the 0.5 it requires. The chain stage does not change
+that, and a chain failure would release the forearm whatever the worm does.
 
 ## Electronics
 
@@ -151,21 +173,23 @@ does. See [safety](../docs/safety.md).
 | UP and DOWN momentary buttons | Hand pendant |
 | E-stop, latching mushroom, normally closed | Hand pendant |
 | PG7 glands, 6-core pendant cable, 4-core motor cable | Control box |
+| AS5600 encoder board | On the chain guard, over the elbow axis |
 
 ## Materials
 
 | Material | Used for |
 |---|---|
-| PETG, FDM, 4 walls at 40% infill | Cuffs, gearbox plate, control box, pendant housing, strap anchor |
+| PETG, FDM, 4 walls at 40% infill | Cuffs, gearbox plate, control box, pendant housing, strap anchor, chain guard, magnet cup |
 | Aluminium 6061 | Upper and forearm struts, standoffs, switch brackets and spacers |
 | Steel | Sprockets, hard stop spacers, pivot bolt, fasteners, shaft key |
+| Rubber | Hard stop sleeves |
 | EVA foam, 5 mm | Cuff pads |
 | Nylon webbing, 25 and 38 mm | Sling strap, waist belt |
 
 ## Not modelled or not checked
 
-- No chain guard, though the chain and sprockets run beside the arm.
 - No chain tensioner is identifiable in the model.
-- Hard stops, their M5 bolts, the chain and the struts have not been checked
-  against stall loads.
+- [First-pass stall loads](../docs/loads.md) exist, but contact stress, strut bending,
+  the gearbox plate and the shoulder mount have not been checked.
+- The encoder and sensor wiring runs are not modelled.
 - There is no torque limiter.
