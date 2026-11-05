@@ -36,6 +36,8 @@ public:
         kFaultDrift    = 4,  // switch and counter disagreed beyond tolerance
         kFaultOverrun  = 5,  // flexion switch reached, value is the measured span
         kFaultSwitch   = 6,  // a switch closed where it physically cannot
+        kFaultEncoder  = 7,  // measured elbow and step count disagreed
+        kFaultSensor   = 8,  // encoder lost: wiring or magnet
     };
 
     struct Record {

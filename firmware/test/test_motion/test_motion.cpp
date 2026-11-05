@@ -3,6 +3,7 @@
 #include <unity.h>
 
 #include "debounce.h"
+#include "encoder.h"
 #include "homing.h"
 #include "journal.h"
 #include "load.h"
@@ -853,6 +854,142 @@ void test_overrun_switch_sits_clear_of_a_normal_stop(void) {
     TEST_ASSERT_TRUE(end < kFlexSteps);
 }
 
+// --- Encoder ---------------------------------------------------------------
+
+namespace {
+
+AngleTracker makeTracker() {
+    AngleTracker tracker;
+    tracker.configure(4096, false, 3.0f, 400);
+    return tracker;
+}
+
+constexpr float kCountsPerDeg = 4096.0f / 360.0f;
+
+uint16_t rawAt(uint16_t zero, float degrees) {
+    long raw = static_cast<long>(zero) + static_cast<long>(degrees * kCountsPerDeg);
+    while (raw < 0) raw += 4096;
+    while (raw >= 4096) raw -= 4096;
+    return static_cast<uint16_t>(raw);
+}
+
+}  // namespace
+
+void test_encoder_measures_from_its_zero(void) {
+    AngleTracker tracker = makeTracker();
+    tracker.setZero(1000);
+
+    tracker.update(rawAt(1000, 45.0f), 45.0f, 0);
+
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 45.0f, tracker.angle());
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 0.0f, tracker.error());
+}
+
+void test_encoder_is_continuous_across_the_rollover(void) {
+    AngleTracker tracker = makeTracker();
+    tracker.setZero(4000);
+
+    // 88 degrees from a zero near the top of the range wraps through 0.
+    tracker.update(rawAt(4000, 88.0f), 88.0f, 0);
+
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 88.0f, tracker.angle());
+    TEST_ASSERT_FALSE(tracker.slipping());
+}
+
+void test_encoder_reads_below_zero_as_negative(void) {
+    AngleTracker tracker = makeTracker();
+    tracker.setZero(10);
+
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, -2.0f, tracker.toDegrees(rawAt(10, -2.0f)));
+}
+
+void test_encoder_invert_flips_the_sign(void) {
+    AngleTracker tracker;
+    tracker.configure(4096, true, 3.0f, 400);
+    tracker.setZero(1000);
+
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, -30.0f, tracker.toDegrees(rawAt(1000, 30.0f)));
+}
+
+void test_encoder_ignores_readings_before_it_has_a_zero(void) {
+    AngleTracker tracker = makeTracker();
+
+    tracker.update(2000, 0.0f, 0);
+    tracker.update(2000, 0.0f, 5000);
+
+    TEST_ASSERT_FALSE(tracker.zeroed());
+    TEST_ASSERT_FALSE(tracker.slipping());
+}
+
+void test_encoder_flags_a_sustained_disagreement(void) {
+    AngleTracker tracker = makeTracker();
+    tracker.setZero(1000);
+
+    tracker.update(rawAt(1000, 40.0f), 50.0f, 1000);
+    TEST_ASSERT_FALSE(tracker.slipping());
+
+    tracker.update(rawAt(1000, 40.0f), 50.0f, 1500);
+    TEST_ASSERT_TRUE(tracker.slipping());
+}
+
+void test_encoder_ignores_a_brief_disagreement(void) {
+    AngleTracker tracker = makeTracker();
+    tracker.setZero(1000);
+
+    tracker.update(rawAt(1000, 40.0f), 50.0f, 1000);
+    tracker.update(rawAt(1000, 50.0f), 50.0f, 1200);
+    tracker.update(rawAt(1000, 40.0f), 50.0f, 1300);
+    tracker.update(rawAt(1000, 40.0f), 50.0f, 1600);
+
+    TEST_ASSERT_FALSE(tracker.slipping());
+}
+
+void test_encoder_allows_disagreement_inside_the_tolerance(void) {
+    AngleTracker tracker = makeTracker();
+    tracker.setZero(1000);
+
+    tracker.update(rawAt(1000, 48.0f), 50.0f, 1000);
+    tracker.update(rawAt(1000, 48.0f), 50.0f, 9000);
+
+    TEST_ASSERT_FALSE(tracker.slipping());
+}
+
+void test_encoder_catches_back_driving_while_stopped(void) {
+    AngleTracker tracker = makeTracker();
+    tracker.setZero(1000);
+
+    // The count is not moving, and the arm is.
+    tracker.update(rawAt(1000, 60.0f), 60.0f, 0);
+    tracker.update(rawAt(1000, 54.0f), 60.0f, 1000);
+    tracker.update(rawAt(1000, 50.0f), 60.0f, 1500);
+
+    TEST_ASSERT_TRUE(tracker.slipping());
+}
+
+void test_encoder_works_at_time_zero(void) {
+    AngleTracker tracker = makeTracker();
+    tracker.setZero(1000);
+
+    // A timer that starts at zero must not read as "not yet started".
+    tracker.update(rawAt(1000, 40.0f), 50.0f, 0);
+    tracker.update(rawAt(1000, 40.0f), 50.0f, 500);
+
+    TEST_ASSERT_TRUE(tracker.slipping());
+}
+
+void test_encoder_clear_zero_stops_supervision(void) {
+    AngleTracker tracker = makeTracker();
+    tracker.setZero(1000);
+    tracker.update(rawAt(1000, 40.0f), 50.0f, 0);
+    tracker.update(rawAt(1000, 40.0f), 50.0f, 500);
+    TEST_ASSERT_TRUE(tracker.slipping());
+
+    tracker.clearZero();
+
+    TEST_ASSERT_FALSE(tracker.slipping());
+    TEST_ASSERT_FALSE(tracker.zeroed());
+}
+
 int main(int, char**) {
     UNITY_BEGIN();
 
@@ -932,6 +1069,18 @@ int main(int, char**) {
     RUN_TEST(test_overrun_span_catches_a_microstep_mismatch);
     RUN_TEST(test_overrun_reset_clears_the_measurement);
     RUN_TEST(test_overrun_switch_sits_clear_of_a_normal_stop);
+
+    RUN_TEST(test_encoder_measures_from_its_zero);
+    RUN_TEST(test_encoder_is_continuous_across_the_rollover);
+    RUN_TEST(test_encoder_reads_below_zero_as_negative);
+    RUN_TEST(test_encoder_invert_flips_the_sign);
+    RUN_TEST(test_encoder_ignores_readings_before_it_has_a_zero);
+    RUN_TEST(test_encoder_flags_a_sustained_disagreement);
+    RUN_TEST(test_encoder_ignores_a_brief_disagreement);
+    RUN_TEST(test_encoder_allows_disagreement_inside_the_tolerance);
+    RUN_TEST(test_encoder_catches_back_driving_while_stopped);
+    RUN_TEST(test_encoder_works_at_time_zero);
+    RUN_TEST(test_encoder_clear_zero_stops_supervision);
 
     return UNITY_END();
 }

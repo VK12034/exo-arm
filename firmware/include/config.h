@@ -28,6 +28,9 @@ constexpr uint8_t kOnboardLedPin = 13;
 // Hall-effect current sensor in the 24 V feed to the driver.
 constexpr uint8_t kCurrentSensePin = A0;
 
+// The AS5600 encoder is on I2C, which is A4 (SDA) and A5 (SCL) on an Uno. Those
+// pins are fixed by the hardware.
+
 // Lever switch at the extension end of travel, used to find zero. Normally
 // open, closing to ground when the arm reaches full extension, read with the
 // internal pull-up. That polarity is chosen for how it fails: a broken wire
@@ -170,6 +173,30 @@ constexpr uint16_t kIdleDisableMs      = 3000;
 // current pose. Needed because step loss has nothing to correct it, but it
 // also defeats the soft limits, so it is deliberately awkward to trigger.
 constexpr uint16_t kRezeroHoldMs = 3000;
+
+// Faults other than the e-stop stop the stepping but leave the motor energised
+// while kDeenergiseWhenIdle is off, so a fault cannot itself drop the forearm.
+// The e-stop always removes current, because it is how a person gets force off
+// a limb.
+
+// --- Encoder ---------------------------------------------------------------
+// AS5600 on the elbow axis. Set false to build for an arm without one.
+constexpr bool     kEncoderFitted = true;
+constexpr uint16_t kEncoderCountsPerRev = 4096;
+constexpr bool     kEncoderInvert = false;  // set so flexion reads positive
+
+// How far the measured elbow may disagree with the step count, and for how long,
+// before it counts as slip. Must clear chain slack and worm backlash, so measure
+// them: see docs/commissioning.md. Three degrees is a placeholder until then.
+constexpr float    kEncoderToleranceDeg = 3.0f;
+constexpr uint16_t kEncoderHoldMs = 400;
+
+// Read rate, kept well below the planner rate so I2C does not take over the loop.
+constexpr uint16_t kEncoderPeriodMs = 20;
+
+// Consecutive failed reads before the sensor counts as lost, so one corrupted
+// transfer next to a stepper driver does not stop the arm.
+constexpr uint8_t kEncoderMaxFailures = 5;
 
 // TB6600 wants at least 2.2 us of pulse width; 4 us gives margin without
 // meaningfully lengthening the interrupt.

@@ -1,16 +1,18 @@
 // Powered elbow firmware.
 //
 // The wearer holds UP or DOWN on the pendant and the elbow moves; everything
-// else here exists to make sure it stops when it should. There is no encoder,
-// so position is counted steps, and the counter only becomes trustworthy once
-// the arm has been extended far enough to reach the home switch. Until then
-// the arm runs slowly and on restricted travel. See docs/operation.md before
-// running it.
+// else here exists to make sure it stops when it should. Position is counted
+// steps, and the counter only becomes trustworthy once the arm has been extended
+// far enough to reach the home switch. Until then the arm runs slowly and on
+// restricted travel. After that, an encoder on the elbow checks the count. See
+// docs/operation.md before running it.
 #include <Arduino.h>
 #include <EEPROM.h>
 #include <avr/wdt.h>
 
+#include "as5600.h"
 #include "config.h"
+#include "encoder.h"
 #include "homing.h"
 #include "journal.h"
 #include "load.h"
@@ -36,12 +38,20 @@ Debounced       g_home_switch;
 Journal         g_journal;
 OverrunGuard    g_overrun;
 Debounced       g_flex_switch;
+As5600          g_encoder;
+AngleTracker    g_angle;
 
 State    g_state = State::kFault;
 uint32_t g_last_plan_us = 0;
 uint32_t g_last_status_ms = 0;
 uint32_t g_idle_since_ms = 0;
 bool     g_rezeroed = false;
+
+uint32_t g_last_encoder_ms = 0;
+uint16_t g_encoder_raw = 0;
+bool     g_encoder_has_reading = false;
+bool     g_encoder_lost = !cfg::kEncoderFitted;
+uint8_t  g_encoder_failures = 0;
 
 // ADC counts read with the driver de-energised, so the sensor's own offset
 // is measured rather than assumed.
@@ -204,6 +214,18 @@ void printJournal(bool formatted) {
             Serial.println(F(" deg"));
             break;
 
+        case Journal::Event::kFaultEncoder:
+            Serial.print(F("encoder disagreed with the counter, counter read "));
+            Serial.print(angleDeg(record.value), 1);
+            Serial.println(F(" deg"));
+            break;
+
+        case Journal::Event::kFaultSensor:
+            Serial.print(F("encoder lost, counter read "));
+            Serial.print(angleDeg(record.value), 1);
+            Serial.println(F(" deg"));
+            break;
+
         case Journal::Event::kNone:
             Serial.println(F("(empty)"));
             break;
@@ -258,6 +280,16 @@ void printStatus(uint32_t now_ms, long position) {
     case Homing::Source::kOperator: Serial.print(F("asserted")); break;
     case Homing::Source::kNone:     Serial.print(F("UNHOMED")); break;
     }
+    Serial.print(F(" enc="));
+    if (g_encoder_lost) {
+        Serial.print(cfg::kEncoderFitted ? F("LOST") : F("none"));
+    } else if (!g_angle.zeroed()) {
+        Serial.print(F("unzeroed"));
+    } else {
+        Serial.print(g_angle.angle(), 1);
+        Serial.print(F("deg err="));
+        Serial.print(g_angle.error(), 1);
+    }
     Serial.print(F(" amps="));
     Serial.print(g_load.current(), 2);
     Serial.print(F(" drive="));
@@ -284,8 +316,16 @@ void calibrateCurrentZero() {
 // write one. Routine e-stop presses pass kNone: they are normal operation,
 // the wearer knows they pressed it, and recording them would crowd the ring
 // and spend EEPROM writes on something nobody needs told.
-void enterFault(const __FlashStringHelper* reason, Journal::Event event) {
-    g_stepper.emergencyStop();
+//
+// Only the e-stop removes motor current here. Nothing has shown the drivetrain
+// holds a loaded arm without it, so a firmware fault that cut the current could
+// drop the forearm by itself.
+void enterFault(const __FlashStringHelper* reason, Journal::Event event, bool cut_current = false) {
+    if (cut_current || cfg::kDeenergiseWhenIdle) {
+        g_stepper.emergencyStop();
+    } else {
+        g_stepper.setVelocity(0.0f);
+    }
     g_planner.stop();
     g_state = State::kFault;
 
@@ -298,6 +338,13 @@ void enterFault(const __FlashStringHelper* reason, Journal::Event event) {
 
     Serial.print(F("FAULT: "));
     Serial.println(reason);
+}
+
+// The switch or the wearer has just defined zero, so the encoder takes the same
+// reference and from here on only the difference between the two matters.
+void captureEncoderZero() {
+    if (g_encoder_lost || !g_encoder_has_reading) return;
+    g_angle.setZero(g_encoder_raw);
 }
 
 // A re-zero redefines where the travel limits sit, so it is only offered
@@ -321,6 +368,7 @@ void handleRezero(uint32_t now_ms) {
     g_homing.adoptOperatorZero();
     applyTravelLimits();
     g_rezeroed = true;
+    captureEncoderZero();
 
     Serial.println(F("rezeroed: this pose is asserted to be full extension"));
 }
@@ -365,6 +413,13 @@ void setup() {
                         cfg::kFlexMinPlausibleSteps);
     g_overrun.reset();
 
+    if (cfg::kEncoderFitted) {
+        g_encoder.begin();
+        g_angle.configure(cfg::kEncoderCountsPerRev, cfg::kEncoderInvert,
+                          cfg::kEncoderToleranceDeg, cfg::kEncoderHoldMs);
+        g_encoder_has_reading = g_encoder.read(&g_encoder_raw);
+    }
+
     calibrateCurrentZero();
     g_load.configure(cfg::kOverloadAmps, cfg::kOverloadMs,
                      cfg::kCollapseAmps, cfg::kCollapseMs,
@@ -407,7 +462,11 @@ void loop() {
     // --- Interlocks --------------------------------------------------------
     if (g_pendant.eStopOpen()) {
         if (g_state != State::kFault) {
-            enterFault(F("estop"), Journal::Event::kNone);
+            enterFault(F("estop"), Journal::Event::kNone, true);
+        } else if (g_stepper.enabled()) {
+            // Other faults keep the motor energised, so an e-stop pressed during
+            // one still has to drop the enable line.
+            g_stepper.emergencyStop();
         }
         updateLeds(now_ms);
         return;
@@ -461,6 +520,50 @@ void loop() {
     const float dt = static_cast<float>(elapsed_us) * 1e-6f;
     long position = g_stepper.position();
 
+    // --- Encoder -----------------------------------------------------------
+    // A lost sensor faults once and the arm then carries on step-counted, because
+    // leaving someone unable to move the arm is its own hazard.
+    if (!g_encoder_lost && (now_ms - g_last_encoder_ms) >= cfg::kEncoderPeriodMs) {
+        g_last_encoder_ms = now_ms;
+
+        if (g_encoder.read(&g_encoder_raw)) {
+            g_encoder_has_reading = true;
+            g_encoder_failures = 0;
+        } else if (++g_encoder_failures >= cfg::kEncoderMaxFailures) {
+            g_encoder_lost = true;
+            g_angle.clearZero();
+            enterFault(g_encoder.faultReason(), Journal::Event::kFaultSensor);
+            updateLeds(now_ms);
+            return;
+        }
+
+        // A sensor that only started answering after homing can take its zero only
+        // while the arm is still at zero. Anywhere else, supervision waits for the
+        // next trip to the switch rather than adopting a wrong reference.
+        if (g_homing.homed() && !g_angle.zeroed() &&
+            position > -cfg::kHomeToleranceSteps && position < cfg::kHomeToleranceSteps) {
+            captureEncoderZero();
+        }
+        if (!g_homing.homed()) g_angle.clearZero();
+
+        if (g_encoder_failures == 0) {
+            g_angle.update(g_encoder_raw, angleDeg(position), now_ms);
+        }
+
+        if (g_angle.slipping()) {
+            // The count can no longer be believed, so the far limit cannot
+            // either. Back to restricted travel until the switch re-references it.
+            g_homing.reset();
+            g_angle.clearZero();
+            applyTravelLimits();
+            enterFault(F("encoder disagrees with the step counter - "
+                         "lost steps, chain slip or back-driving"),
+                       Journal::Event::kFaultEncoder);
+            updateLeds(now_ms);
+            return;
+        }
+    }
+
     // --- Homing ------------------------------------------------------------
     // The switch is a physical feature of the machine and the counter is
     // arithmetic, so where they disagree the switch wins.
@@ -469,6 +572,7 @@ void loop() {
         g_stepper.setPosition(cfg::kMinSteps);
         applyTravelLimits();
         position = g_stepper.position();
+        captureEncoderZero();
         reportZero();
 
         // Only the corrections worth reporting are worth a write. A couple of
