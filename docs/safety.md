@@ -12,14 +12,16 @@ not read this page.
 
 Two things, and both come from the drivetrain.
 
-**It may not hold itself.** The design intends the 15:1 worm to hold the arm
-without power, but that has never been tested, and a worm at this ratio may well
-back-drive. If it does, losing power or pressing the e-stop can let the forearm
-move under its own weight or the wearer's. A failed chain releases the forearm
-whatever the worm does.
+**It probably does not hold itself.** Motovario's catalogue lists the NMRV030 at 15:1
+with a static efficiency of 0.55, above the 0.5 it requires for a load not to turn the
+worm, and warns that vibration and shocks can affect this anyway. So losing power or
+pressing the e-stop can let the forearm move under its own weight or the wearer's,
+though the assist cord pulls the other way. A failed chain releases the forearm
+whatever the worm does. See [loads.md](loads.md).
 
 **The wearer cannot rely on pushing back.** Through 30:1 the motor can produce
-far more torque than the arm needs. A command error ends when the motor stops,
+10 to 15 times the static load, or about 160 to 220 N at the cuff. A command error
+ends when the motor stops,
 the e-stop opens, or the elbow reaches a limit, and stopping the motor may bring
 the first problem with it.
 
@@ -37,9 +39,10 @@ shown what happens when power is lost under load.
 | Travel limits trusted before anything has measured them | Until the home switch is reached the arm is held to 60° at 5°/s, so a parking error of up to about 30° stays short of the flexion stop |
 | Ambiguous command | Both buttons, or neither, reads as stop |
 | Arm binding or pushing against something | Supply current monitored while driving; sustained overload faults the arm. Partial — see Known gaps |
-| Forearm moving when power is lost | **Unverified.** Motor stays energised when idle by default, but the e-stop and any power failure still remove current. See commissioning step 9 |
-| Chain failure or skipped tooth | **Not mitigated.** Releases the forearm from the drive, and a skip also makes the step count wrong until the next homing |
-| Fingers, hair or clothing in the chain and sprockets | **Not mitigated.** No guard in the model. Fit one before wearing |
+| Forearm moving when power is lost | **Not mitigated, and likely.** Motor stays energised when idle and through every fault except the e-stop, but the e-stop and any power failure still remove current. See commissioning step 9 |
+| Chain failure or skipped tooth | **Detected, not prevented.** Releases the forearm from the drive. The encoder sees the disagreement and faults, but cannot hold the arm |
+| Lost steps or back-driving | Encoder on the elbow compares the measured angle with the count, stopped or moving, and faults on a sustained disagreement |
+| Fingers, hair or clothing in the chain and sprockets | Printed guard in the model, not yet built. Its open end is roofed by the gearbox plate, so check for gaps on the real parts |
 | Wearer trapped in a dead arm | Every strap releases one-handed from the free hand; cuffs are quick-release |
 
 ## Interlocks
@@ -76,17 +79,18 @@ page:
   while steps are being commanded.
 
   Both are heuristics. A slow bind that never crosses the threshold will not
-  trip, a collapse reads the same as a disconnected motor, and a stall that
-  happens below the overload threshold is invisible. A shaft encoder would
-  make this exact instead of inferred, and remains the right fix.
+  trip, and a collapse reads the same as a disconnected motor. The encoder now
+  catches the lost motion that follows a stall, but it measures position, not force.
+  Force on the wearer below the overload threshold remains invisible.
 
-- **Lost steps are detected late, not prevented.** The home switch gives the
-  counter a way back to the truth, but only at one end of travel and only
-  when the arm is taken there. Between one homing and the next, loss
-  accumulates unseen exactly as before, and the flexion limit moves with it.
-  What has changed is that the error is now caught and measured instead of
-  compounding forever, and that a large one faults rather than being
-  silently corrected.
+- **Lost steps are detected, not prevented.** The encoder catches a disagreement of
+  more than 3° after 400 ms, and the home switch corrects smaller drift whenever the arm
+  reaches it. Both react after motion has already been lost. If the encoder is lost the
+  arm faults once and carries on step-counted.
+- **Faults leave torque on.** Keeping the motor energised means an overload fault
+  holds whatever force it had reached until someone presses the e-stop, and the e-stop
+  may let the forearm drop. There is no state that does both safely, so a person has
+  to choose, which is another reason someone else should be present.
 - **Both ends now have a switch, but they do different jobs.** Zero is
   measured at the home switch every time the wearer extends onto it. The
   flexion end has an overrun switch three degrees past the soft limit, which
@@ -112,8 +116,8 @@ page:
   costs range rather than overrunning a limit — but it means a clean homing
   message is not proof the counter is right.
 - **No torque limit, and the firmware cannot provide one.** The drivetrain's
-  ideal output is 57 N·m before losses, against about 2.9 N·m of static load,
-  and nothing stops that being applied to an arm.
+  output is 30 to 43 N·m at full motor current, against about 2.9 N·m of static
+  load, and nothing stops that being applied to an arm.
 
   This one deserves spelling out, because the obvious software fix does not
   work. A TB6600 regulates phase current to whatever its DIP switches are
@@ -135,18 +139,17 @@ page:
     a stiff geared actuator worn by a person, and it is the only one that
     works when the firmware is wrong, which is the case that matters.
   - **A lower driver current setting.** The DIP switches trade peak torque
-    for capability directly, and the ideal output is far more than this machine
-    needs. See step 10 of [commissioning.md](commissioning.md).
+    for capability directly. [loads.md](loads.md) suggests starting near 40% of
+    rated current. See step 10 of [commissioning.md](commissioning.md).
     Cheap, available now, and partial: it lowers the ceiling rather than
     limiting the force below it.
   - **A driver whose current is software-settable**, which would make a real
     limit possible and is a different machine from this one.
-- **The hard stops are modelled but not proven.** Steel spacers on the upper
-  strut stop the forearm strut at about 21° and 118° of true flexion. Their M5
-  bolts, the struts and the chain have not been checked against stall loads: the
-  strut meets a stop about 24 mm from the pivot, so the ideal output torque would
-  put over 2 kN on an M5 spacer before losses. As modelled, the rubber bumpers sit
-  above the strut's plane and do not touch it.
+- **The hard stops are modelled but not proven.** Rubber-sleeved steel spacers on the
+  upper strut stop the forearm strut at about 21° and 118° of true flexion. At full
+  motor current they could see 1250 to 1780 N, and the M5 bolt in bending, if the
+  clamp does not help, reaches its limit at about 1400 N. Set the driver current down.
+  See [loads.md](loads.md).
 - **Switch closing angles are modelled targets.** Real levers differ, so
   commissioning measures them. Until then the margins around both switches are
   estimates.
@@ -155,15 +158,17 @@ page:
 
 None of this is a substitute for the e-stop being in the wearer's free hand,
 or for somebody else being present. The load monitor infers rather than
-measures, the counter is only referenced at one end of travel, and nothing
-here has been run against hardware.
+measures, the encoder reacts after motion is lost, and nothing here has been run
+against hardware.
 
 ## Before every session
 
 - [ ] E-stop in the free hand, and a second person who knows where the supply
       switch is
 - [ ] Confirm the hard stops are fitted and their bolts are tight
-- [ ] Confirm a chain guard is fitted, and check chain tension and the sprockets
+- [ ] Confirm the chain guard is fitted and its screws are tight, and check chain
+      tension and the sprockets
+- [ ] Confirm the status line shows `enc=` with a reading rather than `LOST`
 - [ ] Bench test with the arm **not worn**: drive to both soft limits and
       confirm it stops short of the hard stops
 - [ ] Press the e-stop mid-motion and confirm the motor goes dead
@@ -172,6 +177,7 @@ here has been run against hardware.
       the gearbox output, and the elbow pivot bolt
 - [ ] Confirm the arm is parked at the extension stop before power-on, and that
       the monitor prints `homed:` rather than leaving `zero=UNHOMED`
+- [ ] Confirm the driver current is at the setting chosen in commissioning
 - [ ] Read the power-on log. Any fault from the last session is in it, and so
       is the drift trend. Degrees of correction, repeatedly, means the machine
       is losing steps

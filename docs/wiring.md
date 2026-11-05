@@ -126,7 +126,21 @@ Its bracket is in the model too. See [cad/README.md](../cad/README.md).
 | Onboard LED | 13 | Mirrors the status LED, useful on the bench |
 | Current sense | A0 | ACS712-20A output, 100 mV/A about a mid-rail zero |
 
-Pins 11, 12 and A1 to A5 are unused.
+Pins 11, 12 and A1 to A3 are unused. A4 and A5 are the encoder's I2C bus.
+
+### Encoder
+
+| Signal | Uno pin | Notes |
+|---|---|---|
+| SDA | A4 | AS5600 board, address 0x36 |
+| SCL | A5 | |
+| 5 V, GND | 5V, GND | Check the board accepts 5 V, or supply it to suit |
+
+I2C was not designed for long cables beside a stepper driver, and this run goes from
+the belt to the elbow. Use a shielded twisted pair, route it away from the motor cable,
+and keep the bus speed down if reads fail. The firmware tolerates a few failed reads,
+then faults once and carries on step-counted, so `enc=LOST` in the status line is the
+sign of a wiring problem.
 
 ### Current sensor
 

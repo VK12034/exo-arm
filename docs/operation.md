@@ -2,7 +2,7 @@
 
 ## Power-on
 
-There is no encoder. The firmware counts steps, and that count only means
+The firmware counts steps, and that count only means
 something once it has been referenced to the home switch at the extension stop.
 That stop is about 21° short of a straight arm, and the firmware calls the point
 where the switch closes 0°.
@@ -65,6 +65,8 @@ in, so the gaps tell you as much as the entries.
 | `home switch disagreed, counter read X deg` | More than 5° of lost steps found at the switch |
 | `soft limit overrun, span measured N steps` | The flexion switch was reached, so both soft limits failed. The span is also a microstepping check |
 | `switch closed implausibly, counter read X deg` | A switch closed where it physically cannot be. Wiring |
+| `encoder disagreed with the counter, counter read X deg` | Lost steps, chain slip or back-driving |
+| `encoder lost, counter read X deg` | The encoder stopped answering, or its magnet moved |
 
 Routine e-stop presses are **not** logged. They are normal operation and
 would crowd out the entries that matter.
@@ -119,10 +121,10 @@ limit the moment you press the other button.
 
 ## After a stop
 
-The motor stays energised while the arm is stopped, so expect some noise and
-warmth. This is deliberate: nothing has yet shown that the drivetrain holds a
-loaded arm without current. Pressing the e-stop or losing power does remove
-current, and the forearm may move when that happens.
+The motor stays energised while the arm is stopped, and through every fault except
+the e-stop, so expect some noise and warmth. This is deliberate: Motovario's figures
+suggest this worm does not hold a loaded arm without current. **Pressing the e-stop or
+losing power removes current, and the forearm may move when that happens.**
 
 Step 9 of [commissioning.md](commissioning.md) tests this, and
 `kDeenergiseWhenIdle` in `config.h` is only for after that test has passed.
@@ -181,7 +183,7 @@ comes up unhomed, which is free to seek again.
 115200 baud, a line every half second:
 
 ```
-t=12480 state=MOVING angle=42.3deg steps=2820 v=1333 estop=closed home=open flex=open zero=switch amps=1.18 drive=on
+t=12480 state=MOVING angle=42.3deg steps=5640 v=2667 estop=closed home=open flex=open zero=switch enc=42.1deg err=-0.2 amps=1.18 drive=on
 ```
 
 | Field | Meaning |
@@ -194,6 +196,7 @@ t=12480 state=MOVING angle=42.3deg steps=2820 v=1333 estop=closed home=open flex
 | `home` | Home switch contact: `closed` means the arm is on it |
 | `flex` | Overrun switch. Should always read `open`; `CLOSED` is shouted because it means trouble |
 | `zero` | `switch` if measured, `asserted` if set by hand, `UNHOMED` if neither |
+| `enc` | Measured elbow angle and its error against the count. `unzeroed` until homed, `LOST` if the sensor failed, `none` if built without one |
 | `amps` | Filtered supply current to the driver |
 | `drive` | Whether the motor is energised |
 
@@ -213,6 +216,8 @@ reaches the switch.
 | `FAULT: flexion switch reached` | Both soft limits were passed. This is a firmware or configuration fault, not wear. Stop and find out why before using the arm |
 | `FAULT: flexion switch closed with the counter near zero` | Shorted switch, wrong pin, or the arm was parked at full flexion |
 | Buzz without motion | Stall. Reduce speed, check for a mechanical bind, check driver current |
+| `FAULT: encoder disagrees` | Lost steps, chain slip or back-driving. The arm drops to restricted travel, so extend to the switch to re-home, and find out why |
+| `enc=LOST` | Encoder wiring or magnet. The arm still runs, without that check |
 | `FAULT: overload` | The arm is working against something. Find out what before clearing it |
 | `FAULT: current collapse` | Motor disconnected, or the rotor lost synchronism. Check the motor cable first |
 | Arm sags when stopped or at e-stop | The drivetrain is not holding. Stop using it and read step 9 of [commissioning.md](commissioning.md) |

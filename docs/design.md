@@ -32,16 +32,19 @@ arm, and a #35 chain from a 15T to a 30T sprocket carries the drive to the elbow
 for 30:1 overall. That moves the motor's mass up the arm, away from the elbow,
 and keeps it from standing far off the arm.
 
-The intent is for the worm to hold the arm with the motor off. **That has not
-been shown.** A 15:1 worm may well back-drive, and the chain stage does not
-change that. Until the holding test passes, treat this as a machine that needs
+The intent was for the worm to hold the arm with the motor off. **By the
+manufacturer's figures it probably will not:** Motovario lists the 030 at 15:1 with
+a static efficiency of 0.55, above the 0.5 it requires, and the chain stage does not
+change that. See [loads.md](loads.md), which also covers a 30:1 worm with a 1:1 chain
+as the way out. Until the holding test passes, treat this as a machine that needs
 holding current and can move when it loses power. A chain failure or a skipped
 tooth would also release the forearm whatever the worm does.
 
 **A stepper rather than a servo.** Position is whatever has been stepped since
-the last homing, and a missed step is a drift rather than a runaway. A closed
-loop would buy accuracy the application does not need, at the price of an
-encoder, its cable across a moving joint, and the failure modes of both.
+the last homing, and a missed step is a drift rather than a runaway. Control
+stays open-loop, because the application does not need closed-loop accuracy. An
+encoder supervises the count instead, so its failure costs a check rather than
+control of the arm.
 
 **An Arduino Uno.** There is no control loop to run. The firmware debounces
 three inputs, ramps a velocity, and counts steps. An 8-bit micro at 16 MHz is
@@ -97,10 +100,9 @@ planner always passes through zero velocity on a reversal. A pulse emitted
 against a stale direction line would put the step counter out of step with
 the real arm, and the counter is the only position reference there is.
 
-### Position, and the lack of an encoder
+### Position
 
-Position is steps counted, with no encoder to check them against. What the
-counter is referenced to is a lever switch at the extension end of travel.
+Position is steps counted. What the counter is referenced to is a lever switch at the extension end of travel.
 Reaching it sets zero; until it is reached the firmware treats the count as
 an assumption and holds the arm to 60° at 5°/s, so a parking error costs
 range rather than putting the elbow somewhere it should not be.
@@ -134,6 +136,31 @@ asserted pose, which is what a switchless build needs and which also means a
 wrong assertion cannot be walked back without a power cycle. Keeping the soft
 minimum was worth more than that recovery path.
 
+### The encoder
+
+An AS5600 on the elbow axis measures the joint itself, so worm backlash, chain slip,
+lost motor steps and back-driving all appear in one number. It needs no calibration
+constant: it takes its zero when the arm homes, and only the difference from the
+step count matters afterwards.
+
+It is read at 50 Hz. A disagreement above 3° for 400 ms faults the arm and drops it to
+restricted travel until the switch re-references the count. That is checked while the
+arm is stopped too, so a drivetrain giving way is caught rather than only noticed by
+the wearer. After an e-stop, a forearm that moved is caught on the first check after
+the arm is released.
+
+A lost sensor faults once and the arm then carries on step-counted, because leaving
+someone unable to move the arm is its own hazard. Both are logged. The 3° figure is a
+placeholder until chain slack and worm backlash are measured.
+
+### Faults and motor current
+
+Only the e-stop removes motor current. Other faults stop the stepping and leave the
+motor energised, because a firmware fault that cut the current could drop the forearm.
+The cost is that an overload fault leaves holding torque on whatever the arm is
+pushing against, until someone presses the e-stop. That trade is worth revisiting if
+the holding test passes.
+
 ### The power-on log
 
 Two things used to vanish at the wrong moment. A fault reason, because the
@@ -163,9 +190,9 @@ not rewritten.
 
 ### Idle behaviour
 
-The motor stays energised when idle, which costs heat in the motor and driver
-and some noise. `kDeenergiseWhenIdle` in `config.h` drops the current after
-three seconds, and stays off until the holding test in
+The motor stays energised when idle, which costs heat in the motor and driver and
+some noise. `kDeenergiseWhenIdle` in `config.h` drops the current after three seconds
+and also lets faults cut it. It stays off until the holding test in
 [commissioning.md](commissioning.md) has passed under load on the real gearbox.
 
 ## Numbers
@@ -176,14 +203,13 @@ From [cad/README.md](../cad/README.md), measured off the Fusion model:
 |---|---|
 | Elbow to forearm cuff | 193 mm |
 | Shoulder to elbow | 318 mm |
-| Forearm module mass | 0.426 kg |
+| Forearm module mass | 0.430 kg |
 | Static load at the elbow | About 2.9 N·m, calculated for a 70 kg wearer |
-| Ideal output torque | 57 N·m calculated, before worm and chain losses |
+| Output torque at full motor current | 30 to 43 N·m, from catalogue efficiencies |
 
-The drive could be up to about twenty times the static load, before losses.
-Usable torque is unmeasured because worm efficiency is unmeasured. The margin is
-useful for a carried load and for wear, but it is also the amount of force that
-could reach an arm or a hard stop.
+That is 10 to 15 times the static load. The margin helps with a carried load and with
+wear, but it is also the force that could reach an arm or a hard stop: see
+[loads.md](loads.md).
 
 It is also the figure that cannot be reduced in software, and the reason is
 worth recording where the numbers are. A TB6600 regulates phase current to
@@ -204,19 +230,17 @@ holds when the firmware is wrong.
 
 ## Open questions
 
-- Does the drivetrain hold a loaded arm without current? This decides what
-  losing power does, and it has not been tested.
-- The stops are in the model, but their spacers, M5 bolts, the chain and the
-  struts have not been checked against stall loads. The forearm strut meets a
-  stop about 24 mm from the pivot, so the ideal 57 N·m would put over 2 kN on an
-  M5 spacer before losses.
-- The rubber bumper sleeves on the stops sit above the forearm strut's plane, so
-  as modelled they do not touch it.
+- Does the drivetrain hold a loaded arm without current? The catalogue says probably
+  not, and the real gearbox has not been tested. If it does not, it needs a brake or a
+  30:1 worm with a 1:1 chain.
+- There is no torque limiter. A friction clutch at the 30T sprocket is the likely
+  form. See [loads.md](loads.md).
 - The 88° soft limit itself has no physical reference. Both ends of travel carry
   a switch, but neither is at the limit: the home switch defines zero, and the
   overrun switch sits three degrees past the flexion limit as a check on the
   firmware. Between them the limit is still arithmetic.
-- There is no chain guard in the model.
+- The chain guard's stiffness on two pillars is untested, and the encoder gap depends
+  on it.
 - The overrun switch cannot be distinguished from a working one that has
   never fired. It is the one component here whose failure is invisible in
   normal use.
@@ -232,12 +256,10 @@ holds when the firmware is wrong.
   reached, which takes the deliberate procedure in step 7 of
   [commissioning.md](commissioning.md). It is a commissioning check, not a
   running one.
-- Load monitoring infers rather than measures. Supply current tracks
-  mechanical power, so a bind shows as a sustained rise and a lost rotor as a
-  collapse, but a slow bind below the threshold is invisible and a collapse
-  is indistinguishable from an unplugged motor. A shaft encoder would make
-  this exact, and would reference position continuously rather than once per
-  trip to the switch.
+- Load monitoring infers rather than measures. Supply current tracks mechanical
+  power, so a bind shows as a sustained rise and a lost rotor as a collapse, but a slow
+  bind below the threshold is invisible. The encoder covers the position side of that,
+  but not force.
 - With the gearbox on the upper arm, neither the pendant cable nor the motor
   cable crosses the elbow. The motor cable does run from the belt to the moving
   upper arm, and that is the cable to expect to fail first.

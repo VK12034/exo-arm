@@ -38,7 +38,7 @@ into fault on purpose.
 - Status LED blinking fast: fault. Close the e-stop loop.
 - `ready` printed and the LED blinking slowly: the interlocks are working.
 
-If it prints `ESTOP` with the mushroom released, the loop is wired
+If it prints `FAULT: estop` with the mushroom released, the loop is wired
 normally-open. Fix that before going further — a normally-open e-stop reads
 as safe when the cable is cut.
 
@@ -237,12 +237,29 @@ mechanism in the build that can: nothing else compares a step count against a
 distance. If the span disagrees by a factor, fix the DIP switches rather than
 `kMicrosteps`, because every speed and acceleration figure was chosen for 1/8.
 
+## 7a. Encoder
+
+With the chain on and the arm homed, the status line should show `enc=` with an angle
+and `err=` close to zero.
+
+1. If flexing makes `enc=` fall while `angle=` rises, set `kEncoderInvert` to `true`.
+2. Run the full travel at normal speed several times and note the largest `err=`.
+3. Stopped mid-travel, press the forearm by hand both ways and note how far `enc=`
+   moves. That is chain slack and worm backlash together.
+4. Set `kEncoderToleranceDeg` above both, with some margin. A tolerance that trips in
+   normal use will get disabled.
+5. Take the chain off a sprocket with the motor stopped, or hold the output and step
+   the motor with the current limit low. It must fault with `encoder disagrees`.
+6. Unplug the encoder. It must fault once, then show `enc=LOST`.
+
 ## 8. Interlocks under motion
 
 Each of these, with the arm moving:
 
 - [ ] Press the e-stop. The motor must go dead immediately, and the monitor
-      print `ESTOP`.
+      print `FAULT: estop`.
+- [ ] Press the e-stop while the arm is already faulted. The motor must still go
+      dead, with `drive=off` in the status line.
 - [ ] Release the e-stop. The arm must **not** resume, even with a button
       still held. It should print `ready` only once both buttons are up.
 - [ ] Release the button. The arm must ramp down, not stop dead.
@@ -254,8 +271,9 @@ stop, and that is only true if the e-stop contact is normally closed.
 
 ## 9. Holding test
 
-**Do not wear the arm until this passes.** It decides what the machine does when
-power is lost, and it has never been tested.
+**Do not wear the arm until you have done this.** It decides what the machine does
+when power is lost. Motovario's figures suggest a 15:1 worm will not hold reliably, so
+expect to see movement: see [loads.md](loads.md).
 
 Unworn, with a weight in the forearm cuff at least as heavy as the arm it will
 carry. Keep hands and face out of the forearm's path, because it may drop.
@@ -270,7 +288,7 @@ carry. Keep hands and face out of the forearm's path, because it may drop.
 | Result | What it means |
 |---|---|
 | No movement in any test | The drivetrain holds. You may set `kDeenergiseWhenIdle` to `true` and repeat with the extra load you plan to carry |
-| Any creep or drop | It back-drives. Leave `kDeenergiseWhenIdle` off, and treat a forearm drop as what happens at every e-stop and power failure. That needs a brake or a redesign before anyone wears it |
+| Any creep or drop | It back-drives. Leave `kDeenergiseWhenIdle` off, and treat a forearm drop as what happens at every e-stop and power failure. That needs a brake, or a 30:1 worm with a 1:1 chain, before anyone wears it |
 
 Vibration can release a worm that looks locked when still, so a pass here is a
 good sign rather than a guarantee. With holding current on, also check motor and
@@ -318,8 +336,10 @@ stopped, which is why the overload monitor is a trip rather than a limit. It
 notices too much force is already going in and cuts the drive. Everything up
 to the threshold reaches the wearer.
 
-The drivetrain's ideal output is 57 N·m before losses, against a static load of
-about 2.9. The arm does not need anywhere near that.
+At full current the drivetrain can deliver about 30 to 43 N·m against a static load
+of about 2.9, and the hard stop bolts are marginal at the top of that. The arm does
+not need anywhere near that. [loads.md](loads.md) suggests starting near 40% of the
+motor's rated current.
 
 1. Find the lowest current setting that moves the arm, loaded, through full
    travel without skipping. Note it.
