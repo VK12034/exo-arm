@@ -13,7 +13,7 @@ that input.
 
 | Signal | Uno pin | TB6600 | Notes |
 |---|---|---|---|
-| Step | 3 | PUL− | 4 µs pulse, up to about 1.4 kHz at full speed |
+| Step | 3 | PUL− | 4 µs pulse, up to about 2.7 kHz at full speed |
 | Direction | 4 | DIR− | Settled before the next pulse by the firmware |
 | Enable | 5 | ENA− | Low energises the motor |
 | 5 V | 5V | PUL+, DIR+, ENA+ | Common positive |
@@ -73,17 +73,16 @@ on a broken wire is "stop". The home switch is normally open because for a
 position reference, the safe assumption on a broken wire is "I do not know
 where I am".
 
-**There is no bracket for this yet.** The Fusion model has no mount for the
-switch and no hard stop for it to be referenced against, so the figures below
-describe where to put it rather than a part you can print. See
-[bom.md](bom.md).
+**Mounting.** The model has a 3 mm aluminium bracket for it on the inboard face
+of the upper strut, with the lever in the forearm strut's plane. See
+[cad/README.md](../cad/README.md).
 
 **Siting it matters.** The switch can only be acted on once it closes, so the
 arm travels a little further while stopping, and that overshoot has to fit
 between the switch and the hard stop. The firmware seeks at 5 °/s, which is
 0.28° of stopping distance at 45 °/s², so a degree of clearance is ample.
-Mount the lever so it closes about 1–2° before the hard stop and stays closed
-all the way to it, rather than closing exactly at the stop. A switch that
+The model targets closing about 2.5° before the hard stop. It must stay closed
+all the way to the stop, rather than closing exactly at the stop. A switch that
 closes only at the very end can be driven past before the firmware reacts.
 
 ### Overrun switch
@@ -95,10 +94,11 @@ at it.
 |---|---|---|
 | Overrun switch | 10 | **Normally open**, closing to GND, internal pull-up |
 
-Same polarity as the home switch, same reasoning. Mount it at about **138°**,
-three degrees beyond the 135° soft limit, and before the flexion hard stop.
+Same polarity as the home switch, same reasoning. It closes at a firmware angle
+of about **91°**, three degrees beyond the 88° soft limit and about three before
+the flexion hard stop.
 
-This one is not a limit. The planner stops at 135° and the step generator
+This one is not a limit. The planner stops at 88° and the step generator
 refuses to pulse past it on its own arithmetic, so reaching this switch means
 both of those failed. That is why it faults rather than merely stopping.
 
@@ -116,7 +116,7 @@ until the day it is needed, and that day is already a bad one. Step 7 of
 [commissioning.md](commissioning.md) is the only thing that proves it works,
 so do it rather than assuming.
 
-There is no bracket for this one either. See [bom.md](bom.md).
+Its bracket is in the model too. See [cad/README.md](../cad/README.md).
 
 ### Panel
 
@@ -176,10 +176,10 @@ anything else.
 
 ## Cabling
 
-The motor cable crosses the elbow and flexes on every cycle. It is the cable
-that will eventually fail. Give it a service loop, strain-relieve both ends,
-and use a locking connector so replacing it is a five-minute job rather than
-a rebuild.
+The motor cable runs from the belt to the gearmotor on the upper arm, so it
+flexes as the arm moves relative to the torso. It is the cable to expect to fail
+first. Give it a service loop, strain-relieve both ends, and use a locking
+connector so replacing it is a five-minute job rather than a rebuild.
 
 Keep the motor cable away from the pendant cable. A TB6600 switching amps at
 the far end of a long run will couple into button lines, and a false button

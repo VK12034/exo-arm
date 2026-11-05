@@ -7,13 +7,9 @@ a test of the firmware as much as of the build.
 Keep the supply current-limited throughout. A limit of about 1 A is enough to
 move the arm unloaded and not enough to do damage when something is wrong.
 
-**Before step 5, note that the mechanical hard stops and the switch brackets
-are not in the CAD.** Steps 5, 6 and 7 are written as though they are fitted,
-because that is the intended machine. On a build that does not have them yet,
-the soft limits and the two switches are the only things stopping the arm at
-either end, so run those steps uncoupled or with the arm clear of anything it
-could damage, and do not treat "it stopped" as evidence that a backstop
-worked.
+The model includes hard stops and switch mounts, but neither has been built or
+load-tested. Do not treat "it stopped" as evidence that a backstop would hold
+under full motor torque.
 
 Step 7 defeats the flexion soft limit on purpose. Read its warning before
 starting it, not during.
@@ -32,8 +28,8 @@ Expect, at power-on:
 
 ```
 exo-arm elbow ready
-travel 0-135 deg, 66.7 steps/deg
-unhomed: travel held to 90 deg at 5 deg/s until the extension switch is reached
+travel 0-88 deg, 133.3 steps/deg
+unhomed: travel held to 60 deg at 5 deg/s until the extension switch is reached
 ```
 
 and then nothing until the e-stop reads closed, because the firmware boots
@@ -57,10 +53,10 @@ label on the pendant is what the wearer trusts.
 ## 3. Direction, motor connected, arm not attached
 
 **This is the step that hurts someone if it is wrong.** Connect the motor but
-leave the forearm module uncoupled from the output hub, so a wrong direction
-turns a shaft instead of an arm.
+leave the chain off the sprockets, so a wrong direction turns a sprocket instead
+of an arm.
 
-Press UP. The output shaft must turn in the direction that would **flex** the
+Press UP. The 15T sprocket must turn in the direction that would **flex** the
 elbow. If it turns the other way, set `kInvertDirection` to `true` in
 `firmware/include/config.h` and reflash.
 
@@ -70,14 +66,15 @@ recorded.
 
 ## 4. Steps per degree
 
-Still uncoupled. Mark the output shaft, hold UP until the status line reads
-roughly 90°, and measure the actual shaft rotation with a protractor.
+Still with the chain off. Mark the 15T sprocket, hold UP until the status line
+reads 45°, and measure the sprocket's rotation with a protractor. It turns twice
+as far as the elbow will.
 
 | Reading | Meaning |
 |---|---|
-| Shaft moved ≈ 90° | `kMicrosteps` and `kGearRatio` agree with the hardware |
-| Shaft moved ≈ 45° | Driver is set to 1/16, firmware expects 1/8 |
-| Shaft moved ≈ 180° | Driver is set to 1/4 |
+| Sprocket moved ≈ 90° | `kMicrosteps` and `kGearRatio` agree with the hardware |
+| Sprocket moved ≈ 45° | Driver is set to 1/16, firmware expects 1/8 |
+| Sprocket moved ≈ 180° | Driver is set to 1/4 |
 
 The DIP switches on the TB6600 and `cfg::kMicrosteps` must match. Nothing in
 the firmware can detect a mismatch, and every angle, limit and speed is wrong
@@ -85,7 +82,7 @@ by the same factor when they disagree.
 
 ## 5. Home switch
 
-Still uncoupled, motor connected. This is the step that decides whether the
+Still with the chain off, motor connected. This is the step that decides whether the
 travel limits mean anything, so do it before trusting any of them.
 
 First, the switch on its own. With the arm away from the switch, the status
@@ -105,12 +102,11 @@ If pressing the lever does nothing, check the wiring before assuming the
 firmware. An unplugged switch and a working switch that is simply never
 reached look identical from the status line.
 
-Now the siting. Couple the forearm module, park the arm away from full
-extension, power cycle so it comes up unhomed, then hold DOWN and let it
+Now the siting. Fit the chain, park the arm away from the extension stop, power cycle so it comes up unhomed, then hold DOWN and let it
 seek. Measure two things:
 
-- [ ] **Where it closes.** The switch must close **1–2° before** the hard
-      stop and stay closed to the stop. Closing exactly at the stop leaves no
+- [ ] **Where it closes.** The switch must close **at least 1° before** the hard
+      stop, about 2.5° in the model, and stay closed to the stop. Closing exactly at the stop leaves no
       room for the arm to stop in.
 - [ ] **Where it stops.** At 5°/s the arm should come to rest within a
       fraction of a degree of the switch, and must not reach the hard stop.
@@ -118,7 +114,7 @@ seek. Measure two things:
       too high.
 
 Then confirm the restriction lifts: once homed, the status line must show
-`zero=switch`, and holding UP must now ramp to 20°/s and run past 90°. Before
+`zero=switch`, and holding UP must now ramp to 20°/s and run past 60°. Before
 homing it must do neither.
 
 Finally, the correction itself. Home the arm, flex to roughly 30°, extend
@@ -155,15 +151,17 @@ state machine handles both; only one of them can happen to you.
 
 ## 6. Travel limits
 
-Couple the forearm module. Park at full extension and power cycle; confirm it
+With the chain on, park at the extension stop and power cycle; confirm it
 prints `homed:` and shows `zero=switch` before going on, because an unhomed
-arm stops at 90° and this step would look like a failure. Then hold UP and
+arm stops at 60° and this step would look like a failure. Then hold UP and
 let it run to the limit without touching anything.
 
 - It must come to a **stop**, not a halt: the last part of the travel is a
   deceleration ramp.
 - It must stop short of the mechanical hard stop.
-- The status line must read close to 135°.
+- The status line must read close to 88°.
+- Measure the real elbow travel with a protractor. It must match the status line
+  to within a degree or two, which also confirms the chain ratio.
 
 Repeat with DOWN to the extension limit.
 
@@ -182,16 +180,16 @@ firmware being wrong rather than an assumption going stale.
 Which also makes it the hardest thing to test, because you have to make the
 firmware wrong on purpose.
 
-**Uncouple the forearm module first.** This step deliberately defeats the
-flexion soft limit, on a machine whose hard stops are not built. With the
-forearm off, a runaway turns a shaft. With it on, it does not.
+**Keep the arm unworn, with a current-limited supply.** This step deliberately
+defeats the flexion soft limit, and the span can only be measured with the chain
+on, because the forearm strut is what closes the switch.
 
 First, the switch on its own, before any of that. Press the lever by hand
 with the arm stopped mid-travel. The monitor must fault:
 
 ```
 FAULT: flexion switch reached - both soft limits were passed
-span measured 9201 steps, expected 9200 - agrees
+span measured 12134 steps, expected 12133 - agrees
 ```
 
 If `flex=` in the status line reads `CLOSED` with nothing touching it, the
@@ -215,11 +213,12 @@ switch to here, measured rather than calculated. It is the only number on
 this arm that can be checked against a physical length.
 
 1. Home the arm against the extension switch.
-2. Raise `kMaxAngleDeg` to 145 in `config.h` and reflash, so the planner will
-   drive past the switch.
+2. Raise `kMaxAngleDeg` to 93 in `config.h` and reflash, so the planner will
+   drive to the switch. Go no higher: the flexion stop is only about 3° past it.
+   If the switch does not fault the arm, press the e-stop.
 3. Hold UP and let it run until it faults.
 4. Read the span from the fault message, or at the next power-on from the log.
-5. **Put `kMaxAngleDeg` back to 135 and reflash.** Do not leave it raised.
+5. **Put `kMaxAngleDeg` back to 88 and reflash.** Do not leave it raised.
 
 Expect agreement within two degrees. A disagreement is worth more than it
 looks:
@@ -253,12 +252,29 @@ Each of these, with the arm moving:
 The last one is the test people skip. A severed pendant cable must read as
 stop, and that is only true if the e-stop contact is normally closed.
 
-## 9. Idle behaviour
+## 9. Holding test
 
-Leave the arm stopped mid-travel for five seconds. The motor should go quiet
-and the holding current drop away, and **the elbow must not sag**. If it
-sags, the worm is not holding and the whole safety argument for this design
-does not apply to your gearbox. Stop and reconsider the ratio.
+**Do not wear the arm until this passes.** It decides what the machine does when
+power is lost, and it has never been tested.
+
+Unworn, with a weight in the forearm cuff at least as heavy as the arm it will
+carry. Keep hands and face out of the forearm's path, because it may drop.
+
+1. Stop mid-travel with the forearm horizontal.
+2. Press the e-stop, which removes motor current.
+3. Watch for at least a minute and measure any movement at the cuff. Also try the
+   assist cord's effect by repeating with no weight, since it may pull the forearm
+   upward.
+4. Repeat near both ends of travel.
+
+| Result | What it means |
+|---|---|
+| No movement in any test | The drivetrain holds. You may set `kDeenergiseWhenIdle` to `true` and repeat with the extra load you plan to carry |
+| Any creep or drop | It back-drives. Leave `kDeenergiseWhenIdle` off, and treat a forearm drop as what happens at every e-stop and power failure. That needs a brake or a redesign before anyone wears it |
+
+Vibration can release a worm that looks locked when still, so a pass here is a
+good sign rather than a guarantee. With holding current on, also check motor and
+driver temperature after 30 minutes stopped.
 
 ## 10. Speed, loaded
 
@@ -271,7 +287,7 @@ Record what the supply draws, from the `amps=` field in the status line:
 
 | Condition | Figure to record |
 |---|---|
-| Stopped, driver de-energised | Should read near zero. If not, the zero calibration at boot caught something moving |
+| Before the first motion after power-on | Should read near zero. If not, the zero calibration at boot caught something moving |
 | Moving, unloaded | The floor the collapse threshold sits below |
 | Moving, loaded | The normal working figure |
 | Deliberately obstructed, briefly | The level the overload threshold sits below |
@@ -302,13 +318,13 @@ stopped, which is why the overload monitor is a trip rather than a limit. It
 notices too much force is already going in and cuts the drive. Everything up
 to the threshold reaches the wearer.
 
-The drivetrain delivers roughly 20 N·m against a static load of about 2.8,
-which is sevenfold. The arm does not need sevenfold.
+The drivetrain's ideal output is 57 N·m before losses, against a static load of
+about 2.9. The arm does not need anywhere near that.
 
 1. Find the lowest current setting that moves the arm, loaded, through full
    travel without skipping. Note it.
-2. Go up one step from there, for worm losses as it wears and for a carried
-   load.
+2. Go up one step from there, for drivetrain losses as it wears and for a
+   carried load.
 3. Stay there. Do not set it higher because there is headroom on the driver.
 
 The trade is honest and runs both ways: lower current means a smaller stall

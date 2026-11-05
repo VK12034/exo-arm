@@ -7,15 +7,14 @@ One right arm. Masses are from the Fusion model; see
 
 | Qty | Item | Mass | Notes |
 |---|---|---|---|
-| 1 | NEMA 23 stepper, 23HS30, 76 mm body, 1.9 N·m | — | Lumped with the gearbox at 2.2 kg in the model |
-| 1 | NMRV030 worm gearbox, 15:1, 14 mm keyed output | — | Self-locking at this ratio. Do not substitute a lower ratio without rereading [safety.md](safety.md) |
-| 1 | Keyed shaft hub, 14 mm bore, steel | 0.115 kg | Drives the forearm module |
+| 1 | NEMA 23 stepper, 23HS30, 76 mm body, 1.9 N·m | — | Lumped with the gearbox at 2.19 kg in the model |
+| 1 | NMRV030 worm gearbox, 15:1, 14 mm keyed output | — | Whether this holds a loaded arm without current is **unverified**: see [safety.md](safety.md) |
+| 1 | #35 sprocket, 15T, 14 mm keyed bore | 0.084 kg | On the gearbox output |
+| 1 | #35 sprocket, 30T, plate type, drilled | 0.256 kg | On the elbow |
+| 1 | #35 roller chain, 56 links | 0.270 kg | No guard or tensioner is modelled |
 | 1 | Shaft key, 5 × 5 | 0.003 kg | |
-| 1 | M5 set screw | — | Retains the hub |
-
-The ratio is a safety property, not a performance one. A 15:1 worm holds the
-elbow with the motor off; a 10:1 may not, and the machine then needs holding
-current and a plan for what happens when it is lost.
+| 1 | M8 shoulder bolt, nylock and 2 bronze 8 × 12 bushings | 0.025 kg | Elbow pivot |
+| 1 | 1/4 in shock cord, 3 loops, with anchor and spring pins | 0.046 kg | Assist |
 
 ## Control
 
@@ -31,7 +30,7 @@ current and a plan for what happens when it is lost.
 | 2 | PG7 cable gland | 0.002 kg each |
 | 1 | Relay or contactor for the e-stop supply break | — | Rated for the driver's current |
 | 1 | ACS712-20A current sensor module | 0.005 kg | In the 24 V feed to the driver, for load monitoring |
-| 2 | Lever microswitch, **normally open** | 0.002 kg each | Home switch at full extension, overrun switch past the flexion limit. Polarity is deliberate: see [wiring.md](wiring.md) |
+| 2 | Lever microswitch, **normally open** | 0.002 kg each | KW12-style. Home switch at the extension stop, overrun switch past the flexion limit. Polarity is deliberate: see [wiring.md](wiring.md) |
 
 ## Power
 
@@ -51,20 +50,10 @@ PETG, FDM, 4 walls at 40% infill.
 | 1 | Control box body | 0.128 kg |
 | 1 | Control box lid | 0.052 kg |
 | 1 | Hand pendant housing | 0.136 kg |
-| 1 | Upper arm cuff | 0.064 kg |
-| 1 | Forearm cuff | 0.028 kg |
+| 1 | Upper arm cuff | 0.046 kg |
+| 1 | Forearm cuff | 0.039 kg |
+| 1 | Gearbox plate, 10 mm, with heat-set inserts | 0.047 kg |
 | 1 | Sling strap anchor | 0.014 kg |
-| 2 | Travel hard stop | **not designed** |
-| 2 | Switch bracket | **not designed** |
-
-The last two rows are in no sense ready to print. They are listed because
-[safety.md](safety.md) and [wiring.md](wiring.md) both depend on them and the
-Fusion model does not contain them. Designing them is outstanding work, and
-the arm should not be worn before they are fitted.
-
-The brackets are not interchangeable: the home switch must close one to two
-degrees before the extension stop, the overrun switch at about 138°, three
-degrees past the flexion soft limit.
 
 PETG rather than PLA throughout: these parts sit against a body, in a car, in
 sunlight, and PLA creeps under sustained load at temperatures the arm will
@@ -74,35 +63,38 @@ see.
 
 | Qty | Item | Mass |
 |---|---|---|
-| 1 | Upper strut, 1 × 1/8 in 6061 aluminium flat bar | 0.050 kg |
+| 1 | Upper strut, 1.5 × 3/16 in 6061 flat bar | 0.143 kg |
+| 1 | Forearm strut, 1 × 3/16 in 6061 flat bar | 0.086 kg |
+| 2 | Hard stop: 10 mm steel spacer, M5 bolt, rubber sleeve | 0.005 kg each |
+| 2 | Switch bracket, 3 mm 6061, with 2 × 5 mm OD spacers | 0.005 kg each |
+| 3 | Aluminium standoff, 10 mm OD, for the gearbox plate | 0.003 kg each |
 | 1 | Waist belt, 38 mm nylon webbing, side-release buckle | 0.094 kg |
 | 1 | Sling strap, 25 mm webbing | 0.044 kg |
-| 2 | Velcro cuff strap, 25 mm | 0.001 kg each |
-| 1 | Upper cuff pad, 6 mm EVA foam | 0.025 kg |
+| 2 | Velcro cuff strap, 25 mm | 0.002 kg each |
+| 1 | Upper cuff pad, 5 mm EVA foam | 0.021 kg |
 | 1 | Forearm cuff pad, 5 mm EVA foam | 0.012 kg |
 | 1 | 6-core pendant cable | 0.045 kg |
+| 1 | 4-core motor cable, 18 AWG | 0.016 kg |
 | — | M3–M6 fasteners, nylocs, countersunk screws | — |
 
 ## Totals
 
 | | Mass |
 |---|---|
-| Upper arm module | 2.322 kg |
-| Harness and electronics | 0.749 kg |
-| Forearm module | 0.214 kg |
-| **Device** | **3.285 kg** |
+| Upper arm module | 2.910 kg |
+| Harness and electronics | 0.765 kg |
+| Forearm module | 0.426 kg |
+| Switch mounts | 0.013 kg |
+| **Device** | **4.114 kg** |
 
-Most of it is the gearmotor, and most of that hangs at the elbow end of the
-upper arm module — carried by the sling, not by the wearer's shoulder joint.
-That is what the 25 mm sling strap and its printed anchor are reacting.
+Most of it is the gearmotor, mounted mid upper arm and carried by the sling
+rather than the wearer's shoulder joint. That is what the 25 mm sling strap and
+its printed anchor are reacting.
 
 ## Deliberately not here
 
 - **A battery.** Commission on a bench supply with a current limit. Add a
   battery once the arm has behaved for several hours.
-- **A limit switch at the flexion end.** There is now a home switch at the
-  extension end, which is what the travel counter is referenced to. The
-  flexion limit is still counted steps from that reference, so it is only as
-  good as the counter between one homing and the next. A second switch there
-  would make both ends physical. See [design.md](design.md).
+- **A chain guard and a torque limiter.** Neither is designed yet. Both are
+  needed: see [safety.md](safety.md).
 - **Shoulder actuation.** Out of scope. The sling carries the shoulder.

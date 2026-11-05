@@ -12,7 +12,7 @@ It is a workshop build. See [safety.md](safety.md) before anyone puts it on.
 
 | # | Requirement | Why |
 |---|---|---|
-| R1 | Hold the forearm at any angle with no power applied | A limb support that fails to a drop is not a support |
+| R1 | Hold the forearm at any angle with no power applied. **Not yet shown to be met** | A limb support that fails to a drop is not a support |
 | R2 | Move only while a button is held | Intent must be continuous and unambiguous |
 | R3 | Remove motor power within one loop of the e-stop opening | A powered joint on a limb must fail safe fast |
 | R4 | Never drive outside the elbow's working range | Hard stops are a last resort, not a strategy |
@@ -27,19 +27,21 @@ motion that fatigues first. Powering the shoulder as well would double the
 actuators, double the failure modes, and need a frame stiff enough to react
 shoulder torque into the torso. The sling does that job passively.
 
-**A worm gearbox, and specifically 15:1.** A worm at this ratio is
-self-locking: the output cannot drive the input. The elbow therefore holds
-its angle with the motor off. That single property removes the entire
-control problem that an exoskeleton usually has — no gravity model, no
-holding current, no PID fighting the weight of the arm, no thermal budget for
-standing still. It costs backdrivability and efficiency, neither of which
-this machine needs.
+**A worm gearbox with a chain stage.** The NMRV030 at 15:1 lies along the upper
+arm, and a #35 chain from a 15T to a 30T sprocket carries the drive to the elbow,
+for 30:1 overall. That moves the motor's mass up the arm, away from the elbow,
+and keeps it from standing far off the arm.
 
-**A stepper rather than a servo.** With the load self-locking, position is
-whatever has been stepped since power-on, and a missed step is a slow drift
-rather than a runaway. A closed loop would buy accuracy the application does
-not need, at the price of an encoder, its cable across a moving joint, and
-the failure modes of both.
+The intent is for the worm to hold the arm with the motor off. **That has not
+been shown.** A 15:1 worm may well back-drive, and the chain stage does not
+change that. Until the holding test passes, treat this as a machine that needs
+holding current and can move when it loses power. A chain failure or a skipped
+tooth would also release the forearm whatever the worm does.
+
+**A stepper rather than a servo.** Position is whatever has been stepped since
+the last homing, and a missed step is a drift rather than a runaway. A closed
+loop would buy accuracy the application does not need, at the price of an
+encoder, its cable across a moving joint, and the failure modes of both.
 
 **An Arduino Uno.** There is no control loop to run. The firmware debounces
 three inputs, ramps a velocity, and counts steps. An 8-bit micro at 16 MHz is
@@ -47,8 +49,8 @@ not the constraint; a part that can be replaced from any electronics shop is
 worth more here than headroom.
 
 **A pendant rather than intent sensing.** Load cells or EMG would let the arm
-follow the wearer, but a non-backdrivable joint cannot be led — the wearer
-would be pushing against a worm that does not yield. Buttons are honest about
+follow the wearer, but a geared drive this stiff cannot be led by pushing on
+it, whether or not it turns out to be self-locking. Buttons are honest about
 what the machine can do.
 
 ## Architecture
@@ -65,7 +67,10 @@ what the machine can do.
                            ╚═════ breaks driver supply ═══════════ 15:1
                                                                    │
                                                                    ▼
-                                                            elbow, direct
+                                                            #35 chain, 2:1
+                                                                   │
+                                                                   ▼
+                                                            elbow        
 ```
 
 The e-stop appears twice on purpose: the firmware reads it and stops, and the
@@ -97,7 +102,7 @@ the real arm, and the counter is the only position reference there is.
 Position is steps counted, with no encoder to check them against. What the
 counter is referenced to is a lever switch at the extension end of travel.
 Reaching it sets zero; until it is reached the firmware treats the count as
-an assumption and holds the arm to 90° at 5°/s, so a parking error costs
+an assumption and holds the arm to 60° at 5°/s, so a parking error costs
 range rather than putting the elbow somewhere it should not be.
 
 The switch is deliberately not homed to on power-up. The one rule this
@@ -114,7 +119,7 @@ rounds. Past five degrees it faults instead, because that much loss means the
 flexion limit moved too while the arm was in use, and correcting only the
 zero would hide that.
 
-This is one-ended in two senses. Zero is a switch and 135° is still
+This is one-ended in two senses. Zero is a switch and 88° is still
 arithmetic from it; and the drift measurement only works in the direction
 that matters. Lost steps leave the arm more extended than it claims, so it
 arrives at the switch with the count reading positive and the error is
@@ -158,9 +163,10 @@ not rewritten.
 
 ### Idle behaviour
 
-After three seconds without motion the driver is de-energised. The worm holds
-the elbow, so the only things a holding current would buy are heat in the
-motor, heat in the driver, and noise the wearer has to carry.
+The motor stays energised when idle, which costs heat in the motor and driver
+and some noise. `kDeenergiseWhenIdle` in `config.h` drops the current after
+three seconds, and stays off until the holding test in
+[commissioning.md](commissioning.md) has passed under load on the real gearbox.
 
 ## Numbers
 
@@ -170,26 +176,27 @@ From [cad/README.md](../cad/README.md), measured off the Fusion model:
 |---|---|
 | Elbow to forearm cuff | 193 mm |
 | Shoulder to elbow | 318 mm |
-| Forearm module mass | 0.214 kg |
-| Static load at the elbow | ≈ 2.8 N·m with a typical forearm |
-| Available output torque | ≈ 20 N·m after worm losses |
+| Forearm module mass | 0.426 kg |
+| Static load at the elbow | About 2.9 N·m, calculated for a 70 kg wearer |
+| Ideal output torque | 57 N·m calculated, before worm and chain losses |
 
-The margin is roughly sevenfold. That is not over-engineering: worm
-efficiency falls with wear and temperature, the load rises if the wearer
-carries anything, and a stepper that stalls loses position silently.
+The drive could be up to about twenty times the static load, before losses.
+Usable torque is unmeasured because worm efficiency is unmeasured. The margin is
+useful for a carried load and for wear, but it is also the amount of force that
+could reach an arm or a hard stop.
 
 It is also the figure that cannot be reduced in software, and the reason is
 worth recording where the numbers are. A TB6600 regulates phase current to
-its DIP setting, and stepper torque follows phase current, so those 20 N·m
-are available at every commanded speed. Torque in fact rises as speed falls,
+its DIP setting, and stepper torque follows phase current, so that torque
+is available at every commanded speed. Torque in fact rises as speed falls,
 so commanding the arm slowly does not make it push more gently. There is no
 firmware state between stepping and stopped, which makes the overload monitor
 a trip rather than a limit: it notices that too much force is already going
 in and cuts the drive.
 
 The lever that does exist is the DIP current setting, which scales peak
-torque directly. Dropping it from seven times the static load to two or three
-keeps ample margin for worm losses and a carried load while lowering the
+torque directly. Dropping it toward two or three times the static load keeps
+ample margin for worm losses and a carried load while lowering the
 worst case considerably, at the cost of a smaller stall margin and therefore
 more lost steps. That trade is a bench measurement, not a decision to be made
 from CAD. A mechanical torque limiter on the output is the only fix that
@@ -197,16 +204,19 @@ holds when the firmware is wrong.
 
 ## Open questions
 
-- The mechanical hard stops are not designed. Both this document and
-  [safety.md](safety.md) describe them as the layer behind the soft limits,
-  and the home switch is specified relative to one, but the Fusion model
-  contains no travel stop and no switch mount. The firmware layers are real
-  and tested; the physical one is an intention. It is the largest
-  inconsistency between the documentation and the design.
-- The 135° soft limit itself has no physical reference. Both ends of travel
-  now carry a switch, but neither is at the limit: the home switch defines
-  zero, and the overrun switch sits three degrees past the flexion limit as a
-  check on the firmware. Between them the limit is still arithmetic.
+- Does the drivetrain hold a loaded arm without current? This decides what
+  losing power does, and it has not been tested.
+- The stops are in the model, but their spacers, M5 bolts, the chain and the
+  struts have not been checked against stall loads. The forearm strut meets a
+  stop about 24 mm from the pivot, so the ideal 57 N·m would put over 2 kN on an
+  M5 spacer before losses.
+- The rubber bumper sleeves on the stops sit above the forearm strut's plane, so
+  as modelled they do not touch it.
+- The 88° soft limit itself has no physical reference. Both ends of travel carry
+  a switch, but neither is at the limit: the home switch defines zero, and the
+  overrun switch sits three degrees past the flexion limit as a check on the
+  firmware. Between them the limit is still arithmetic.
+- There is no chain guard in the model.
 - The overrun switch cannot be distinguished from a working one that has
   never fired. It is the one component here whose failure is invisible in
   normal use.
@@ -228,5 +238,6 @@ holds when the firmware is wrong.
   is indistinguishable from an unplugged motor. A shaft encoder would make
   this exact, and would reference position continuously rather than once per
   trip to the switch.
-- The pendant cable crosses no joint, but the motor cable does. That is the
-  cable that will eventually fail.
+- With the gearbox on the upper arm, neither the pendant cable nor the motor
+  cable crosses the elbow. The motor cable does run from the belt to the moving
+  upper arm, and that is the cable to expect to fail first.

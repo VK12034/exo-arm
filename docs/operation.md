@@ -3,9 +3,11 @@
 ## Power-on
 
 There is no encoder. The firmware counts steps, and that count only means
-something once it has been referenced to the home switch at full extension.
+something once it has been referenced to the home switch at the extension stop.
+That stop is about 21° short of a straight arm, and the firmware calls the point
+where the switch closes 0°.
 
-1. **Park the arm at full extension**, against its stop, before switching on.
+1. **Park the arm against its extension stop** before switching on.
 2. Switch on. The status LED blinks fast: the firmware boots into fault.
 3. Release the e-stop mushroom if it is latched, and let go of both buttons.
    The LED drops to a slow blink and the monitor prints `ready`.
@@ -28,7 +30,7 @@ pretend to know where the arm is, so it holds back:
 | | Unhomed | Homed |
 |---|---|---|
 | Speed | 5°/s | 20°/s |
-| Flexion limit | 90° | 135° |
+| Flexion limit | 60° | 88° |
 | Extension | free, seeking the switch | stops at 0° |
 
 Hold **DOWN** and let the arm extend. The moment it reaches the switch the
@@ -47,9 +49,9 @@ banner:
 
 ```
 log: session 14, 3 events, oldest first:
-  s11 drift 41 steps (0.62 deg)
+  s11 drift 83 steps (0.62 deg)
   s12 overload at 73.4 deg
-  s13 drift 96 steps (1.44 deg)
+  s13 drift 192 steps (1.44 deg)
 ```
 
 `session` counts power-ons. Each line is tagged with the session it happened
@@ -89,7 +91,7 @@ They look alike and do unrelated jobs.
 
 | | Home switch | Overrun switch |
 |---|---|---|
-| Where | At full extension, 0° | Past the flexion limit, about 138° |
+| Where | At the extension stop, 0° | Past the flexion limit, about 91° |
 | Reached | Every session, on purpose | Never, if everything is working |
 | On contact | Sets zero, restores full travel | Faults the arm |
 | Status field | `home=` | `flex=` |
@@ -117,12 +119,13 @@ limit the moment you press the other button.
 
 ## After a stop
 
-The motor de-energises three seconds after the arm stops moving. The elbow
-holds its angle anyway: the worm is self-locking. Expect the arm to go quiet
-and stay exactly where it was.
+The motor stays energised while the arm is stopped, so expect some noise and
+warmth. This is deliberate: nothing has yet shown that the drivetrain holds a
+loaded arm without current. Pressing the e-stop or losing power does remove
+current, and the forearm may move when that happens.
 
-If it sags when the motor drops out, stop using it and re-read step 9 of
-[commissioning.md](commissioning.md).
+Step 9 of [commissioning.md](commissioning.md) tests this, and
+`kDeenergiseWhenIdle` in `config.h` is only for after that test has passed.
 
 ## Re-zeroing
 
@@ -135,7 +138,7 @@ the count is re-referenced. If the correction was more than half a degree the
 monitor says how big it was:
 
 ```
-homed: zero set at the extension switch, counter was out by 164 steps (2.46 deg)
+homed: zero set at the extension switch, counter was out by 328 steps (2.46 deg)
 ```
 
 Worth watching. A couple of steps is rounding. Degrees, session after
@@ -212,7 +215,7 @@ reaches the switch.
 | Buzz without motion | Stall. Reduce speed, check for a mechanical bind, check driver current |
 | `FAULT: overload` | The arm is working against something. Find out what before clearing it |
 | `FAULT: current collapse` | Motor disconnected, or the rotor lost synchronism. Check the motor cable first |
-| Arm sags when idle | The worm is not holding. Stop using it |
+| Arm sags when stopped or at e-stop | The drivetrain is not holding. Stop using it and read step 9 of [commissioning.md](commissioning.md) |
 
 ## After a load fault
 
@@ -230,6 +233,6 @@ the size of the correction it reports.
 
 ## Shutdown
 
-Drive to full extension, release the buttons, let it come to rest, then
+Drive to the extension stop, release the buttons, let it come to rest, then
 switch off. Leaving it parked on the home switch means the next power-on
 homes immediately instead of starting out slow and short of range.

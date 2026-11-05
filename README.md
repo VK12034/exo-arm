@@ -3,8 +3,8 @@
 ![BudgetExoArm](cad/BudgetExoArm.png)
 
 A single-degree-of-freedom powered elbow worn on the right arm. A NEMA 23
-stepper drives the elbow through a 15:1 worm; a sling and waist belt carry
-the shoulder; the wearer commands it with a hand pendant.
+stepper drives the elbow through a 15:1 worm and a 2:1 chain stage; a sling
+and waist belt carry the shoulder; the wearer commands it with a hand pendant.
 
 This repository holds the Fusion design, the firmware, and the documentation
 needed to build, commission and operate it.
@@ -19,18 +19,19 @@ needed to build, commission and operate it.
 |---|---|
 | Degrees of freedom | 1 — elbow flexion and extension |
 | Actuator | NEMA 23 stepper, 1.9 N·m, through an NMRV030 worm at 15:1 |
-| Output | ≈ 20 N·m at the elbow after worm losses, against ≈ 2.8 N·m of load |
-| Resolution | 24 000 microsteps per output revolution, 66.7 per degree |
-| Travel | 0° (full extension) to 135° of flexion |
+| Final drive | #35 chain, 15T to 30T, for 30:1 overall |
+| Output | 57 N·m calculated before losses, against about 2.9 N·m of static load |
+| Resolution | 48 000 microsteps per elbow revolution, 133.3 per degree |
+| Travel | About 96° between the hard stops, from about 21° to 118° of true flexion |
 | Control | Arduino Uno and a TB6600 driver, belt-mounted |
 | Interface | UP / DOWN buttons and a latching NC e-stop on a hand pendant |
-| Device mass | 3.285 kg |
+| Device mass | 4.114 kg |
 
-The worm is the fact that shapes everything else. At 15:1 it is self-locking:
-the elbow holds its angle with the motor de-energised, so there is no holding
-current, no gravity compensation to compute, and nothing to tune. It also
-means the wearer cannot backdrive the arm, which is why the e-stop cuts
-driver power rather than asking the firmware to be well behaved.
+The drivetrain is far stronger than the arm needs and may not hold itself.
+**Whether the 15:1 worm is self-locking is unverified.** Until the holding test
+in [commissioning](docs/commissioning.md) passes on the real gearbox, the
+firmware keeps the motor energised when idle. Losing power, or pressing the
+e-stop, may let the forearm move.
 
 ## Layout
 
@@ -57,8 +58,8 @@ limit rather than arriving at it under power. That matters more than it
 sounds — a stepper stopped dead at speed loses steps, and with no encoder the
 step counter is the only idea the firmware has of where the arm is.
 
-That counter is referenced to a lever switch at full extension. Reaching it
-sets zero; until it is reached the arm is held to 90° at 5°/s, because the
+That counter is referenced to a lever switch at the extension stop. Reaching it
+sets zero; until it is reached the arm is held to 60° at 5°/s, because the
 count is an assumption about how the arm was parked and not worth more than
 that. Where the switch and the counter disagree the switch wins, and past
 five degrees of disagreement it faults rather than correcting, because that
@@ -119,10 +120,9 @@ invent a zero wherever the arm happened to be.
 
 ## Status
 
-The mechanical design is substantially complete in CAD, with two known
-omissions: the travel hard stops and the home switch bracket are specified in
-the docs but not modelled, and [docs/safety.md](docs/safety.md) explains why
-that matters more than it sounds.
+The mechanical design is modelled in CAD, including hard stops and switch
+mounts. It has no chain guard or torque limiter, and its structure has not been
+checked against stall loads. See [docs/safety.md](docs/safety.md).
 
 The firmware is written and its planning, step-rate, debounce, load, homing,
 overrun and logging logic are covered by 70 host unit tests, but **it has
