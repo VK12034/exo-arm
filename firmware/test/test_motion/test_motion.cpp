@@ -820,8 +820,8 @@ void test_overrun_span_error_is_signed(void) {
     TEST_ASSERT_TRUE(guard.spanSignificant());
 }
 
-// The case this measurement exists for: the TB6600 set to 1/16 while
-// config.h says 1/8 makes every commanded step half a real step, so the arm
+// The case this measurement exists for: the TB6600 set to 1/8 while
+// config.h says 1/4 makes every commanded step half a real step, so the arm
 // travels only half as far before the switch and the span reads half.
 void test_overrun_span_catches_a_microstep_mismatch(void) {
     OverrunGuard guard = makeGuard();

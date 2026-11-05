@@ -27,18 +27,23 @@ motion that fatigues first. Powering the shoulder as well would double the
 actuators, double the failure modes, and need a frame stiff enough to react
 shoulder torque into the torso. The sling does that job passively.
 
-**A worm gearbox with a chain stage.** The NMRV030 at 15:1 lies along the upper
+**A worm gearbox with a chain stage.** The NMRV030 at 30:1 lies along the upper
 arm, and a #35 chain from a 15T to a 30T sprocket carries the drive to the elbow,
-for 30:1 overall. That moves the motor's mass up the arm, away from the elbow,
+for 60:1 overall. That moves the motor's mass up the arm, away from the elbow,
 and keeps it from standing far off the arm.
 
-The intent was for the worm to hold the arm with the motor off. **By the
-manufacturer's figures it probably will not:** Motovario lists the 030 at 15:1 with
-a static efficiency of 0.55, above the 0.5 it requires, and the chain stage does not
-change that. See [loads.md](loads.md), which also covers a 30:1 worm with a 1:1 chain
-as the way out. Until the holding test passes, treat this as a machine that needs
+The intent is for the worm to hold the arm with the motor off. **The manufacturer's
+figures say it should:** Motovario lists the 030 at 30:1 with a static efficiency of
+0.39, below the 0.5 it requires. A 15:1 worm, at 0.55, does not meet that, which is why
+this one replaced it. Until the holding test passes, treat this as a machine that needs
 holding current and can move when it loses power. A chain failure or a skipped
 tooth would also release the forearm whatever the worm does.
+
+**A deliberately small motor.** The arm needs about 0.13 N·m from the motor to carry the
+static load, so 0.55 N·m leaves margin without much more force than the arm needs.
+A stronger motor with its current turned down depends on the DIP switches staying
+right. This one limits the force even if they are wrong, though not to a level that is
+safe for an arm in every case. See [loads.md](loads.md).
 
 **A stepper rather than a servo.** Position is whatever has been stepped since
 the last homing, and a missed step is a drift rather than a runaway. Control
@@ -67,7 +72,7 @@ what the machine can do.
   └─────────┘              ║  │  · step generator    │ enable      │
                            ║  └──────────────────────┘             ▼
                            ║                                 NEMA 23 + worm
-                           ╚═════ breaks driver supply ═══════════ 15:1
+                           ╚═════ breaks driver supply ═══════════ 30:1
                                                                    │
                                                                    ▼
                                                             #35 chain, 2:1
@@ -205,9 +210,9 @@ From [cad/README.md](../cad/README.md), measured off the Fusion model:
 | Shoulder to elbow | 318 mm |
 | Forearm module mass | 0.430 kg |
 | Static load at the elbow | About 2.9 N·m, calculated for a 70 kg wearer |
-| Output torque at full motor current | 30 to 43 N·m, from catalogue efficiencies |
+| Output torque at full motor current | 12 to 21 N·m, from catalogue efficiencies |
 
-That is 10 to 15 times the static load. The margin helps with a carried load and with
+That is 4 to 7 times the static load. The margin helps with a carried load and with
 wear, but it is also the force that could reach an arm or a hard stop: see
 [loads.md](loads.md).
 
@@ -220,19 +225,18 @@ firmware state between stepping and stopped, which makes the overload monitor
 a trip rather than a limit: it notices that too much force is already going
 in and cuts the drive.
 
-The lever that does exist is the DIP current setting, which scales peak
-torque directly. Dropping it toward two or three times the static load keeps
-ample margin for worm losses and a carried load while lowering the
-worst case considerably, at the cost of a smaller stall margin and therefore
-more lost steps. That trade is a bench measurement, not a decision to be made
-from CAD. A mechanical torque limiter on the output is the only fix that
-holds when the firmware is wrong.
+The levers that do exist are the choice of motor, which sets the ceiling, and the DIP
+current setting, which scales torque below it. Dropping the setting toward two or three
+times the static load keeps margin for worm losses and a carried load while lowering
+the worst case, at the cost of a smaller stall margin and therefore more lost steps.
+That trade is a bench measurement, not a decision to be made from CAD. A mechanical
+torque limiter on the output is the only fix that holds when the firmware is wrong.
 
 ## Open questions
 
-- Does the drivetrain hold a loaded arm without current? The catalogue says probably
-  not, and the real gearbox has not been tested. If it does not, it needs a brake or a
-  30:1 worm with a 1:1 chain.
+- Does the drivetrain hold a loaded arm without current? The catalogue says it should,
+  and the real gearbox has not been tested. If it does not, it needs a motor brake.
+- The CAD still shows the earlier 15:1 gearbox and larger motor, and needs re-exporting.
 - There is no torque limiter. A friction clutch at the 30T sprocket is the likely
   form. See [loads.md](loads.md).
 - The 88° soft limit itself has no physical reference. Both ends of travel carry
@@ -248,10 +252,10 @@ holds when the firmware is wrong.
   normally-open wiring means a break costs range rather than inventing a
   zero, and a contact stuck closed far into flexion faults, but a lever bent
   so that it closes early would be believed.
-- Microstepping is set by DIP switches on the TB6600 and assumed to be 1/8 in
+- Microstepping is set by DIP switches on the TB6600 and assumed to be 1/4 in
   `config.h`. The home-to-overrun span now checks this, because it is the one
   figure that compares a step count against a physical distance: a driver set
-  to 1/16 against a firmware expecting 1/8 halves the measured span, which no
+  to 1/8 against a firmware expecting 1/4 halves the measured span, which no
   tolerance absorbs. But the check only runs when the overrun switch is
   reached, which takes the deliberate procedure in step 7 of
   [commissioning.md](commissioning.md). It is a commissioning check, not a

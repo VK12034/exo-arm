@@ -123,8 +123,10 @@ limit the moment you press the other button.
 
 The motor stays energised while the arm is stopped, and through every fault except
 the e-stop, so expect some noise and warmth. This is deliberate: Motovario's figures
-suggest this worm does not hold a loaded arm without current. **Pressing the e-stop or
-losing power removes current, and the forearm may move when that happens.**
+say this worm should hold a loaded arm without current, but that is not proven until
+the holding test passes. **Pressing the e-stop or losing power removes current, and the
+forearm may move when that happens.** If the worm does hold, it also holds your arm in
+place, so use the quick-release straps to get out.
 
 Step 9 of [commissioning.md](commissioning.md) tests this, and
 `kDeenergiseWhenIdle` in `config.h` is only for after that test has passed.

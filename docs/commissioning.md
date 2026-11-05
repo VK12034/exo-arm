@@ -73,8 +73,8 @@ as far as the elbow will.
 | Reading | Meaning |
 |---|---|
 | Sprocket moved ≈ 90° | `kMicrosteps` and `kGearRatio` agree with the hardware |
-| Sprocket moved ≈ 45° | Driver is set to 1/16, firmware expects 1/8 |
-| Sprocket moved ≈ 180° | Driver is set to 1/4 |
+| Sprocket moved ≈ 45° | Driver is set to 1/8, firmware expects 1/4 |
+| Sprocket moved ≈ 180° | Driver is set to 1/2 |
 
 The DIP switches on the TB6600 and `cfg::kMicrosteps` must match. Nothing in
 the firmware can detect a mismatch, and every angle, limit and speed is wrong
@@ -226,8 +226,8 @@ looks:
 | Span reads | Means |
 |---|---|
 | ≈ expected | Microstepping, gear ratio and switch siting all agree |
-| ≈ half | TB6600 is set to 1/16 and `kMicrosteps` says 1/8 |
-| ≈ double | TB6600 is set to 1/4 |
+| ≈ half | TB6600 is set to 1/8 and `kMicrosteps` says 1/4 |
+| ≈ double | TB6600 is set to 1/2 |
 | A few degrees out | Switch siting, or lever flex. Adjust the switch, not the constant |
 | Shrinking over repeat runs | Steps being lost on the way up |
 
@@ -235,7 +235,7 @@ The halved and doubled cases are the ones step 4 could only check with a
 protractor by eye. This is the firmware checking it, and it is the only
 mechanism in the build that can: nothing else compares a step count against a
 distance. If the span disagrees by a factor, fix the DIP switches rather than
-`kMicrosteps`, because every speed and acceleration figure was chosen for 1/8.
+`kMicrosteps`, because every speed and acceleration figure was chosen for 1/4.
 
 ## 7a. Encoder
 
@@ -272,8 +272,8 @@ stop, and that is only true if the e-stop contact is normally closed.
 ## 9. Holding test
 
 **Do not wear the arm until you have done this.** It decides what the machine does
-when power is lost. Motovario's figures suggest a 15:1 worm will not hold reliably, so
-expect to see movement: see [loads.md](loads.md).
+when power is lost. Motovario's figures say a 30:1 worm should hold, but check the
+figures for the gearbox you bought and do not assume it: see [loads.md](loads.md).
 
 Unworn, with a weight in the forearm cuff at least as heavy as the arm it will
 carry. Keep hands and face out of the forearm's path, because it may drop.
@@ -288,10 +288,13 @@ carry. Keep hands and face out of the forearm's path, because it may drop.
 | Result | What it means |
 |---|---|
 | No movement in any test | The drivetrain holds. You may set `kDeenergiseWhenIdle` to `true` and repeat with the extra load you plan to carry |
-| Any creep or drop | It back-drives. Leave `kDeenergiseWhenIdle` off, and treat a forearm drop as what happens at every e-stop and power failure. That needs a brake, or a 30:1 worm with a 1:1 chain, before anyone wears it |
+| Any creep or drop | It back-drives. Leave `kDeenergiseWhenIdle` off, and treat a forearm drop as what happens at every e-stop and power failure. That needs a motor brake before anyone wears it |
 
 Vibration can release a worm that looks locked when still, so a pass here is a
-good sign rather than a guarantee. With holding current on, also check motor and
+good sign rather than a guarantee. It also says nothing about a moving arm: at this
+ratio the catalogue does not expect the worm to stop instantly in motion, so also press
+the e-stop mid-move and measure how far the forearm runs on. With holding current on,
+also check motor and
 driver temperature after 30 minutes stopped.
 
 ## 10. Speed, loaded
@@ -316,8 +319,8 @@ Then set the thresholds in `config.h`:
 - `kOverloadAmps` midway between the loaded working figure and the obstructed
   one
 
-The values shipped are placeholders sized for a NEMA 23 at roughly 2 A per
-phase. Set too low they will trip during normal use, and a safety device that
+The values shipped are placeholders estimated for the 23HS16 at the 2.0 A starting
+setting. Set too low they will trip during normal use, and a safety device that
 cries wolf gets disabled; set too high they catch nothing.
 
 Obstruct the arm by hand against a bench, not against a person, and keep it
@@ -336,10 +339,9 @@ stopped, which is why the overload monitor is a trip rather than a limit. It
 notices too much force is already going in and cuts the drive. Everything up
 to the threshold reaches the wearer.
 
-At full current the drivetrain can deliver about 30 to 43 N·m against a static load
-of about 2.9, and the hard stop bolts are marginal at the top of that. The arm does
-not need anywhere near that. [loads.md](loads.md) suggests starting near 40% of the
-motor's rated current.
+At the motor's rated 2.8 A the drivetrain can deliver about 12 to 21 N·m against a
+static load of about 2.9. Start at 2.0 A, which gives about 9 to 15 N·m, and never go
+above 2.8 A. See [loads.md](loads.md).
 
 1. Find the lowest current setting that moves the arm, loaded, through full
    travel without skipping. Note it.

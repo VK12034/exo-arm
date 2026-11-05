@@ -3,7 +3,7 @@
 ![BudgetExoArm](cad/BudgetExoArm.png)
 
 A single-degree-of-freedom powered elbow worn on the right arm. A NEMA 23
-stepper drives the elbow through a 15:1 worm and a 2:1 chain stage; a sling
+stepper drives the elbow through a 30:1 worm and a 2:1 chain stage; a sling
 and waist belt carry the shoulder; the wearer commands it with a hand pendant.
 
 This repository holds the Fusion design, the firmware, and the documentation
@@ -18,21 +18,21 @@ needed to build, commission and operate it.
 | | |
 |---|---|
 | Degrees of freedom | 1 — elbow flexion and extension |
-| Actuator | NEMA 23 stepper, 1.9 N·m, through an NMRV030 worm at 15:1 |
-| Final drive | #35 chain, 15T to 30T, for 30:1 overall |
-| Output | About 30 to 43 N·m at full motor torque, against about 2.9 N·m of static load |
-| Resolution | 48 000 microsteps per elbow revolution, 133.3 per degree |
+| Actuator | NEMA 23 stepper, 0.55 N·m, through an NMRV030 worm at 30:1 |
+| Final drive | #35 chain, 15T to 30T, for 60:1 overall |
+| Output | About 12 to 21 N·m at the motor's rated current, 9 to 15 N·m at the 2.0 A starting setting, against about 2.9 N·m of static load |
+| Resolution | 48 000 quarter steps per elbow revolution, 133.3 per degree |
 | Travel | About 96° between the hard stops, from about 21° to 118° of true flexion |
 | Control | Arduino Uno and a TB6600 driver, belt-mounted |
 | Interface | UP / DOWN buttons and a latching NC e-stop on a hand pendant |
 | Encoder | AS5600 on the elbow axis, checking the step count |
-| Device mass | 4.160 kg |
+| Device mass | 4.160 kg as modelled, with a larger motor than the build uses |
 
-The drivetrain is far stronger than the arm needs and probably cannot hold itself.
-**By Motovario's catalogue figures, an NMRV030 at 15:1 is not self-locking.** The
-firmware keeps the motor energised when idle and through every fault except the
-e-stop, but pressing the e-stop or losing power may let the forearm move. See
-[docs/loads.md](docs/loads.md).
+The motor is deliberately small, because it sets the ceiling on how hard the arm can
+push. **By Motovario's catalogue figures, an NMRV030 at 30:1 should hold the arm
+without power, but that has not been tested.** The firmware keeps the motor energised
+when idle and through every fault except the e-stop, and a chain failure releases the
+forearm whatever the worm does. See [docs/loads.md](docs/loads.md).
 
 ## Layout
 
@@ -128,10 +128,10 @@ invent a zero wherever the arm happened to be.
 ## Status
 
 The mechanical design is modelled in CAD, including hard stops, switch mounts, a
-chain guard and the encoder mount. It has no torque limiter, and the worm probably
-does not hold the arm without power. First-pass stall loads are in
-[docs/loads.md](docs/loads.md), and they show the hard stop bolts need the driver
-current set down.
+chain guard and the encoder mount. It has no torque limiter, and the holding test has
+not been done. The drivetrain was changed to a 30:1 worm and a smaller motor after the
+model was last exported, so [the CAD](cad/README.md) still shows the earlier 15:1 worm
+and larger motor. First-pass stall loads are in [docs/loads.md](docs/loads.md).
 
 The firmware is written and its planning, step-rate, debounce, load, homing,
 overrun, encoder and logging logic are covered by host unit tests, but **it has

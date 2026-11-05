@@ -4,6 +4,13 @@
 
 The mechanical design, as modelled in Fusion 360.
 
+**The model is behind the build on the motor and gearbox.** It still names a 15:1
+gearbox and shows a 76 mm, 1.9 N·m motor, and the files below were exported that way.
+The build uses a 30:1 gearbox and a 41 mm, 0.55 N·m motor, as listed under
+[Drivetrain](#drivetrain). A shorter motor should clear everything the longer one
+cleared, and the catalogue gives one set of dimensions for the gearbox size, but
+neither has been re-modelled. The masses here include the larger motor.
+
 | File | What it is |
 |---|---|
 | `source/BudgetExoArm.f3d` | Fusion archive of the design |
@@ -148,19 +155,19 @@ error is a few grams and does not affect any figure here.
 
 | Item | Value |
 |---|---|
-| Motor | NEMA 23 stepper, 76 mm body, 1.9 N·m holding |
-| Gearbox | NMRV030 worm, 15:1 |
+| Motor | NEMA 23 stepper, 41 mm body, 0.55 N·m holding (the model shows 76 mm, 1.9 N·m) |
+| Gearbox | NMRV030 worm, 30:1 (the model says 15:1) |
 | Chain stage | #35, 15T to 30T, 2:1, 56 links |
-| Overall ratio | 30:1 |
-| Resolution | 200 full steps × 8 microsteps × 30 = 48 000 steps per elbow revolution |
-| Ideal output | 57 N·m calculated, before worm and chain losses |
+| Overall ratio | 60:1 |
+| Resolution | 200 full steps × 4 microsteps × 60 = 48 000 steps per elbow revolution |
+| Ideal output | 33 N·m calculated, before worm and chain losses |
 | Assist | 1/4 in shock cord, 3 loops, between the upper arm and a pin on the forearm |
 
-Catalogue efficiencies give 30 to 43 N·m at the elbow at full motor torque. See
+Catalogue efficiencies give 12 to 21 N·m at the elbow at full motor torque. See
 [loads](../docs/loads.md).
 
-**The worm is probably not self-locking.** Motovario lists the NMRV030 at 15:1 with a
-static efficiency of 0.55, above the 0.5 it requires. The chain stage does not change
+**The worm should hold, but that is untested.** Motovario lists the NMRV030 at 30:1
+with a static efficiency of 0.39, below the 0.5 it requires. Vibration can still affect
 that, and a chain failure would release the forearm whatever the worm does.
 
 ## Electronics

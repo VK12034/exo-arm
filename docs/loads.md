@@ -4,75 +4,106 @@ First-pass figures, reproducible with `python tools/stall_loads.py`. They size t
 problem, and they are not a structural sign-off. Limits are typical published
 values rather than figures for the parts you will buy.
 
+## The drivetrain, and why
+
+A 30:1 worm, the 15T to 30T chain, and a 0.55 N·m motor, for 60:1 overall. All figures
+below are at full motor torque.
+
+| | 15:1 worm, chain, 1.9 N·m motor | 30:1 worm, 1:1 chain, 1.9 N·m motor | **This design** |
+|---|---|---|---|
+| Catalogue static efficiency | 0.55, does not hold | 0.39, should hold | **0.39, should hold** |
+| Force at the cuff | 158 to 223 N | 112 to 189 N | **65 to 109 N** |
+| Elbow torque | 30 to 43 N·m | 22 to 37 N·m | **12 to 21 N·m** |
+| Peak gearbox torque | 22 N·m | 38 N·m | **11 N·m** |
+| Parts that change from the 15:1 design | | Sprocket, chain, guard, encoder mount | **Motor and gearbox** |
+
+A stronger motor with its current turned down could reach the same force, but only
+while the DIP switches stay right. Here, the motor is what limits it.
+
+The cost is speed and smoothness at the motor. It turns at 200 rpm for 20°/s, twice the
+earlier design, and it runs at 1/4 microstepping to keep the step rate and
+`kStepsPerDegree` unchanged. That is rougher than 1/8, and vibration can affect a
+worm's holding.
+
 ## Does the worm hold the arm?
 
-**By the manufacturer's own numbers, probably not reliably.** From Motovario's
-technical catalogue, sections 2.4 and 2.5, for an NMRV 030 at 15:1:
+**By the manufacturer's numbers it should, when stopped.** From Motovario's technical
+catalogue, sections 2.4 and 2.5, for an NMRV 030 at 30:1:
 
 | Figure | Value | Catalogue's class |
 |---|---|---|
-| Lead angle | 9°40′ | |
-| Static efficiency | 0.55 | Above 0.5, so not statically irreversible. 0.5 to 0.55 is "low static reversibility", and above 0.55 is "static reversibility" |
-| Dynamic efficiency at 1400 rpm | 0.78 | Above 0.6 is "dynamic reversibility" |
+| Lead angle | 4°52′ | |
+| Static efficiency | 0.39 | Below 0.5, so statically irreversible |
+| Dynamic efficiency at 1400 rpm | 0.66 | Above 0.6 is "dynamic reversibility" |
 
 The catalogue requires a static efficiency below 0.5 for a load on the output to
 fail to turn the worm, and warns that vibration and shocks can affect this even
-then. The gearmotor modelled here may come from another maker, whose figures can
-differ, so [the holding test](commissioning.md) on the real gearbox decides.
+then. The dynamic figure means a moving worm is not expected to stop instantly when
+drive is removed, although this one runs far below 1400 rpm. Other makers' figures can
+differ, so [the holding test](commissioning.md) on the real gearbox decides. If it
+fails, the fix is a motor brake.
 
-Plan on the forearm being able to move whenever motor current is lost.
-
-### The option worth considering
-
-The same table gives the 030 at 30:1 a static efficiency of 0.39 and a dynamic
-efficiency of 0.66, which the catalogue classes as statically irreversible. A
-30:1 worm with a 1:1 chain would keep today's overall ratio, so
-`kStepsPerDegree` would not change. It has not been designed: sprocket fit, that
-gearbox's torque rating, and the chain tension all need checking. A brake on the
-motor is the other route.
+A worm that holds has a cost of its own: the arm stays locked where it stopped, and it
+cannot be pushed back by hand. The quick-release straps are the way out.
 
 ## Stall loads
 
-At full motor holding torque of 1.9 N·m, using the catalogue efficiencies as the
-range. Static load is 2.9 N·m, assuming a 70 kg wearer with the forearm horizontal.
+Using the catalogue efficiencies as the range. Static load is 2.9 N·m, assuming a 70 kg
+wearer with the forearm horizontal.
 
-| Worm efficiency | Gearbox output | Elbow | Times static | At the cuff | Chain | On a hard stop |
-|---|---|---|---|---|---|---|
-| 0.55 | 15.7 N·m | 30.4 N·m | 10.4 | 158 N | 684 N | 1252 N |
-| 0.78 | 22.2 N·m | 43.1 N·m | 14.8 | 223 N | 970 N | 1776 N |
+| Driver | Worm efficiency | Motor | Gearbox output | Elbow | Times static | At the cuff | Chain | On a hard stop |
+|---|---|---|---|---|---|---|---|---|
+| 2.0 A, start here | 0.39 | 0.39 N·m | 4.6 N·m | 8.9 N·m | 3.1 | 46 N | 201 N | 367 N |
+| 2.0 A, start here | 0.66 | 0.39 N·m | 7.8 N·m | 15.1 N·m | 5.2 | 78 N | 339 N | 621 N |
+| 2.8 A, rated | 0.39 | 0.55 N·m | 6.4 N·m | 12.5 N·m | 4.3 | 65 N | 281 N | 514 N |
+| 2.8 A, rated | 0.66 | 0.55 N·m | 10.9 N·m | 21.1 N·m | 7.3 | 109 N | 475 N | 870 N |
+| 3.5 A, wrong switch | 0.66 | 0.69 N·m | 13.6 N·m | 26.4 N·m | 9.1 | 137 N | 594 N | 1087 N |
 
-About 160 to 220 N at the cuff, roughly the weight of 16 to 23 kg, is what could
-reach an arm with no torque limiter.
+The 3.5 A row assumes torque keeps rising with current, which is generous because the
+motor saturates, and running there would overheat it. Torque here is proportional to
+current and comes from holding torque, so it falls off somewhat with speed.
 
 | Item | Limit | Result |
 |---|---|---|
-| Gearbox output | 25 N·m listed maximum | 22 N·m at most. Little margin |
+| Gearbox output, section 5.12 at 500 rpm input | 20 N·m rated, 40 N·m peak | 10.9 N·m at rated motor current. Comfortable |
+| Radial load on the output, chain wheel factor 1.4 | 1529 N on the centre line, 994 N if 50 mm out | 665 N at rated motor current. Comfortable |
 | #35 chain | About 2135 N allowable, 7830 N minimum tensile | Comfortable |
-| M5 hard stop bolt in bending, if the clamp does not help | 34 N·m at the elbow | **Exceeded at the top of the range** |
+| M5 hard stop bolt in bending, if the clamp does not help | 34 N·m at the elbow | Not reached, even in the 3.5 A row |
 | M5 hard stop bolt in shear | 132 N·m at the elbow | Comfortable |
 | M5 bolt bearing in the 4.8 mm strut | 225 N·m at the elbow | Comfortable |
 
 Not checked: contact stress where the strut edge meets the spacer, the strut's
 own bending, the gearbox plate, and the shoulder mount.
 
+## Is the motor strong enough?
+
+Carrying the static load at the lower efficiency takes about 0.13 N·m at the motor. At
+2.0 A it has about 0.39 N·m, or 3.1 times that, before the drop with speed and before a
+carried load.
+
+At 20°/s the motor takes 1.50 ms per full step, and with 1.4 mH on 24 V the phase
+current takes about 0.16 ms to rise, so little torque should be lost to speed. That is
+a calculation, and no torque curve for this motor has been checked, so read one before
+ordering, and let step 10 of [commissioning.md](commissioning.md) decide.
+
+Avoid the 0.88 A, 21.7 mH version sold under a similar name. Its current would take
+far longer to rise at this speed.
+
 ## What this means
 
-**Set the driver current down.** With a factor of 2 on the weakest hard stop check,
-elbow torque should stay under about 17 N·m. At the higher efficiency that is about
-0.75 N·m at the motor, or roughly 40% of its rated current if torque follows current
-in proportion. That still leaves about six times the static load, before the drop in
-torque with speed. Use it as a starting point for the current step in
-[commissioning.md](commissioning.md), and confirm it moves a loaded arm without
-skipping.
+**Start the driver at 2.0 A, and never set it above 2.8 A.** With a factor of 2 on the
+weakest hard stop check, elbow torque should stay under about 17 N·m, and 2.0 A does.
+Rated current is within the bolt's limit with a factor of about 1.6. Confirm that 2.0 A
+moves a loaded arm without skipping.
 
-**A torque limiter is still needed.** Lowering current lowers the ceiling, but it is
-a setting rather than a guarantee. A friction clutch between the 30T sprocket and the
-forearm strut, set to slip near that same torque, would hold when the firmware or the
-DIP switches are wrong. It is not designed yet. If it slips, the encoder sees it.
+**A torque limiter is still needed.** About 80 to 110 N at the cuff can still hurt a
+pinned arm. A friction clutch between the 30T sprocket and the forearm strut, set to
+slip above the working load, would hold when the firmware or the DIP switches are
+wrong. It is not designed yet. If it slips, the encoder sees it.
 
 ## Sources
 
-- [Motovario technical catalogue, VSF/IEC/ATEX rev1 2017](https://my.motovario.com/uploads/pdf_static/TECHNICAL%20CATALOGUE_VSF_IEC_ATEX_EN_rev1_2017.pdf), read from a PDF text extraction, so check the table against the page
-- [RS Components listing for a Motovario 15:1 worm gearbox](https://za.rs-online.com/web/p/gearboxes/2166479), 25 N·m maximum
+- [Motovario technical catalogue, VSF/IEC/ATEX rev1 2017](https://my.motovario.com/uploads/pdf_static/TECHNICAL%20CATALOGUE_VSF_IEC_ATEX_EN_rev1_2017.pdf), read from a PDF text extraction whose columns were scrambled, so check the tables against the page
+- [StepperOnline 23HS16-2804D listing](https://www.omc-stepperonline.com/dual-shaft-nema-23-bipolar-1-8deg-0-55nm-78oz-in-2-8a-2v-57x57x41mm-4-wires.html), from a search result because the page itself refused the request
 - [Tsubaki RS35 roller chain](https://chains.ustsubaki.com/viewitems/rs25-through-rs240-chains/rs35-roller-chains), 1760 lb minimum
 - [partmatch #35 chain](https://partmatch.io/chain/35-1), 480 lb maximum allowable load

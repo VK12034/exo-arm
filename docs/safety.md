@@ -12,16 +12,19 @@ not read this page.
 
 Two things, and both come from the drivetrain.
 
-**It probably does not hold itself.** Motovario's catalogue lists the NMRV030 at 15:1
-with a static efficiency of 0.55, above the 0.5 it requires for a load not to turn the
-worm, and warns that vibration and shocks can affect this anyway. So losing power or
-pressing the e-stop can let the forearm move under its own weight or the wearer's,
-though the assist cord pulls the other way. A failed chain releases the forearm
-whatever the worm does. See [loads.md](loads.md).
+**Whether it holds itself is unproven.** Motovario's catalogue lists the NMRV030 at
+30:1 with a static efficiency of 0.39, below the 0.5 it requires for a load not to turn
+the worm, but warns that vibration and shocks can affect this anyway, and the gearbox
+you buy may come from another maker. Until the holding test passes, assume losing power
+or pressing the e-stop can let the forearm move under its own weight or the wearer's,
+though the assist cord pulls the other way. A moving arm may also run on before it
+stops. A failed chain releases the forearm whatever the worm does. See
+[loads.md](loads.md).
 
-**The wearer cannot rely on pushing back.** Through 30:1 the motor can produce
-10 to 15 times the static load, or about 160 to 220 N at the cuff. A command error
-ends when the motor stops,
+**The wearer cannot rely on pushing back.** Through 60:1 the motor can produce
+4 to 7 times the static load at its rated current, or about 65 to 110 N at the cuff. A
+worm that holds also cannot be pushed back by hand, even with the power off. A command
+error ends when the motor stops,
 the e-stop opens, or the elbow reaches a limit, and stopping the motor may bring
 the first problem with it.
 
@@ -39,11 +42,11 @@ shown what happens when power is lost under load.
 | Travel limits trusted before anything has measured them | Until the home switch is reached the arm is held to 60° at 5°/s, so a parking error of up to about 30° stays short of the flexion stop |
 | Ambiguous command | Both buttons, or neither, reads as stop |
 | Arm binding or pushing against something | Supply current monitored while driving; sustained overload faults the arm. Partial — see Known gaps |
-| Forearm moving when power is lost | **Not mitigated, and likely.** Motor stays energised when idle and through every fault except the e-stop, but the e-stop and any power failure still remove current. See commissioning step 9 |
+| Forearm moving when power is lost | **Should hold by catalogue figures, unproven.** Worm chosen to be statically irreversible. Motor also stays energised when idle and through every fault except the e-stop, but the e-stop and any power failure still remove current. See commissioning step 9 |
 | Chain failure or skipped tooth | **Detected, not prevented.** Releases the forearm from the drive. The encoder sees the disagreement and faults, but cannot hold the arm |
 | Lost steps or back-driving | Encoder on the elbow compares the measured angle with the count, stopped or moving, and faults on a sustained disagreement |
 | Fingers, hair or clothing in the chain and sprockets | Printed guard in the model, not yet built. Its open end is roofed by the gearbox plate, so check for gaps on the real parts |
-| Wearer trapped in a dead arm | Every strap releases one-handed from the free hand; cuffs are quick-release |
+| Wearer trapped in a dead arm | **More likely if the worm holds, since the arm then locks where it stopped.** Every strap releases one-handed from the free hand; cuffs are quick-release |
 
 ## Interlocks
 
@@ -115,9 +118,11 @@ page:
   0° before the switch can be reached. That is the benign direction — it
   costs range rather than overrunning a limit — but it means a clean homing
   message is not proof the counter is right.
-- **No torque limit, and the firmware cannot provide one.** The drivetrain's
-  output is 30 to 43 N·m at full motor current, against about 2.9 N·m of static
-  load, and nothing stops that being applied to an arm.
+- **No torque limit below the motor's own, and the firmware cannot provide one.** The
+  drivetrain's output is 12 to 21 N·m at the motor's rated current, against about
+  2.9 N·m of static load, and nothing stops that being applied to an arm. A small
+  motor lowers that ceiling but does not make it safe: about 110 N at the cuff is
+  still enough to hurt a pinned arm.
 
   This one deserves spelling out, because the obvious software fix does not
   work. A TB6600 regulates phase current to whatever its DIP switches are
@@ -139,17 +144,18 @@ page:
     a stiff geared actuator worn by a person, and it is the only one that
     works when the firmware is wrong, which is the case that matters.
   - **A lower driver current setting.** The DIP switches trade peak torque
-    for capability directly. [loads.md](loads.md) suggests starting near 40% of
-    rated current. See step 10 of [commissioning.md](commissioning.md).
+    for capability directly. [loads.md](loads.md) suggests starting at 2.0 A.
+    See step 10 of [commissioning.md](commissioning.md).
     Cheap, available now, and partial: it lowers the ceiling rather than
-    limiting the force below it.
+    limiting the force below it. A wrong switch can raise it again, to about
+    137 N at the cuff at the driver's 3.5 A top setting if torque keeps rising
+    with current.
   - **A driver whose current is software-settable**, which would make a real
     limit possible and is a different machine from this one.
 - **The hard stops are modelled but not proven.** Rubber-sleeved steel spacers on the
-  upper strut stop the forearm strut at about 21° and 118° of true flexion. At full
-  motor current they could see 1250 to 1780 N, and the M5 bolt in bending, if the
-  clamp does not help, reaches its limit at about 1400 N. Set the driver current down.
-  See [loads.md](loads.md).
+  upper strut stop the forearm strut at about 21° and 118° of true flexion. At the
+  motor's rated current they could see 510 to 870 N, and the M5 bolt in bending, if the
+  clamp does not help, reaches its limit at about 1400 N. See [loads.md](loads.md).
 - **Switch closing angles are modelled targets.** Real levers differ, so
   commissioning measures them. Until then the margins around both switches are
   estimates.

@@ -18,8 +18,8 @@
 // so the step count when it closes measures the distance from the home switch
 // to here. That span is the only number on this machine that can be compared
 // against a physical length, which makes it the one available check on
-// microstepping: if the TB6600's DIP switches say 1/16 while config.h says
-// 1/8, every angle is wrong by a factor of two and the measured span says so.
+// microstepping: if the TB6600's DIP switches say 1/8 while config.h says
+// 1/4, every angle is wrong by a factor of two and the measured span says so.
 // Nothing else in the firmware can detect that.
 #pragma once
 

@@ -18,8 +18,8 @@ that input.
 | Enable | 5 | ENA− | Low energises the motor |
 | 5 V | 5V | PUL+, DIR+, ENA+ | Common positive |
 
-Set the DIP switches for **1/8 microstepping** and a current appropriate to
-the motor. `cfg::kMicrosteps` must match the switches. Step 7 of
+Set the DIP switches for **1/4 microstepping** and **2.0 A** to start, and never above
+the motor's rated 2.8 A. `cfg::kMicrosteps` must match the switches. Step 7 of
 [commissioning.md](commissioning.md) checks that it does, by measuring the
 home-to-overrun span, but nothing checks it while the arm is running, and a
 mismatch scales every angle in the firmware by the same wrong factor.

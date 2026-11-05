@@ -54,11 +54,12 @@ constexpr bool kFlexSwitchClosesToGround = true;
 constexpr bool kEnableActiveLow = true;
 
 // --- Drivetrain ------------------------------------------------------------
-// NEMA 23 (23HS30) through an NMRV030 worm at 15:1, then a #35 chain stage from
-// a 15T sprocket to a 30T sprocket on the elbow: 30:1 overall.
+// NEMA 23 (23HS16, 0.55 N.m) through an NMRV030 worm at 30:1, then a #35 chain
+// stage from a 15T sprocket to a 30T sprocket on the elbow: 60:1 overall. The small
+// motor is deliberate: it sets the ceiling on force. See docs/loads.md.
 constexpr uint16_t kMotorStepsPerRev = 200;
-constexpr uint8_t  kMicrosteps       = 8;     // TB6600 DIP switches
-constexpr uint8_t  kGearRatio        = 30;    // 15:1 worm x 2:1 chain
+constexpr uint8_t  kMicrosteps       = 4;     // TB6600 DIP switches
+constexpr uint8_t  kGearRatio        = 60;    // 30:1 worm x 2:1 chain
 
 constexpr float kStepsPerOutputRev =
     static_cast<float>(kMotorStepsPerRev) * kMicrosteps * kGearRatio;  // 48000
@@ -162,10 +163,10 @@ constexpr uint16_t kDebounceMs    = 25;
 constexpr uint16_t kStatusPeriodMs = 500;
 
 // Whether the motor may be de-energised after a pause. Off until proven safe.
-// Nothing has shown that this drivetrain holds a loaded arm without current,
-// and a 15:1 worm may well back-drive, in which case cutting current drops the
-// forearm. Turn this on only after the holding test in docs/commissioning.md
-// passes on the real gearbox, under load.
+// The catalogue says a 30:1 worm should hold a loaded arm without current, but
+// nothing has shown it on this gearbox, and if it back-drives then cutting current
+// drops the forearm. Turn this on only after the holding test in
+// docs/commissioning.md passes on the real gearbox, under load.
 constexpr bool     kDeenergiseWhenIdle = false;
 constexpr uint16_t kIdleDisableMs      = 3000;
 
@@ -214,9 +215,11 @@ constexpr float kAmpsPerCount = (5.0f / 1024.0f) / 0.100f;
 constexpr uint8_t kCurrentZeroSamples = 64;
 
 // Every threshold here is a placeholder until it is measured on the bench.
-// docs/commissioning.md step 10 says to record the real figures; these are
-// sized for a NEMA 23 at roughly 2 A per phase off a 24 V supply.
-constexpr float    kOverloadAmps  = 2.5f;   // sustained draw that means binding
+// docs/commissioning.md step 10 says to record the real figures. These are
+// estimated for a 23HS16 with the driver at its 2.0 A starting setting, off a 24 V
+// supply: about 0.4 A carrying the static load and 0.7 A near stall. They move with
+// the driver setting.
+constexpr float    kOverloadAmps  = 0.6f;   // sustained draw that means binding
 constexpr uint16_t kOverloadMs    = 400;
 constexpr float    kCollapseAmps  = 0.15f;  // draw that means no useful work
 constexpr uint16_t kCollapseMs    = 600;
