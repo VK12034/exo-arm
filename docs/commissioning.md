@@ -355,9 +355,16 @@ drift. Higher current means a harder push into whatever the arm meets. Pick
 from measurement rather than from the datasheet, and redo the thresholds
 above afterwards, because they move with it.
 
-A mechanical torque limiter on the output is the only fix that still holds
-when the firmware is wrong. It is not in this design. See
-[safety.md](safety.md).
+The clutch is the fix that still holds when the firmware is wrong, and it comes next.
+
+## 10a. Clutch
+
+Set the slip torque by following [torque-limiter.md](torque-limiter.md#setting-it), with
+the arm unworn and a spring scale at the cuff. It should slip at 35 to 45 N, and doing so
+should fault the arm through the encoder. **Do not go on until it does both.** If it slips
+without a fault, the encoder is not on the forearm side of the clutch.
+
+Repeat the holding test in step 9 afterwards, since the clutch is now in that load path.
 
 ## 11. Load monitoring
 

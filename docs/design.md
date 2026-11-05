@@ -144,7 +144,7 @@ minimum was worth more than that recovery path.
 ### The encoder
 
 An AS5600 on the elbow axis measures the joint itself, so worm backlash, chain slip,
-lost motor steps and back-driving all appear in one number. It needs no calibration
+clutch slip, lost motor steps and back-driving all appear in one number. It needs no calibration
 constant: it takes its zero when the arm homes, and only the difference from the
 step count matters afterwards.
 
@@ -208,7 +208,7 @@ From [cad/README.md](../cad/README.md), measured off the Fusion model:
 |---|---|
 | Elbow to forearm cuff | 193 mm |
 | Shoulder to elbow | 318 mm |
-| Forearm module mass | 0.430 kg |
+| Forearm module mass | 0.600 kg |
 | Static load at the elbow | About 2.9 N·m, calculated for a 70 kg wearer |
 | Output torque at full motor current | 12 to 21 N·m, from catalogue efficiencies |
 
@@ -229,15 +229,21 @@ The levers that do exist are the choice of motor, which sets the ceiling, and th
 current setting, which scales torque below it. Dropping the setting toward two or three
 times the static load keeps margin for worm losses and a carried load while lowering
 the worst case, at the cost of a smaller stall margin and therefore more lost steps.
-That trade is a bench measurement, not a decision to be made from CAD. A mechanical
-torque limiter on the output is the only fix that holds when the firmware is wrong.
+That trade is a bench measurement, not a decision to be made from CAD.
+
+**A friction clutch at the 30T sprocket** is the fix that holds when the firmware is
+wrong. It is to be set to slip near 8 N·m, so about 41 N at the cuff. It sits at the
+elbow rather than the gearbox because a 15T sprocket leaves too little room for facings
+or a hub, and because the larger radius needs less clamping force. It relies on the
+encoder magnet staying on the forearm side, so that a slip faults the arm. See
+[torque-limiter.md](torque-limiter.md).
 
 ## Open questions
 
 - Does the drivetrain hold a loaded arm without current? The catalogue says it should,
   and the real gearbox has not been tested. If it does not, it needs a motor brake.
-- There is no torque limiter. A friction clutch at the 30T sprocket is the likely
-  form. See [loads.md](loads.md).
+- The clutch has not been built, its friction is assumed, and wear lowers its setting
+  quickly. See [torque-limiter.md](torque-limiter.md).
 - The 88° soft limit itself has no physical reference. Both ends of travel carry
   a switch, but neither is at the limit: the home switch defines zero, and the
   overrun switch sits three degrees past the flexion limit as a check on the

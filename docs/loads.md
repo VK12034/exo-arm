@@ -73,7 +73,7 @@ current and comes from holding torque, so it falls off somewhat with speed.
 | M5 bolt bearing in the 4.8 mm strut | 225 N·m at the elbow | Comfortable |
 
 Not checked: contact stress where the strut edge meets the spacer, the strut's
-own bending, the gearbox plate, and the shoulder mount.
+own bending, the gearbox plate, the shoulder mount, and the clutch plates' flatness.
 
 ## Is the motor strong enough?
 
@@ -96,10 +96,11 @@ weakest hard stop check, elbow torque should stay under about 17 N·m, and 2.0 A
 Rated current is within the bolt's limit with a factor of about 1.6. Confirm that 2.0 A
 moves a loaded arm without skipping.
 
-**A torque limiter is still needed.** About 80 to 110 N at the cuff can still hurt a
-pinned arm. A friction clutch between the 30T sprocket and the forearm strut, set to
-slip above the working load, would hold when the firmware or the DIP switches are
-wrong. It is not designed yet. If it slips, the encoder sees it.
+**The clutch sets the real limit, if it works.** About 80 to 110 N at the cuff can still
+hurt a pinned arm. [A friction clutch](torque-limiter.md) between the 30T sprocket and
+the forearm, set to slip near 8 N·m, should bring that to about 41 N and about 330 N on a
+hard stop, whatever the firmware or DIP switches do. The figures above are what is left
+if it seizes or is over-tightened. It has not been built or tested.
 
 ## Sources
 

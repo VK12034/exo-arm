@@ -557,7 +557,7 @@ void loop() {
             g_angle.clearZero();
             applyTravelLimits();
             enterFault(F("encoder disagrees with the step counter - "
-                         "lost steps, chain slip or back-driving"),
+                         "lost steps, clutch or chain slip, or back-driving"),
                        Journal::Event::kFaultEncoder);
             updateLeds(now_ms);
             return;

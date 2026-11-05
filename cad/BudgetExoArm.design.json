@@ -6,7 +6,7 @@
     "angle": "rad"
   },
   "fusion_default_length_unit": "mm",
-  "timeline_items": 370,
+  "timeline_items": 379,
   "parameters": [
     {
       "name": "d141",
@@ -1633,13 +1633,13 @@
       "description": "",
       "part_number": "2026-09-25-13-44-36-213",
       "physical": {
-        "mass_kg": 10.352694544353936,
-        "volume_mm3": 45906054.723015115,
-        "area_mm2": 1942713.6244386341,
+        "mass_kg": 10.521618280856085,
+        "volume_mm3": 45938415.31919425,
+        "area_mm2": 1977633.667185435,
         "centre_of_mass_mm": {
-          "x": -6.877264753554195,
-          "y": -111.0245841114447,
-          "z": -200.35586622173304
+          "x": -6.76721898006257,
+          "y": -107.94603444453142,
+          "z": -202.43715472847697
         }
       },
       "bounding_box": {
@@ -1804,13 +1804,13 @@
       "description": "",
       "part_number": "2026-09-25-13-47-21-260",
       "physical": {
-        "mass_kg": 2.366199409759486,
-        "volume_mm3": 679382.9433340547,
-        "area_mm2": 219322.5388011264,
+        "mass_kg": 2.3647611509435604,
+        "volume_mm3": 679199.7256504972,
+        "area_mm2": 219095.21315671265,
         "centre_of_mass_mm": {
-          "x": -17.96352243366545,
-          "y": 105.52922601122472,
-          "z": -175.42130110474577
+          "x": -17.976085998654057,
+          "y": 105.54803731145381,
+          "z": -175.32667316759995
         }
       },
       "bounding_box": {
@@ -1830,7 +1830,7 @@
           "z": 326.03
         }
       },
-      "body_count": 44
+      "body_count": 42
     },
     {
       "name": "Forearm Module",
@@ -1838,33 +1838,33 @@
       "description": "",
       "part_number": "2026-09-25-13-47-48-261",
       "physical": {
-        "mass_kg": 0.4300386637761827,
-        "volume_mm3": 146783.12941383533,
-        "area_mm2": 81694.77516463761,
+        "mass_kg": 0.6004006590942562,
+        "volume_mm3": 179326.94327654215,
+        "area_mm2": 116842.14355585177,
         "centre_of_mass_mm": {
-          "x": 49.580967922172825,
-          "y": 71.93157708612942,
-          "z": -330.0000000000002
+          "x": 35.51250797269082,
+          "y": 74.41246039055922,
+          "z": -330.00000000000006
         }
       },
       "bounding_box": {
         "min_mm": {
-          "x": -48.470000000000006,
+          "x": -48.480000000000004,
           "y": -34.22,
-          "z": -378.47
+          "z": -378.48
         },
         "max_mm": {
-          "x": 252.72000000000003,
+          "x": 252.72000000000006,
           "y": 106.02000000000001,
-          "z": -281.53
+          "z": -281.52
         },
         "size_mm": {
-          "x": 301.19000000000005,
+          "x": 301.20000000000005,
           "y": 140.24,
-          "z": 96.94000000000003
+          "z": 96.96000000000001
         }
       },
-      "body_count": 19
+      "body_count": 29
     },
     {
       "name": "Switch Mounts",
@@ -4761,40 +4761,6 @@
     {
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
-      "body": "Spacer End Cap, not a bumper",
-      "material": "Steel",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.0007191294079626566,
-        "volume_mm3": 91.60884177868238,
-        "area_mm2": 113.66282220687879,
-        "centre_of_mass_mm": {
-          "x": 13.151134403389989,
-          "y": 74.6,
-          "z": -303.036178611025
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": 10.45113440367232,
-          "y": 72.6,
-          "z": -305.73617861102497
-        },
-        "max_mm": {
-          "x": 15.85113440367232,
-          "y": 76.6,
-          "z": -300.336178611025
-        },
-        "size_mm": {
-          "x": 5.4,
-          "y": 4.0000000000000036,
-          "z": 5.3999999999999915
-        }
-      }
-    },
-    {
-      "occurrence": "/Upper Arm Module:1",
-      "component": "Upper Arm Module",
       "body": "Extension Hard Stop (steel spacer)",
       "material": "Steel",
       "visible": true,
@@ -4863,40 +4829,6 @@
     {
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
-      "body": "Spacer End Cap, not a bumper (1)",
-      "material": "Steel",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.0007191294079626566,
-        "volume_mm3": 91.60884177868238,
-        "area_mm2": 113.66282220687879,
-        "centre_of_mass_mm": {
-          "x": -7.7645713533579555,
-          "y": 74.6,
-          "z": -358.97777478867204
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -10.464571353075623,
-          "y": 72.6,
-          "z": -361.6777747886721
-        },
-        "max_mm": {
-          "x": -5.064571353075622,
-          "y": 76.6,
-          "z": -356.277774788672
-        },
-        "size_mm": {
-          "x": 5.4,
-          "y": 4.0000000000000036,
-          "z": 5.4000000000000625
-        }
-      }
-    },
-    {
-      "occurrence": "/Upper Arm Module:1",
-      "component": "Upper Arm Module",
       "body": "Rubber Stop Sleeve (Extension)",
       "material": "Rubber",
       "visible": true,
@@ -4959,176 +4891,6 @@
           "x": 10.0,
           "y": 5.800000000000001,
           "z": 10.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Forearm Module:1",
-      "component": "Forearm Module",
-      "body": "Elbow Sprocket #35 30T (plate type, drilled)",
-      "material": "Steel",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.25641393783438143,
-        "volume_mm3": 32664.195902468975,
-        "area_mm2": 17706.202177917185,
-        "centre_of_mass_mm": {
-          "x": -8.173019702579174e-11,
-          "y": 80.25,
-          "z": -330.00000000000006
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -48.46,
-          "y": 77.6,
-          "z": -378.46000000000004
-        },
-        "max_mm": {
-          "x": 48.46,
-          "y": 82.9,
-          "z": -281.54
-        },
-        "size_mm": {
-          "x": 96.92,
-          "y": 5.300000000000011,
-          "z": 96.92000000000004
-        }
-      }
-    },
-    {
-      "occurrence": "/Forearm Module:1",
-      "component": "Forearm Module",
-      "body": "Sprocket Spacer 5 mm",
-      "material": "Steel",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.002150174734456244,
-        "volume_mm3": 273.90760948487184,
-        "area_mm2": 353.03647444715295,
-        "centre_of_mass_mm": {
-          "x": -20.000000000874305,
-          "y": 75.1,
-          "z": -330.0
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -25.0,
-          "y": 72.6,
-          "z": -335.0
-        },
-        "max_mm": {
-          "x": -15.0,
-          "y": 77.6,
-          "z": -325.0
-        },
-        "size_mm": {
-          "x": 10.0,
-          "y": 5.0,
-          "z": 10.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Forearm Module:1",
-      "component": "Forearm Module",
-      "body": "M5 Nylock Nut",
-      "material": "Steel",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.0010528414248696025,
-        "volume_mm3": 134.11992673498122,
-        "area_mm2": 244.26165189571267,
-        "centre_of_mass_mm": {
-          "x": -19.99999999963947,
-          "y": 84.89999999999998,
-          "z": -330.00000000000006
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -24.61880215351701,
-          "y": 82.9,
-          "z": -334.0
-        },
-        "max_mm": {
-          "x": -15.381197846482994,
-          "y": 86.89999999999999,
-          "z": -326.0
-        },
-        "size_mm": {
-          "x": 9.237604307034013,
-          "y": 3.999999999999986,
-          "z": 7.999999999999972
-        }
-      }
-    },
-    {
-      "occurrence": "/Forearm Module:1",
-      "component": "Forearm Module",
-      "body": "Sprocket Spacer 5 mm (1)",
-      "material": "Steel",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.0021501747344562444,
-        "volume_mm3": 273.9076094848719,
-        "area_mm2": 353.03647444715295,
-        "centre_of_mass_mm": {
-          "x": 19.99999999912569,
-          "y": 75.1,
-          "z": -329.99999999999994
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": 15.0,
-          "y": 72.6,
-          "z": -335.0
-        },
-        "max_mm": {
-          "x": 25.0,
-          "y": 77.6,
-          "z": -325.0
-        },
-        "size_mm": {
-          "x": 10.0,
-          "y": 5.0,
-          "z": 10.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Forearm Module:1",
-      "component": "Forearm Module",
-      "body": "M5 Nylock Nut (1)",
-      "material": "Steel",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.0010528414248696094,
-        "volume_mm3": 134.1199267349821,
-        "area_mm2": 244.26165189571242,
-        "centre_of_mass_mm": {
-          "x": 20.000000000360522,
-          "y": 84.89999999999998,
-          "z": -330.0
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": 15.381197846482994,
-          "y": 82.9,
-          "z": -334.0
-        },
-        "max_mm": {
-          "x": 24.61880215351701,
-          "y": 86.89999999999999,
-          "z": -326.0
-        },
-        "size_mm": {
-          "x": 9.237604307034013,
-          "y": 3.999999999999986,
-          "z": 7.999999999999972
         }
       }
     },
@@ -5543,40 +5305,6 @@
     {
       "occurrence": "/Forearm Module:1",
       "component": "Forearm Module",
-      "body": "Encoder Magnet Cup (PETG print)",
-      "material": "PETG (FDM, 4 walls + 40% infill)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.0037744327215345997,
-        "volume_mm3": 4193.814135038444,
-        "area_mm2": 5566.305279556932,
-        "centre_of_mass_mm": {
-          "x": 2.509141112183483e-09,
-          "y": 89.74673522818568,
-          "z": -329.9999999999999
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -26.0,
-          "y": 86.9,
-          "z": -356.0
-        },
-        "max_mm": {
-          "x": 26.0,
-          "y": 96.4,
-          "z": -304.0
-        },
-        "size_mm": {
-          "x": 52.0,
-          "y": 9.499999999999993,
-          "z": 52.00000000000003
-        }
-      }
-    },
-    {
-      "occurrence": "/Forearm Module:1",
-      "component": "Forearm Module",
       "body": "Encoder Magnet (6 x 2.5 mm diametric)",
       "material": "Steel",
       "visible": true,
@@ -5605,6 +5333,550 @@
           "x": 6.000000000000001,
           "y": 2.5,
           "z": 5.999999999999943
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Shim",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.016717169277387065,
+        "volume_mm3": 2129.5757041257407,
+        "area_mm2": 3222.080257374764,
+        "centre_of_mass_mm": {
+          "x": -2.9119288393882595e-09,
+          "y": 73.35,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -23.0,
+          "y": 72.6,
+          "z": -353.0
+        },
+        "max_mm": {
+          "x": 23.0,
+          "y": 74.1,
+          "z": -307.0
+        },
+        "size_mm": {
+          "x": 46.0,
+          "y": 1.5000000000000036,
+          "z": 45.99999999999998
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Inner Plate",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.08902247457573377,
+        "volume_mm3": 11340.442621112583,
+        "area_mm2": 9961.424817855586,
+        "centre_of_mass_mm": {
+          "x": -4.3261215961673555e-09,
+          "y": 75.35,
+          "z": -330.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -39.0,
+          "y": 74.1,
+          "z": -369.0
+        },
+        "max_mm": {
+          "x": 39.0,
+          "y": 76.6,
+          "z": -291.0
+        },
+        "size_mm": {
+          "x": 78.0,
+          "y": 2.5,
+          "z": 77.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Hub",
+      "material": "Aluminum 6061",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.032194468487489546,
+        "volume_mm3": 11923.87721758872,
+        "area_mm2": 5391.22432097237,
+        "centre_of_mass_mm": {
+          "x": -3.2162937282512435e-09,
+          "y": 80.0,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -25.5,
+          "y": 76.6,
+          "z": -355.5
+        },
+        "max_mm": {
+          "x": 25.5,
+          "y": 83.4,
+          "z": -304.5
+        },
+        "size_mm": {
+          "x": 51.0,
+          "y": 6.799999999999997,
+          "z": 50.99999999999998
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Facing (inner)",
+      "material": "Clutch facing, 1 mm organic",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.004259528399369888,
+        "volume_mm3": 2366.4046663166046,
+        "area_mm2": 5144.357970253286,
+        "centre_of_mass_mm": {
+          "x": -1.0654569414763344e-08,
+          "y": 77.1,
+          "z": -329.99999999999994
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -38.5,
+          "y": 76.6,
+          "z": -368.5
+        },
+        "max_mm": {
+          "x": 38.5,
+          "y": 77.6,
+          "z": -291.5
+        },
+        "size_mm": {
+          "x": 77.0,
+          "y": 0.9999999999999964,
+          "z": 77.00000000000003
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Facing (outer)",
+      "material": "Clutch facing, 1 mm organic",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.004259528399369962,
+        "volume_mm3": 2366.4046663166455,
+        "area_mm2": 5144.357970253293,
+        "centre_of_mass_mm": {
+          "x": -1.0654524375378356e-08,
+          "y": 83.39999999999998,
+          "z": -329.99999999999994
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -38.5,
+          "y": 82.89999999999999,
+          "z": -368.5
+        },
+        "max_mm": {
+          "x": 38.5,
+          "y": 83.9,
+          "z": -291.5
+        },
+        "size_mm": {
+          "x": 77.0,
+          "y": 1.0000000000000142,
+          "z": 77.00000000000003
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Outer Plate",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.10399706209843389,
+        "volume_mm3": 13248.033388335529,
+        "area_mm2": 10030.85401549991,
+        "centre_of_mass_mm": {
+          "x": -4.4731362901303665e-09,
+          "y": 85.39999999999999,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -39.0,
+          "y": 83.9,
+          "z": -369.0
+        },
+        "max_mm": {
+          "x": 39.0,
+          "y": 86.89999999999998,
+          "z": -291.0
+        },
+        "size_mm": {
+          "x": 78.0,
+          "y": 2.9999999999999716,
+          "z": 77.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Disc Springs, 4 x 10 x 5.2 x 0.4",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0012595122470325415,
+        "volume_mm3": 160.44742000414544,
+        "area_mm2": 248.31148333973778,
+        "centre_of_mass_mm": {
+          "x": 19.999999999182624,
+          "y": 88.3,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 15.0,
+          "y": 86.89999999999999,
+          "z": -335.0
+        },
+        "max_mm": {
+          "x": 25.0,
+          "y": 89.7,
+          "z": -325.0
+        },
+        "size_mm": {
+          "x": 10.0,
+          "y": 2.8000000000000114,
+          "z": 10.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Disc Springs, 4 x 10 x 5.2 x 0.4 (1)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0012595122470325413,
+        "volume_mm3": 160.4474200041454,
+        "area_mm2": 248.31148333973778,
+        "centre_of_mass_mm": {
+          "x": -20.000000000817373,
+          "y": 88.3,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -25.0,
+          "y": 86.89999999999999,
+          "z": -335.0
+        },
+        "max_mm": {
+          "x": -15.0,
+          "y": 89.7,
+          "z": -325.0
+        },
+        "size_mm": {
+          "x": 10.0,
+          "y": 2.8000000000000114,
+          "z": 10.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Disc Springs, 4 x 10 x 5.2 x 0.4 (2)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0012595122470325417,
+        "volume_mm3": 160.44742000414547,
+        "area_mm2": 248.31148333973778,
+        "centre_of_mass_mm": {
+          "x": -8.173746258554392e-10,
+          "y": 88.3,
+          "z": -310.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -5.0,
+          "y": 86.89999999999999,
+          "z": -315.0
+        },
+        "max_mm": {
+          "x": 5.0,
+          "y": 89.7,
+          "z": -305.0
+        },
+        "size_mm": {
+          "x": 10.0,
+          "y": 2.8000000000000114,
+          "z": 10.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Clutch Disc Springs, 4 x 10 x 5.2 x 0.4 (3)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0012595122470325417,
+        "volume_mm3": 160.44742000414547,
+        "area_mm2": 248.31148333973778,
+        "centre_of_mass_mm": {
+          "x": -8.173746258554392e-10,
+          "y": 88.3,
+          "z": -350.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -5.0,
+          "y": 86.89999999999999,
+          "z": -355.0
+        },
+        "max_mm": {
+          "x": 5.0,
+          "y": 89.7,
+          "z": -345.0
+        },
+        "size_mm": {
+          "x": 10.0,
+          "y": 2.8000000000000114,
+          "z": 10.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "M5 Nylock Nut",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0010528414248696031,
+        "volume_mm3": 134.1199267349813,
+        "area_mm2": 244.26165189571267,
+        "centre_of_mass_mm": {
+          "x": 20.000000000360533,
+          "y": 91.70000000000002,
+          "z": -330.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 15.381197846482992,
+          "y": 89.7,
+          "z": -334.0
+        },
+        "max_mm": {
+          "x": 24.61880215351701,
+          "y": 93.69999999999999,
+          "z": -326.0
+        },
+        "size_mm": {
+          "x": 9.237604307034015,
+          "y": 3.999999999999986,
+          "z": 7.999999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "M5 Nylock Nut (1)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0010528414248696025,
+        "volume_mm3": 134.11992673498122,
+        "area_mm2": 244.26165189571267,
+        "centre_of_mass_mm": {
+          "x": -19.99999999963947,
+          "y": 91.69999999999999,
+          "z": -330.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -24.61880215351701,
+          "y": 89.7,
+          "z": -334.0
+        },
+        "max_mm": {
+          "x": -15.381197846482994,
+          "y": 93.69999999999999,
+          "z": -326.0
+        },
+        "size_mm": {
+          "x": 9.237604307034013,
+          "y": 3.999999999999986,
+          "z": 7.999999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "M5 Nylock Nut (2)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0010528414248696064,
+        "volume_mm3": 134.1199267349817,
+        "area_mm2": 244.2616518957127,
+        "centre_of_mass_mm": {
+          "x": 3.605334731431152e-10,
+          "y": 91.7,
+          "z": -310.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.618802153517008,
+          "y": 89.7,
+          "z": -314.0
+        },
+        "max_mm": {
+          "x": 4.618802153517006,
+          "y": 93.69999999999999,
+          "z": -306.0
+        },
+        "size_mm": {
+          "x": 9.237604307034013,
+          "y": 3.999999999999986,
+          "z": 7.999999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "M5 Nylock Nut (3)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0010528414248696027,
+        "volume_mm3": 134.11992673498125,
+        "area_mm2": 244.2616518957127,
+        "centre_of_mass_mm": {
+          "x": 3.605303689538705e-10,
+          "y": 91.70000000000002,
+          "z": -350.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -4.618802153517008,
+          "y": 89.7,
+          "z": -354.0
+        },
+        "max_mm": {
+          "x": 4.618802153517006,
+          "y": 93.69999999999999,
+          "z": -346.0
+        },
+        "size_mm": {
+          "x": 9.237604307034013,
+          "y": 3.999999999999986,
+          "z": 7.999999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Elbow Sprocket #35 30T (52 mm bore)",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.17412132221707424,
+        "volume_mm3": 22181.06015504131,
+        "area_mm2": 13925.414659839496,
+        "centre_of_mass_mm": {
+          "x": -4.38734363504196e-11,
+          "y": 80.25,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -48.46,
+          "y": 77.6,
+          "z": -378.46000000000004
+        },
+        "max_mm": {
+          "x": 48.46,
+          "y": 82.9,
+          "z": -281.54
+        },
+        "size_mm": {
+          "x": 96.92,
+          "y": 5.300000000000011,
+          "z": 96.92000000000004
+        }
+      }
+    },
+    {
+      "occurrence": "/Forearm Module:1",
+      "component": "Forearm Module",
+      "body": "Encoder Magnet Cup (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0031354300501743484,
+        "volume_mm3": 3483.811166860387,
+        "area_mm2": 4824.465548383489,
+        "centre_of_mass_mm": {
+          "x": 5.369691586431974e-10,
+          "y": 90.17405122328219,
+          "z": -329.9999999999999
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -25.939,
+          "y": 86.9,
+          "z": -355.93899999999996
+        },
+        "max_mm": {
+          "x": 25.939,
+          "y": 96.4,
+          "z": -304.0609999999999
+        },
+        "size_mm": {
+          "x": 51.878,
+          "y": 9.499999999999993,
+          "z": 51.87800000000003
         }
       }
     },
@@ -6046,7 +6318,7 @@
       "name": "Elbow (chain-driven)",
       "type": "revolute",
       "origin_mm": {
-        "x": 1.5777218104420236e-29,
+        "x": -3.60822483003176e-14,
         "y": 70.19999999999999,
         "z": -330.0
       },

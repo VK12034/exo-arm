@@ -21,12 +21,13 @@ needed to build, commission and operate it.
 | Actuator | NEMA 23 stepper, 0.55 N·m, through an NMRV030 worm at 30:1 |
 | Final drive | #35 chain, 15T to 30T, for 60:1 overall |
 | Output | About 12 to 21 N·m at the motor's rated current, 9 to 15 N·m at the 2.0 A starting setting, against about 2.9 N·m of static load |
+| Torque limiter | Friction clutch at the 30T sprocket, to be set to slip near 8 N·m, about 41 N at the cuff. Untested |
 | Resolution | 48 000 quarter steps per elbow revolution, 133.3 per degree |
 | Travel | About 96° between the hard stops, from about 21° to 118° of true flexion |
 | Control | Arduino Uno and a TB6600 driver, belt-mounted |
 | Interface | UP / DOWN buttons and a latching NC e-stop on a hand pendant |
 | Encoder | AS5600 on the elbow axis, checking the step count |
-| Device mass | 3.618 kg |
+| Device mass | 3.787 kg |
 
 The motor is deliberately small, because it sets the ceiling on how hard the arm can
 push. **By Motovario's catalogue figures, an NMRV030 at 30:1 should hold the arm
@@ -40,9 +41,10 @@ forearm whatever the worm does. See [docs/loads.md](docs/loads.md).
 |---|---|
 | `firmware/` | Arduino Uno firmware: motion planning, step generation, interlocks |
 | `cad/` | The Fusion design, STEP and STL exports, and measured mass properties |
-| `docs/` | Design, safety, loads, wiring, BOM, commissioning, operation |
+| `docs/` | Design, safety, loads, torque limiter, wiring, BOM, commissioning, operation |
 | `tools/fusion/` | Read-only Fusion script that regenerates everything in `cad/` |
 | `tools/stall_loads.py` | The stall load calculation behind `docs/loads.md` |
+| `tools/clutch_sizing.py` | The clutch calculation behind `docs/torque-limiter.md` |
 
 ## Firmware
 
@@ -124,12 +126,14 @@ invent a zero wherever the arm happened to be.
 - Bringing one up: [docs/commissioning.md](docs/commissioning.md)
 - Using one: [docs/operation.md](docs/operation.md)
 - The CAD and its measured numbers: [cad/README.md](cad/README.md)
+- The clutch that limits its force: [docs/torque-limiter.md](docs/torque-limiter.md)
 
 ## Status
 
 The mechanical design is modelled in CAD, including hard stops, switch mounts, a
-chain guard and the encoder mount. It has no torque limiter, and the holding test has
-not been done. First-pass stall loads are in [docs/loads.md](docs/loads.md).
+chain guard, the encoder mount and a friction torque limiter. Neither the clutch nor the
+holding test has been tried on real parts. First-pass stall loads are in
+[docs/loads.md](docs/loads.md).
 
 The firmware is written and its planning, step-rate, debounce, load, homing,
 overrun, encoder and logging logic are covered by host unit tests, but **it has

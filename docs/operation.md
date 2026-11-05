@@ -65,7 +65,7 @@ in, so the gaps tell you as much as the entries.
 | `home switch disagreed, counter read X deg` | More than 5° of lost steps found at the switch |
 | `soft limit overrun, span measured N steps` | The flexion switch was reached, so both soft limits failed. The span is also a microstepping check |
 | `switch closed implausibly, counter read X deg` | A switch closed where it physically cannot be. Wiring |
-| `encoder disagreed with the counter, counter read X deg` | Lost steps, chain slip or back-driving |
+| `encoder disagreed with the counter, counter read X deg` | Lost steps, clutch or chain slip, or back-driving |
 | `encoder lost, counter read X deg` | The encoder stopped answering, or its magnet moved |
 
 Routine e-stop presses are **not** logged. They are normal operation and
@@ -218,11 +218,11 @@ reaches the switch.
 | `FAULT: flexion switch reached` | Both soft limits were passed. This is a firmware or configuration fault, not wear. Stop and find out why before using the arm |
 | `FAULT: flexion switch closed with the counter near zero` | Shorted switch, wrong pin, or the arm was parked at full flexion |
 | Buzz without motion | Stall. Reduce speed, check for a mechanical bind, check driver current |
-| `FAULT: encoder disagrees` | Lost steps, chain slip or back-driving. The arm drops to restricted travel, so extend to the switch to re-home, and find out why |
+| `FAULT: encoder disagrees` | Lost steps, clutch or chain slip, or back-driving. If you hit something or felt the arm give, the clutch probably slipped: clear the obstruction first. The arm drops to restricted travel, so extend to the switch to re-home, and find out why |
 | `enc=LOST` | Encoder wiring or magnet. The arm still runs, without that check |
 | `FAULT: overload` | The arm is working against something. Find out what before clearing it |
 | `FAULT: current collapse` | Motor disconnected, or the rotor lost synchronism. Check the motor cable first |
-| Arm sags when stopped or at e-stop | The drivetrain is not holding. Stop using it and read step 9 of [commissioning.md](commissioning.md) |
+| Arm sags when stopped or at e-stop | The drivetrain is not holding, or the clutch is worn or oily. Stop using it, check the clutch with a spring scale, and read step 9 of [commissioning.md](commissioning.md) |
 
 ## After a load fault
 

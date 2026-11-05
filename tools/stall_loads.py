@@ -34,7 +34,7 @@ STRUT_THICKNESS = 0.0048
 
 # --- Static load, 70 kg wearer, forearm horizontal ---
 GRAVITY = 9.81
-FOREARM_MODULE = (0.4257, 0.0501)  # kg, m from the elbow, from the CAD
+FOREARM_MODULE = (0.600, 0.0355)  # kg, m from the elbow, from the CAD
 WEARER_FOREARM_HAND = (0.022 * 70.0, 0.179)  # segment fractions, not measured
 
 # --- Typical limits ---

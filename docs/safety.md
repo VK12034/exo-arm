@@ -41,7 +41,8 @@ shown what happens when power is lost under load.
 | Accumulated step loss moving the limits | Home switch at the extension end re-references the counter every time the arm reaches it; a disagreement beyond 5° faults rather than being corrected quietly. Re-zero gesture as a fallback |
 | Travel limits trusted before anything has measured them | Until the home switch is reached the arm is held to 60° at 5°/s, so a parking error of up to about 30° stays short of the flexion stop |
 | Ambiguous command | Both buttons, or neither, reads as stop |
-| Arm binding or pushing against something | Supply current monitored while driving; sustained overload faults the arm. Partial — see Known gaps |
+| Arm binding or pushing against something | A friction clutch slips at about 8 N·m, or about 41 N at the cuff, if it is set right and has not worn. Supply current is also monitored while driving. **The clutch is untested**: see [torque-limiter.md](torque-limiter.md) |
+| Clutch slipping too easily, from wear or oil | The forearm can sag under its own weight. The encoder faults the arm but cannot hold it. Checked with a spring scale before every session |
 | Forearm moving when power is lost | **Should hold by catalogue figures, unproven.** Worm chosen to be statically irreversible. Motor also stays energised when idle and through every fault except the e-stop, but the e-stop and any power failure still remove current. See commissioning step 9 |
 | Chain failure or skipped tooth | **Detected, not prevented.** Releases the forearm from the drive. The encoder sees the disagreement and faults, but cannot hold the arm |
 | Lost steps or back-driving | Encoder on the elbow compares the measured angle with the count, stopped or moving, and faults on a sustained disagreement |
@@ -118,11 +119,12 @@ page:
   0° before the switch can be reached. That is the benign direction — it
   costs range rather than overrunning a limit — but it means a clean homing
   message is not proof the counter is right.
-- **No torque limit below the motor's own, and the firmware cannot provide one.** The
-  drivetrain's output is 12 to 21 N·m at the motor's rated current, against about
-  2.9 N·m of static load, and nothing stops that being applied to an arm. A small
-  motor lowers that ceiling but does not make it safe: about 110 N at the cuff is
-  still enough to hurt a pinned arm.
+- **The only torque limit is an untested clutch, and the firmware cannot provide one.**
+  The drivetrain's output is 12 to 21 N·m at the motor's rated current, against about
+  2.9 N·m of static load. A small motor lowers that ceiling but does not make it safe:
+  about 110 N at the cuff is still enough to hurt a pinned arm. The clutch should bring
+  that to about 41 N, and 41 N has not been assessed as safe either. It is also more
+  force closer to the elbow, because the limit is a torque.
 
   This one deserves spelling out, because the obvious software fix does not
   work. A TB6600 regulates phase current to whatever its DIP switches are
@@ -139,10 +141,12 @@ page:
 
   The real fixes, none of them firmware:
 
-  - **A mechanical torque limiter** between the drive and the forearm,
-    sized to slip below the injury threshold. This is the standard answer for
-    a stiff geared actuator worn by a person, and it is the only one that
-    works when the firmware is wrong, which is the case that matters.
+  - **A mechanical torque limiter** between the drive and the forearm. This is the
+    standard answer for a stiff geared actuator worn by a person, and it is the only one
+    that works when the firmware is wrong, which is the case that matters. This
+    machine's is [a friction clutch](torque-limiter.md), modelled but not built. Its
+    setting is an engineering estimate rather than an injury threshold, and it only
+    protects while it is in adjustment.
   - **A lower driver current setting.** The DIP switches trade peak torque
     for capability directly. [loads.md](loads.md) suggests starting at 2.0 A.
     See step 10 of [commissioning.md](commissioning.md).
@@ -154,8 +158,9 @@ page:
     limit possible and is a different machine from this one.
 - **The hard stops are modelled but not proven.** Rubber-sleeved steel spacers on the
   upper strut stop the forearm strut at about 21° and 118° of true flexion. At the
-  motor's rated current they could see 510 to 870 N, and the M5 bolt in bending, if the
-  clamp does not help, reaches its limit at about 1400 N. See [loads.md](loads.md).
+  motor's rated current they could see 510 to 870 N, or about 330 N through the clutch,
+  and the M5 bolt in bending, if the clamp does not help, reaches its limit at about
+  1400 N. See [loads.md](loads.md).
 - **Switch closing angles are modelled targets.** Real levers differ, so
   commissioning measures them. Until then the margins around both switches are
   estimates.
@@ -179,6 +184,9 @@ against hardware.
       confirm it stops short of the hard stops
 - [ ] Press the e-stop mid-motion and confirm the motor goes dead
 - [ ] Release both buttons mid-motion and confirm it ramps to a stop
+- [ ] With a spring scale at the cuff, unworn, confirm the clutch holds 30 N and slips by
+      50 N, and that slipping faults the arm. See
+      [torque-limiter.md](torque-limiter.md#what-to-check-every-session)
 - [ ] Check the forearm cuff, upper cuff, sling and belt, the keyed sprocket on
       the gearbox output, and the elbow pivot bolt
 - [ ] Confirm the arm is parked at the extension stop before power-on, and that

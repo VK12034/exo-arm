@@ -74,10 +74,9 @@ a firmware angle to get true flexion.
 The hard stops are 7 mm steel spacers in 10 mm OD rubber sleeves on the upper strut,
 each 30 mm from the pivot, and the forearm strut's edge strikes the rubber. The
 sleeves keep the same 10 mm contact as the original spacers, so the stop angles did
-not change, though the rubber will compress a little under load. The original
-sleeves above the strut's plane remain in the model as `Spacer End Cap, not a bumper`,
-because removing them also removes the spacers imported with them. Leave them off the
-build.
+not change, though the rubber will compress a little under load. Their M5 × 10 bolts
+screw into tapped spacers and must end below the top of the spacer, because the clutch
+plate sweeps over them.
 
 ## Switch mounts
 
@@ -114,25 +113,43 @@ pillars is a guess until one is printed.
 
 ## Encoder mount
 
-A printed cup on the two M5 sprocket bolts turns with the forearm and carries a 6 ×
-2.5 mm diametric magnet on the elbow axis, clear of the stationary M8 nut. An AS5600
-board on an arm from the chain guard sits above it with a 1.5 mm gap. Those M5 bolts
-need about 6 mm more thread to take a second nut over the cup.
+A printed cup screwed to the clutch's outer plate turns with the forearm and carries a 6
+× 2.5 mm diametric magnet on the elbow axis, clear of the stationary M8 nut. The clutch
+nuts and springs pass through holes in it. An AS5600 board on an arm from the chain
+guard sits above it with a 1.5 mm gap.
 
-Checked at 10 elbow angles from 22° to 117° with the guard, cup and sleeves in place:
-no clashes involving them, and the stop gaps were unchanged. Printed tolerances and
-the guard's stiffness could still close the 1.5 mm gap or misalign the magnet.
+Printed tolerances and the guard's stiffness could still close the 1.5 mm gap or
+misalign the magnet, and so could moving the outer plate when the clutch is adjusted.
+
+## Torque limiter
+
+A friction clutch between the 30T sprocket and the forearm, fully described in
+[torque-limiter.md](../docs/torque-limiter.md). It takes the 5 mm that the sprocket
+spacers used, so the sprocket and chain line have not moved.
+
+Checked at 11 elbow angles across the joint's full range, for the clutch parts,
+sprocket, cup and nuts:
+
+| Check | Result |
+|---|---|
+| Clashes with the upper arm, switches and guard | None, leaving aside the chain, which is modelled as a fixed loop with teeth that do not follow the sprocket |
+| Overlaps within the forearm stack | None |
+| Plate to the top of the overrun and home switches | 0.8 mm |
+| Plate edge to the modelled chain | 2.0 mm |
+| Bodies not deliberately changed | Mass unchanged |
+
+The bolts' shanks and the countersinks for the two extra bolts are not modelled.
 
 ## Mass
 
 | Component | Mass (kg) | Bodies | Notes |
 |---|---|---|---|
-| Upper Arm Module | 2.366 | 44 | Gearbox 1.10, motor 0.55, chain 0.27, struts, cuff, 15T sprocket |
+| Upper Arm Module | 2.365 | 42 | Gearbox 1.10, motor 0.55, chain 0.27, struts, cuff, 15T sprocket |
 | Harness + Electronics | 0.764 | 31 | Waist belt, control box, pendant. Carried by the torso |
-| Forearm Module | 0.430 | 19 | 30T sprocket 0.256, strut, cuff, magnet cup |
+| Forearm Module | 0.600 | 29 | Clutch 0.255, bored 30T sprocket 0.174, strut, cuff, magnet cup |
 | Chain Guard | 0.044 | 2 | Guard and encoder board |
 | Switch Mounts | 0.013 | 10 | Added for the home and overrun switches |
-| **Device total** | **3.618** | 106 | |
+| **Device total** | **3.787** | 114 | |
 | Ref - Wearer Torso | 6.213 | 8 | Reference mannequin, not part of the device |
 | Ref - Wearer Upper Arm | 0.336 | 2 | Reference solid |
 | Ref - Wearer Forearm | 0.185 | 4 | Reference solid |
@@ -145,8 +162,9 @@ The `Ref - Wearer` bodies are shape references at an arbitrary density. Their
 masses are **not** anthropometric and must not be used for load calculations.
 Use published segment fractions against the wearer's own body mass instead.
 
-Bronze bushings and the leftover end caps are still assigned steel in the model. The
-error is a few grams and does not affect any figure here.
+Bronze bushings are still assigned steel in the model. The error is a few grams and does
+not affect any figure here. The clutch adds about 0.17 kg, almost all of it close to the
+elbow axis, so the static load does not change.
 
 ## Drivetrain
 
@@ -185,7 +203,9 @@ that, and a chain failure would release the forearm whatever the worm does.
 |---|---|
 | PETG, FDM, 4 walls at 40% infill | Cuffs, gearbox plate, control box, pendant housing, strap anchor, chain guard, magnet cup |
 | Aluminium 6061 | Upper and forearm struts, standoffs, switch brackets and spacers |
-| Steel | Sprockets, hard stop spacers, pivot bolt, fasteners, shaft key |
+| Steel | Sprockets, clutch plates and shim, hard stop spacers, pivot bolt, fasteners, shaft key |
+| Aluminium 6061, machined | Clutch hub |
+| Organic friction sheet, 1 mm | Clutch facings, density assumed |
 | Rubber | Hard stop sleeves |
 | EVA foam, 5 mm | Cuff pads |
 | Nylon webbing, 25 and 38 mm | Sling strap, waist belt |
@@ -196,4 +216,4 @@ that, and a chain failure would release the forearm whatever the worm does.
 - [First-pass stall loads](../docs/loads.md) exist, but contact stress, strut bending,
   the gearbox plate and the shoulder mount have not been checked.
 - The encoder and sensor wiring runs are not modelled.
-- There is no torque limiter.
+- [The clutch](../docs/torque-limiter.md) has not been built, and its friction is assumed.
