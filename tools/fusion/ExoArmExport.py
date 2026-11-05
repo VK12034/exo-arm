@@ -4,12 +4,13 @@ Run from Fusion with the exoskeleton design open:
 
     Utilities tab -> Scripts and Add-Ins -> Scripts -> ExoArmExport -> Run
 
-It writes, into a folder you choose:
+Point it at the repository's cad/ folder. It writes:
 
-    design.json      parameters, components, joints, mass properties
-    bodies.csv       one row per solid body
-    <design>.step    STEP export of the whole design
-    <design>.stl     mesh export of the whole design
+    <design>.design.json   parameters, components, joints, mass properties
+    <design>.bodies.csv    one row per solid body
+    source/<design>.f3d    Fusion archive of the whole design
+    step/<design>.step     STEP export of the whole design
+    mesh/<design>.stl      mesh export of the whole design
 
 Nothing in the design is modified. The script only reads and exports.
 
@@ -20,6 +21,7 @@ straight into firmware/include/config.h.
 
 import json
 import os
+import re
 import traceback
 
 import adsk.core
@@ -163,8 +165,10 @@ def _joint_type_name(motion):
 
 
 def _joints(root):
+    # As-built joints are a separate collection. Reading only root.joints
+    # reports a jointed assembly as having none.
     out = []
-    for joint in root.joints:
+    for joint in list(root.joints) + list(root.asBuiltJoints):
         entry = {
             "name": joint.name,
             "type": None,
@@ -177,6 +181,9 @@ def _joints(root):
             entry["type"] = _joint_type_name(motion)
 
             if entry["type"] == "revolute":
+                axis = motion.rotationAxisVector
+                entry["rotation_axis"] = {"x": axis.x, "y": axis.y, "z": axis.z}
+                entry["rotation_rad"] = motion.rotationValue
                 limits = motion.rotationLimits
                 if limits and limits.isMaximumValueEnabled and limits.isMinimumValueEnabled:
                     entry["rotation_limits_rad"] = {
@@ -187,7 +194,9 @@ def _joints(root):
             pass
 
         try:
-            geometry = joint.geometryOrOriginOne
+            geometry = (
+                joint.geometryOrOriginOne if hasattr(joint, "geometryOrOriginOne") else joint.geometry
+            )
             if geometry and geometry.origin:
                 entry["origin_mm"] = _point_mm(geometry.origin)
         except Exception:
@@ -198,26 +207,29 @@ def _joints(root):
 
 
 def _export(design, folder, stem):
-    """STEP and STL of the whole design. Returns what was written."""
+    """Native, STEP and STL of the whole design. Returns repo-relative paths."""
     manager = design.exportManager
+    root = design.rootComponent
     written = {}
 
-    step_path = os.path.join(folder, stem + ".step")
-    try:
-        options = manager.createSTEPExportOptions(step_path, design.rootComponent)
-        manager.execute(options)
-        written["step"] = step_path
-    except Exception as exc:
-        written["step_error"] = str(exc)
+    for sub in ("source", "step", "mesh"):
+        os.makedirs(os.path.join(folder, sub), exist_ok=True)
 
-    stl_path = os.path.join(folder, stem + ".stl")
-    try:
-        options = manager.createSTLExportOptions(design.rootComponent, stl_path)
-        options.meshRefinement = adsk.fusion.MeshRefinementSettings.MeshRefinementMedium
-        manager.execute(options)
-        written["stl"] = stl_path
-    except Exception as exc:
-        written["stl_error"] = str(exc)
+    f3d = os.path.join("source", stem + ".f3d")
+    manager.execute(
+        manager.createFusionArchiveExportOptions(os.path.join(folder, f3d), root)
+    )
+    written["f3d"] = f3d.replace(os.sep, "/")
+
+    step = os.path.join("step", stem + ".step")
+    manager.execute(manager.createSTEPExportOptions(os.path.join(folder, step), root))
+    written["step"] = step.replace(os.sep, "/")
+
+    stl = os.path.join("mesh", stem + ".stl")
+    options = manager.createSTLExportOptions(root, os.path.join(folder, stl))
+    options.meshRefinement = adsk.fusion.MeshRefinementSettings.MeshRefinementMedium
+    manager.execute(options)
+    written["stl"] = stl.replace(os.sep, "/")
 
     return written
 
@@ -275,6 +287,67 @@ def _write_csv(path, bodies):
         handle.write("\n".join(lines) + "\n")
 
 
+def export_all(design, folder):
+    """Writes everything into folder, normally the repository's cad/ directory."""
+    timeline = design.timeline
+    if timeline.markerPosition != timeline.count:
+        # A rolled-back timeline exports an intermediate state as if it were
+        # the design. This has already happened once, and the repository
+        # described the wrong machine because of it.
+        raise RuntimeError(
+            "Timeline is rolled back ({0} of {1}). Move the marker to the end, "
+            "or this exports a mid-edit state.".format(timeline.markerPosition, timeline.count)
+        )
+
+    root = design.rootComponent
+    stem = re.sub(r"\s*\(~recovered\)", "", root.name or "design").replace(" ", "_")
+
+    components = []
+    bodies = []
+    seen = set()
+
+    components.append(
+        {
+            "name": root.name,
+            "id": root.id,
+            "description": root.description,
+            "part_number": root.partNumber,
+            "physical": _physical(root),
+            "bounding_box": _bounding_box_mm(root),
+            "body_count": root.bRepBodies.count,
+            "is_root": True,
+        }
+    )
+    bodies.extend(_bodies(root, ""))
+
+    for occurrence in root.occurrences:
+        _walk(occurrence, "", seen, components, bodies)
+
+    payload = {
+        "design_name": root.name,
+        "units": {"length": "mm", "mass": "kg", "angle": "rad"},
+        "fusion_default_length_unit": design.unitsManager.defaultLengthUnits,
+        "timeline_items": timeline.count,
+        "parameters": _parameters(design),
+        "components": components,
+        "bodies": bodies,
+        "joints": _joints(root),
+        "exports": _export(design, folder, stem),
+    }
+
+    with open(os.path.join(folder, stem + ".design.json"), "w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2)
+
+    _write_csv(os.path.join(folder, stem + ".bodies.csv"), bodies)
+
+    total = 0.0
+    for body in bodies:
+        physical = body.get("physical") or {}
+        total += physical.get("mass_kg") or 0.0
+
+    return len(components), len(bodies), len(payload["joints"]), total
+
+
 def run(_context):
     app = adsk.core.Application.get()
     ui = app.userInterface
@@ -286,60 +359,17 @@ def run(_context):
             return
 
         dialog = ui.createFolderDialog()
-        dialog.title = "Where should the export go?"
+        dialog.title = "Point this at the repository's cad folder"
         if dialog.showDialog() != adsk.core.DialogResults.DialogOK:
             return
         folder = dialog.folder
 
-        root = design.rootComponent
-        stem = (root.name or "design").replace(" ", "_")
-
-        components = []
-        bodies = []
-        seen = set()
-
-        components.append(
-            {
-                "name": root.name,
-                "id": root.id,
-                "description": root.description,
-                "part_number": root.partNumber,
-                "physical": _physical(root),
-                "bounding_box": _bounding_box_mm(root),
-                "body_count": root.bRepBodies.count,
-                "is_root": True,
-            }
-        )
-        bodies.extend(_bodies(root, ""))
-
-        for occurrence in root.occurrences:
-            _walk(occurrence, "", seen, components, bodies)
-
-        payload = {
-            "design_name": root.name,
-            "units": {"length": "mm", "mass": "kg", "angle": "rad"},
-            "fusion_default_length_unit": design.unitsManager.defaultLengthUnits,
-            "parameters": _parameters(design),
-            "components": components,
-            "bodies": bodies,
-            "joints": _joints(root),
-            "exports": _export(design, folder, stem),
-        }
-
-        with open(os.path.join(folder, "design.json"), "w", encoding="utf-8") as handle:
-            json.dump(payload, handle, indent=2)
-
-        _write_csv(os.path.join(folder, "bodies.csv"), bodies)
-
-        total = 0.0
-        for body in bodies:
-            physical = body.get("physical") or {}
-            total += physical.get("mass_kg") or 0.0
+        components, bodies, joints, total = export_all(design, folder)
 
         ui.messageBox(
             "Exported {0} components, {1} solid bodies, {2} joints.\n"
             "Total mass: {3:.3f} kg\n\nWritten to:\n{4}".format(
-                len(components), len(bodies), len(payload["joints"]), total, folder
+                components, bodies, joints, total, folder
             )
         )
 
