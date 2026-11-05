@@ -2,12 +2,15 @@
 //
 // The wearer holds UP or DOWN on the pendant and the elbow moves; everything
 // else here exists to make sure it stops when it should. There is no encoder,
-// so position is counted steps from the pose the arm was parked in at
-// power-on. See docs/operation.md before running it.
+// so position is counted steps, and the counter only becomes trustworthy once
+// the arm has been extended far enough to reach the home switch. Until then
+// the arm runs slowly and on restricted travel. See docs/operation.md before
+// running it.
 #include <Arduino.h>
 #include <avr/wdt.h>
 
 #include "config.h"
+#include "homing.h"
 #include "load.h"
 #include "motion.h"
 #include "pendant.h"
@@ -25,6 +28,8 @@ Stepper         g_stepper;
 Pendant         g_pendant;
 motion::Planner g_planner;
 LoadMonitor     g_load;
+Homing          g_homing;
+Debounced       g_home_switch;
 
 State    g_state = State::kFault;
 uint32_t g_last_plan_us = 0;
@@ -40,6 +45,29 @@ float readAmps() {
     const int counts = analogRead(cfg::kCurrentSensePin) - g_current_zero;
     const float amps = static_cast<float>(counts) * cfg::kAmpsPerCount;
     return amps < 0.0f ? -amps : amps;
+}
+
+// The switch closes to ground, so a LOW reading is contact. Debounced like
+// any other mechanical contact: a lever switch bounces, and a bounce here
+// would re-zero the travel counter.
+bool readHomeSwitchRaw() {
+    const int level = digitalRead(cfg::kHomeSwitchPin);
+    return cfg::kHomeSwitchClosesToGround ? (level == LOW) : (level == HIGH);
+}
+
+// Travel and speed both depend on whether zero has been established. An
+// unhomed arm is allowed to seek below its assumed zero to find the switch,
+// is held well short of full flexion, and runs at seeking speed so that
+// whatever it is doing when the switch closes can be stopped in the gap
+// between the switch and the hard stop.
+void applyTravelLimits() {
+    const bool  homed = g_homing.homed();
+    const long  min_steps = homed ? cfg::kMinSteps : cfg::kSeekMinSteps;
+    const long  max_steps = homed ? cfg::kMaxSteps : cfg::kUnhomedMaxSteps;
+    const float speed     = homed ? cfg::kMaxSpeedSteps : cfg::kHomingSpeedSteps;
+
+    g_stepper.setLimits(min_steps, max_steps);
+    g_planner.configure(speed, cfg::kAccelSteps, min_steps, max_steps);
 }
 
 void setLeds(bool status, bool onboard) {
@@ -70,6 +98,22 @@ float angleDeg(long steps) {
     return static_cast<float>(steps) / cfg::kStepsPerDegree;
 }
 
+// Reported rather than silent, because the size of the correction is the only
+// evidence the wearer gets about how much the counter drifts in a session.
+// A few steps is rounding; a few degrees means the machine is losing them.
+void reportZero() {
+    Serial.print(F("homed: zero set at the extension switch"));
+
+    if (g_homing.driftSignificant()) {
+        Serial.print(F(", counter was out by "));
+        Serial.print(g_homing.drift());
+        Serial.print(F(" steps ("));
+        Serial.print(angleDeg(g_homing.drift()), 2);
+        Serial.print(F(" deg)"));
+    }
+    Serial.println();
+}
+
 void printStatus(uint32_t now_ms, long position) {
     const char* state =
         g_state == State::kFault ? "FAULT" : (g_state == State::kMoving ? "MOVING" : "IDLE");
@@ -86,6 +130,14 @@ void printStatus(uint32_t now_ms, long position) {
     Serial.print(g_planner.velocity(), 0);
     Serial.print(F(" estop="));
     Serial.print(g_pendant.eStopOpen() ? F("OPEN") : F("closed"));
+    Serial.print(F(" home="));
+    Serial.print(g_home_switch.state() ? F("closed") : F("open"));
+    Serial.print(F(" zero="));
+    switch (g_homing.source()) {
+    case Homing::Source::kSwitch:   Serial.print(F("switch")); break;
+    case Homing::Source::kOperator: Serial.print(F("asserted")); break;
+    case Homing::Source::kNone:     Serial.print(F("UNHOMED")); break;
+    }
     Serial.print(F(" amps="));
     Serial.print(g_load.current(), 2);
     Serial.print(F(" drive="));
@@ -119,6 +171,11 @@ void enterFault(const __FlashStringHelper* reason) {
 
 // A re-zero redefines where the travel limits sit, so it is only offered
 // when the arm is stopped, and it is held for three seconds on purpose.
+//
+// This is the fallback for a build with no home switch fitted, and for
+// recovering a session after a drift fault without power cycling. It asserts
+// a zero rather than measuring one, so it is recorded as asserted and the
+// status output says so. Reaching the switch is always better.
 void handleRezero(uint32_t now_ms) {
     if (g_planner.moving()) return;
 
@@ -130,9 +187,11 @@ void handleRezero(uint32_t now_ms) {
     if (g_rezeroed) return;
 
     g_stepper.setPosition(cfg::kMinSteps);
+    g_homing.adoptOperatorZero();
+    applyTravelLimits();
     g_rezeroed = true;
 
-    Serial.println(F("rezeroed: this pose is now full extension"));
+    Serial.println(F("rezeroed: this pose is asserted to be full extension"));
 }
 
 }  // namespace
@@ -147,13 +206,21 @@ void setup() {
 
     g_pendant.begin(now_ms);
 
-    // Power-on pose is taken to be full extension. Nothing measures this, so
-    // parking the arm against its stop before switching on is part of the
-    // operating procedure, not a nicety.
+    // The counter starts at nominal zero, but nothing has measured that yet.
+    // Parking the arm against its stop before switching on is still the
+    // procedure, and now it is checked rather than assumed: the arm stays on
+    // restricted travel until it reaches the home switch, and if it is parked
+    // there already it homes on the first pass through the loop.
     g_stepper.begin(cfg::kMinSteps);
-    g_stepper.setLimits(cfg::kMinSteps, cfg::kMaxSteps);
 
-    g_planner.configure(cfg::kMaxSpeedSteps, cfg::kAccelSteps, cfg::kMinSteps, cfg::kMaxSteps);
+    pinMode(cfg::kHomeSwitchPin, INPUT_PULLUP);
+    g_home_switch.configure(cfg::kDebounceMs);
+    g_home_switch.reset(readHomeSwitchRaw(), now_ms);
+
+    g_homing.configure(cfg::kMinSteps, cfg::kHomeToleranceSteps,
+                       cfg::kHomeDriftFaultSteps);
+    g_homing.reset();
+    applyTravelLimits();
 
     calibrateCurrentZero();
     g_load.configure(cfg::kOverloadAmps, cfg::kOverloadMs,
@@ -174,6 +241,11 @@ void setup() {
     Serial.print(F(" deg, "));
     Serial.print(cfg::kStepsPerDegree, 1);
     Serial.println(F(" steps/deg"));
+    Serial.print(F("unhomed: travel held to "));
+    Serial.print(cfg::kUnhomedMaxAngleDeg, 0);
+    Serial.print(F(" deg at "));
+    Serial.print(cfg::kHomingSpeedDegPerSec, 0);
+    Serial.println(F(" deg/s until the extension switch is reached"));
 
     wdt_enable(WDTO_1S);
 }
@@ -185,6 +257,7 @@ void loop() {
     const uint32_t now_us = micros();
 
     g_pendant.poll(now_ms);
+    g_home_switch.update(readHomeSwitchRaw(), now_ms);
 
     // --- Interlocks --------------------------------------------------------
     if (g_pendant.eStopOpen()) {
@@ -219,7 +292,30 @@ void loop() {
     g_last_plan_us = now_us;
 
     const float dt = static_cast<float>(elapsed_us) * 1e-6f;
-    const long position = g_stepper.position();
+    long position = g_stepper.position();
+
+    // --- Homing ------------------------------------------------------------
+    // The switch is a physical feature of the machine and the counter is
+    // arithmetic, so where they disagree the switch wins.
+    switch (g_homing.update(g_home_switch.state(), position)) {
+    case Homing::Action::kZero:
+        g_stepper.setPosition(cfg::kMinSteps);
+        applyTravelLimits();
+        position = g_stepper.position();
+        reportZero();
+        break;
+
+    case Homing::Action::kFault:
+        // Back to restricted travel before anything else happens, because
+        // the far limit is no longer where it was believed to be either.
+        applyTravelLimits();
+        enterFault(F("home switch disagrees with the step counter - steps lost"));
+        updateLeds(now_ms);
+        return;
+
+    case Homing::Action::kNone:
+        break;
+    }
 
     handleRezero(now_ms);
 

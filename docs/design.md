@@ -94,13 +94,40 @@ the real arm, and the counter is the only position reference there is.
 
 ### Position, and the lack of an encoder
 
-There is no absolute reference. Position is steps counted from the pose the
-arm was in at power-on, which the firmware takes to be full extension. Park
-the arm against its extension stop before switching on; that ritual is the
-reference. Holding both buttons for three seconds re-zeroes at the current
-pose, which is there because accumulated step loss has nothing else to
-correct it — and which also defeats the soft limits, so it is deliberately
-awkward to trigger.
+Position is steps counted, with no encoder to check them against. What the
+counter is referenced to is a lever switch at the extension end of travel.
+Reaching it sets zero; until it is reached the firmware treats the count as
+an assumption and holds the arm to 90° at 5°/s, so a parking error costs
+range rather than putting the elbow somewhere it should not be.
+
+The switch is deliberately not homed to on power-up. The one rule this
+machine has is that it moves only while a human holds a button, and driving
+the arm at a switch by itself to fix a lesser problem would break it. So the
+zero is adopted during the extension the wearer was commanding anyway. The
+cost is a session that starts restricted; the alternative was a machine that
+moves on its own.
+
+Where the switch and the counter disagree, the switch wins. It is a physical
+feature of the machine and the counter is arithmetic that drifts with every
+lost step. A small disagreement is corrected silently, because the count
+rounds. Past five degrees it faults instead, because that much loss means the
+flexion limit moved too while the arm was in use, and correcting only the
+zero would hide that.
+
+This is one-ended in two senses. Zero is a switch and 135° is still
+arithmetic from it; and the drift measurement only works in the direction
+that matters. Lost steps leave the arm more extended than it claims, so it
+arrives at the switch with the count reading positive and the error is
+caught. The opposite error never reaches the switch, because the soft minimum
+stops the arm at a reported 0° first. That is the harmless direction, but it
+does mean a clean homing message is not a proof of correctness.
+
+The re-zero gesture survives as a fallback for a build with no switch fitted,
+and is recorded as asserted rather than measured so the status output can say
+which of the two the current zero is. It sets the soft minimum at the
+asserted pose, which is what a switchless build needs and which also means a
+wrong assertion cannot be walked back without a power cycle. Keeping the soft
+minimum was worth more than that recovery path.
 
 ### Idle behaviour
 
@@ -126,9 +153,14 @@ carries anything, and a stepper that stalls loses position silently.
 
 ## Open questions
 
-- No limit switches. The soft limits are counted steps, so they are only as
-  good as the power-on park and the absence of step loss. A single switch at
-  full extension would make homing real.
+- Only the extension end is physical. The home switch references zero; the
+  135° flexion limit is still counted steps from it, so it is only as good as
+  the counter between one homing and the next. A second switch there would
+  make both ends real, and pins 10 to 12 are free for it.
+- The home switch is a single contact with nothing to cross-check it. The
+  normally-open wiring means a break costs range rather than inventing a
+  zero, and a contact stuck closed far into flexion faults, but a lever bent
+  so that it closes early would be believed.
 - Microstepping is set by DIP switches on the TB6600 and assumed to be 1/8 in
   `config.h`. Nothing checks that the two agree; if they do not, every angle
   is wrong by the same factor.
@@ -136,6 +168,7 @@ carries anything, and a stepper that stalls loses position silently.
   mechanical power, so a bind shows as a sustained rise and a lost rotor as a
   collapse, but a slow bind below the threshold is invisible and a collapse
   is indistinguishable from an unplugged motor. A shaft encoder would make
-  this exact, and would also make homing real.
+  this exact, and would reference position continuously rather than once per
+  trip to the switch.
 - The pendant cable crosses no joint, but the motor cable does. That is the
   cable that will eventually fail.

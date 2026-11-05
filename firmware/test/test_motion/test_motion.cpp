@@ -3,6 +3,7 @@
 #include <unity.h>
 
 #include "debounce.h"
+#include "homing.h"
 #include "load.h"
 #include "motion.h"
 
@@ -372,6 +373,154 @@ void test_load_filter_smooths_the_reading(void) {
     TEST_ASSERT_TRUE(load.current() < 0.5f);
 }
 
+
+// --- Homing ----------------------------------------------------------------
+
+namespace {
+
+// Half a degree of tolerance, five degrees before it is treated as lost
+// steps, at the real 66.667 steps per degree.
+constexpr long kHomeSteps = 0;
+constexpr long kTolerance = static_cast<long>(0.5f * kStepsPerDeg);
+constexpr long kFaultSteps = static_cast<long>(5.0f * kStepsPerDeg);
+
+Homing makeHoming() {
+    Homing homing;
+    homing.configure(kHomeSteps, kTolerance, kFaultSteps);
+    homing.reset();
+    return homing;
+}
+
+}  // namespace
+
+void test_homing_starts_unhomed(void) {
+    Homing homing = makeHoming();
+
+    TEST_ASSERT_FALSE(homing.homed());
+    TEST_ASSERT_TRUE(Homing::Source::kNone == homing.source());
+}
+
+void test_homing_does_nothing_until_the_switch_is_reached(void) {
+    Homing homing = makeHoming();
+
+    TEST_ASSERT_TRUE(Homing::Action::kNone == homing.update(false, -1000));
+    TEST_ASSERT_FALSE(homing.homed());
+}
+
+// An arm parked against the switch at power-on must home on the first update,
+// not have to leave the switch and come back to it.
+void test_homing_adopts_a_switch_already_closed_at_startup(void) {
+    Homing homing = makeHoming();
+
+    TEST_ASSERT_TRUE(Homing::Action::kZero == homing.update(true, 0));
+    TEST_ASSERT_TRUE(homing.homed());
+    TEST_ASSERT_TRUE(Homing::Source::kSwitch == homing.source());
+}
+
+// Before homing the counter means nothing, so reaching the switch a long way
+// from nominal zero is the reference being established, not a discrepancy.
+void test_first_home_is_a_definition_not_a_measurement(void) {
+    Homing homing = makeHoming();
+
+    TEST_ASSERT_TRUE(Homing::Action::kZero == homing.update(true, -4000));
+    TEST_ASSERT_EQUAL_INT32(0, homing.drift());
+    TEST_ASSERT_FALSE(homing.driftSignificant());
+}
+
+void test_homing_does_not_rezero_while_the_switch_stays_closed(void) {
+    Homing homing = makeHoming();
+    homing.update(true, 0);
+
+    TEST_ASSERT_TRUE(Homing::Action::kNone == homing.update(true, 0));
+    TEST_ASSERT_TRUE(Homing::Action::kNone == homing.update(true, 10));
+}
+
+void test_homing_corrects_a_small_drift_silently(void) {
+    Homing homing = makeHoming();
+    homing.update(true, 0);
+    homing.update(false, 2000);
+
+    // Back on the switch a few steps out: rounding, not lost steps.
+    TEST_ASSERT_TRUE(Homing::Action::kZero == homing.update(true, 12));
+    TEST_ASSERT_EQUAL_INT32(12, homing.drift());
+    TEST_ASSERT_FALSE(homing.driftSignificant());
+    TEST_ASSERT_TRUE(homing.homed());
+}
+
+void test_homing_reports_a_drift_worth_knowing_about(void) {
+    Homing homing = makeHoming();
+    homing.update(true, 0);
+    homing.update(false, 2000);
+
+    // Two degrees out: inside the fault threshold, so correct it, but say so.
+    const long drift = static_cast<long>(2.0f * kStepsPerDeg);
+    TEST_ASSERT_TRUE(Homing::Action::kZero == homing.update(true, drift));
+    TEST_ASSERT_EQUAL_INT32(drift, homing.drift());
+    TEST_ASSERT_TRUE(homing.driftSignificant());
+    TEST_ASSERT_TRUE(homing.homed());
+}
+
+// A large disagreement means the far limit has moved too, so correcting the
+// zero would hide the real problem.
+void test_homing_faults_when_the_counter_has_lost_too_much(void) {
+    Homing homing = makeHoming();
+    homing.update(true, 0);
+    homing.update(false, 4000);
+
+    const long drift = static_cast<long>(12.0f * kStepsPerDeg);
+    TEST_ASSERT_TRUE(Homing::Action::kFault == homing.update(true, drift));
+    TEST_ASSERT_FALSE(homing.homed());
+    TEST_ASSERT_TRUE(Homing::Source::kNone == homing.source());
+}
+
+void test_homing_faults_on_drift_in_either_direction(void) {
+    Homing homing = makeHoming();
+    homing.update(true, 0);
+    homing.update(false, -4000);
+
+    const long drift = static_cast<long>(-12.0f * kStepsPerDeg);
+    TEST_ASSERT_TRUE(Homing::Action::kFault == homing.update(true, drift));
+    TEST_ASSERT_FALSE(homing.homed());
+}
+
+// A normally-open switch cannot read closed by being broken, only by being
+// shorted or jammed shut, and a jammed one would re-zero the arm mid-travel.
+void test_homing_faults_on_a_switch_stuck_closed(void) {
+    Homing homing = makeHoming();
+    homing.update(true, 0);
+
+    const long far = static_cast<long>(60.0f * kStepsPerDeg);
+    TEST_ASSERT_TRUE(Homing::Action::kFault == homing.update(true, far));
+}
+
+void test_operator_zero_is_recorded_as_asserted(void) {
+    Homing homing = makeHoming();
+    homing.adoptOperatorZero();
+
+    TEST_ASSERT_TRUE(homing.homed());
+    TEST_ASSERT_TRUE(Homing::Source::kOperator == homing.source());
+    TEST_ASSERT_EQUAL_INT32(0, homing.drift());
+}
+
+// After an operator zero the switch is still the better reference, so
+// reaching it must take over.
+void test_switch_supersedes_an_operator_zero(void) {
+    Homing homing = makeHoming();
+    homing.adoptOperatorZero();
+
+    TEST_ASSERT_TRUE(Homing::Action::kZero == homing.update(true, 10));
+    TEST_ASSERT_TRUE(Homing::Source::kSwitch == homing.source());
+}
+
+void test_homing_reset_returns_to_unhomed(void) {
+    Homing homing = makeHoming();
+    homing.update(true, 0);
+    homing.reset();
+
+    TEST_ASSERT_FALSE(homing.homed());
+    TEST_ASSERT_TRUE(Homing::Source::kNone == homing.source());
+}
+
 int main(int, char**) {
     UNITY_BEGIN();
 
@@ -410,6 +559,20 @@ int main(int, char**) {
     RUN_TEST(test_load_timers_restart_when_motion_stops);
     RUN_TEST(test_load_clear_releases_the_trip);
     RUN_TEST(test_load_filter_smooths_the_reading);
+
+    RUN_TEST(test_homing_starts_unhomed);
+    RUN_TEST(test_homing_does_nothing_until_the_switch_is_reached);
+    RUN_TEST(test_homing_adopts_a_switch_already_closed_at_startup);
+    RUN_TEST(test_first_home_is_a_definition_not_a_measurement);
+    RUN_TEST(test_homing_does_not_rezero_while_the_switch_stays_closed);
+    RUN_TEST(test_homing_corrects_a_small_drift_silently);
+    RUN_TEST(test_homing_reports_a_drift_worth_knowing_about);
+    RUN_TEST(test_homing_faults_when_the_counter_has_lost_too_much);
+    RUN_TEST(test_homing_faults_on_drift_in_either_direction);
+    RUN_TEST(test_homing_faults_on_a_switch_stuck_closed);
+    RUN_TEST(test_operator_zero_is_recorded_as_asserted);
+    RUN_TEST(test_switch_supersedes_an_operator_zero);
+    RUN_TEST(test_homing_reset_returns_to_unhomed);
 
     return UNITY_END();
 }

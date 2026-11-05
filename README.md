@@ -57,6 +57,18 @@ limit rather than arriving at it under power. That matters more than it
 sounds — a stepper stopped dead at speed loses steps, and with no encoder the
 step counter is the only idea the firmware has of where the arm is.
 
+That counter is referenced to a lever switch at full extension. Reaching it
+sets zero; until it is reached the arm is held to 90° at 5°/s, because the
+count is an assumption about how the arm was parked and not worth more than
+that. Where the switch and the counter disagree the switch wins, and past
+five degrees of disagreement it faults rather than correcting, because that
+much lost motion means the flexion limit moved too.
+
+The switch is not homed to automatically. The arm moves only while a button
+is held, and that rule was worth keeping more than a session that starts at
+full range: the zero is adopted during an extension the wearer was commanding
+anyway.
+
 Four things are enforced below the planner: the step generator refuses to
 pulse past the travel limits whatever it is told, the e-stop drops the driver
 enable before anything else runs, both buttons at once reads as stop rather
@@ -77,6 +89,12 @@ At power-on the firmware starts in a fault state and will not leave it until
 the e-stop reads closed **and** both buttons are released, so a stuck button
 cannot drive the arm the moment power arrives.
 
+The home switch is wired the opposite way round, normally open, and
+deliberately so. For a stop command the safe reading of a broken wire is
+"stop"; for a position reference it is "I do not know where I am". Wired
+normally closed, a cut cable would read as "at home" and the firmware would
+invent a zero wherever the arm happened to be.
+
 ## Where to start
 
 - Building one: [docs/bom.md](docs/bom.md), then [docs/wiring.md](docs/wiring.md)
@@ -88,8 +106,8 @@ cannot drive the arm the moment power arrives.
 ## Status
 
 The mechanical design is complete in CAD. The firmware is written and its
-planning, step-rate and debounce logic are unit tested, but **it has never
-been run on hardware**. The pin assignments in `firmware/include/config.h`
+planning, step-rate, debounce, load and homing logic are covered by 45 host
+unit tests, but **it has never been run on hardware**. The pin assignments in `firmware/include/config.h`
 are a proposal, not a built wiring loom, and the direction sense has not been
 verified against a real motor. Work through
 [docs/commissioning.md](docs/commissioning.md) before the arm is worn.

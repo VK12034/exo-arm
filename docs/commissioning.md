@@ -22,6 +22,7 @@ Expect, at power-on:
 ```
 exo-arm elbow ready
 travel 0-135 deg, 66.7 steps/deg
+unhomed: travel held to 90 deg at 5 deg/s until the extension switch is reached
 ```
 
 and then nothing until the e-stop reads closed, because the firmware boots
@@ -71,10 +72,75 @@ The DIP switches on the TB6600 and `cfg::kMicrosteps` must match. Nothing in
 the firmware can detect a mismatch, and every angle, limit and speed is wrong
 by the same factor when they disagree.
 
-## 5. Travel limits
+## 5. Home switch
 
-Couple the forearm module. Park at full extension, power cycle, then hold UP
-and let it run to the limit without touching anything.
+Still uncoupled, motor connected. This is the step that decides whether the
+travel limits mean anything, so do it before trusting any of them.
+
+First, the switch on its own. With the arm away from the switch, the status
+line must read `home=open` and `zero=UNHOMED`. Press the lever by hand:
+`home=` must go to `closed`, and the monitor must print
+
+```
+homed: zero set at the extension switch
+```
+
+If `home=` reads `closed` with nothing touching the lever, the switch is
+wired normally closed. Fix it. Wired that way a broken wire invents a zero
+wherever the arm happens to be, which is the failure this polarity exists to
+avoid: see [wiring.md](wiring.md).
+
+If pressing the lever does nothing, check the wiring before assuming the
+firmware. An unplugged switch and a working switch that is simply never
+reached look identical from the status line.
+
+Now the siting. Couple the forearm module, park the arm away from full
+extension, power cycle so it comes up unhomed, then hold DOWN and let it
+seek. Measure two things:
+
+- [ ] **Where it closes.** The switch must close **1–2° before** the hard
+      stop and stay closed to the stop. Closing exactly at the stop leaves no
+      room for the arm to stop in.
+- [ ] **Where it stops.** At 5°/s the arm should come to rest within a
+      fraction of a degree of the switch, and must not reach the hard stop.
+      If it does, the switch is sited too late or `kHomingSpeedDegPerSec` is
+      too high.
+
+Then confirm the restriction lifts: once homed, the status line must show
+`zero=switch`, and holding UP must now ramp to 20°/s and run past 90°. Before
+homing it must do neither.
+
+Finally, the correction itself. Home the arm, flex to roughly 30°, extend
+back to the switch, and read the number it reports:
+
+```
+homed: zero set at the extension switch, counter was out by 7 steps (0.11 deg)
+```
+
+A handful of steps is the healthy answer, and under half a degree it will say
+nothing at all. Do this five or six times and write the figures down. They
+are the baseline: a build that reports a tenth of a degree per trip now and
+whole degrees in a month is losing steps, and the cause is mechanical.
+
+**On deliberately provoking the fault.** Resist the temptation to fake a
+drift with the re-zero gesture. Asserting a zero sets the soft minimum to
+that pose, so the arm can no longer extend toward the switch and you cannot
+reach it to trigger anything; recovering needs a power cycle. The fault path
+is covered by the host tests (`pio test -e native`) instead.
+
+Worth knowing while you are here: the detection is one-sided in practice.
+Lost steps leave the arm physically **more** extended than the counter
+claims, so it reaches the switch with the count still reading positive, which
+is exactly what gets measured. The opposite error cannot be seen, because the
+soft minimum stops the arm at a reported 0° before the switch is reached. The
+state machine handles both; only one of them can happen to you.
+
+## 6. Travel limits
+
+Couple the forearm module. Park at full extension and power cycle; confirm it
+prints `homed:` and shows `zero=switch` before going on, because an unhomed
+arm stops at 90° and this step would look like a failure. Then hold UP and
+let it run to the limit without touching anything.
 
 - It must come to a **stop**, not a halt: the last part of the travel is a
   deceleration ramp.
@@ -83,10 +149,11 @@ and let it run to the limit without touching anything.
 
 Repeat with DOWN to the extension limit.
 
-If it reaches a hard stop, stop and work out why before continuing. Either
-the park was wrong, the steps-per-degree is wrong, or steps are being lost.
+If it reaches a hard stop, stop and work out why before continuing. The park
+is no longer a candidate once the arm has homed, so it is the steps-per-degree
+or steps being lost.
 
-## 6. Interlocks under motion
+## 7. Interlocks under motion
 
 Each of these, with the arm moving:
 
@@ -101,14 +168,14 @@ Each of these, with the arm moving:
 The last one is the test people skip. A severed pendant cable must read as
 stop, and that is only true if the e-stop contact is normally closed.
 
-## 7. Idle behaviour
+## 8. Idle behaviour
 
 Leave the arm stopped mid-travel for five seconds. The motor should go quiet
 and the holding current drop away, and **the elbow must not sag**. If it
 sags, the worm is not holding and the whole safety argument for this design
 does not apply to your gearbox. Stop and reconsider the ratio.
 
-## 8. Speed, loaded
+## 9. Speed, loaded
 
 With a representative weight in the cuff, run the full travel. 20°/s should
 feel unhurried. If the motor stalls or skips — a buzz without motion — reduce
@@ -137,7 +204,7 @@ cries wolf gets disabled; set too high they catch nothing.
 Obstruct the arm by hand against a bench, not against a person, and keep it
 brief.
 
-## 9. Load monitoring
+## 10. Load monitoring
 
 With the thresholds set, confirm both trips fire:
 
@@ -151,7 +218,7 @@ The third is the one that decides whether the thresholds are usable. A
 monitor that trips during normal use will be turned off, and then it protects
 nothing.
 
-## 10. First wear
+## 11. First wear
 
 Follow the checklist in [safety.md](safety.md). Short presses, not long ones.
 Someone else on the e-stop.

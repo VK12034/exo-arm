@@ -28,6 +28,16 @@ constexpr uint8_t kOnboardLedPin = 13;
 // Hall-effect current sensor in the 24 V feed to the driver.
 constexpr uint8_t kCurrentSensePin = A0;
 
+// Lever switch at the extension end of travel, used to find zero. Normally
+// open, closing to ground when the arm reaches full extension, read with the
+// internal pull-up. That polarity is chosen for how it fails: a broken wire
+// or an unplugged switch reads open forever, so the arm simply never homes
+// and stays on its restricted travel. Wired the other way round, the same
+// break would read as "at home" and invent a zero wherever the arm happened
+// to be.
+constexpr uint8_t kHomeSwitchPin = 9;
+constexpr bool kHomeSwitchClosesToGround = true;
+
 // The TB6600 enable input is active low in this wiring: pulling ENA low
 // energises the motor.
 constexpr bool kEnableActiveLow = true;
@@ -55,6 +65,39 @@ constexpr float kMaxAngleDeg = 135.0f;
 
 constexpr long kMinSteps = static_cast<long>(kMinAngleDeg * kStepsPerDegree);
 constexpr long kMaxSteps = static_cast<long>(kMaxAngleDeg * kStepsPerDegree);
+
+// --- Homing ----------------------------------------------------------------
+// Until the home switch has been reached, the step counter is an assumption
+// about how the arm was parked, so flexion is held well inside the full range.
+// Reaching the switch lifts this. 90 degrees is enough to be useful and not
+// enough for a 45 degree parking error to put the elbow somewhere it should
+// not be.
+constexpr float kUnhomedMaxAngleDeg = 90.0f;
+constexpr long  kUnhomedMaxSteps =
+    static_cast<long>(kUnhomedMaxAngleDeg * kStepsPerDegree);
+
+// An unhomed arm has to be allowed to travel below its assumed zero, or it
+// could never reach the switch that defines zero. The real floor while
+// seeking is the switch, and the hard stop behind it. A full range of
+// allowance covers any plausible parking error.
+constexpr long kSeekMinSteps = -kMaxSteps;
+
+// Seeking speed. The switch can only be acted on once it is reached, so
+// whatever the arm is doing at that moment is overshoot, and it has to fit
+// between the switch and the hard stop. At 5 deg/s this is 0.28 degrees of
+// stopping distance against 45 deg/s^2, so the switch wants siting at least a
+// degree clear of the stop. docs/commissioning.md gives the measurement.
+constexpr float kHomingSpeedDegPerSec = 5.0f;
+constexpr float kHomingSpeedSteps = kHomingSpeedDegPerSec * kStepsPerDegree;
+
+// How far the counter may disagree with the switch before it is worth saying
+// so. Position arrives as a whole step count and the switch has hysteresis of
+// its own, so small disagreements are expected and corrected silently.
+constexpr long kHomeToleranceSteps = static_cast<long>(0.5f * kStepsPerDegree);
+
+// Past this, enough steps have been lost that the far limit is no longer
+// where it is believed to be. Re-zeroing would hide that, so it faults.
+constexpr long kHomeDriftFaultSteps = static_cast<long>(5.0f * kStepsPerDegree);
 
 // --- Motion profile --------------------------------------------------------
 // Deliberately slow. This is a limb, and the worm means a command error cannot
@@ -97,7 +140,7 @@ constexpr float kAmpsPerCount = (5.0f / 1024.0f) / 0.100f;
 constexpr uint8_t kCurrentZeroSamples = 64;
 
 // Every threshold here is a placeholder until it is measured on the bench.
-// docs/commissioning.md step 8 says to record the real figures; these are
+// docs/commissioning.md step 9 says to record the real figures; these are
 // sized for a NEMA 23 at roughly 2 A per phase off a 24 V supply.
 constexpr float    kOverloadAmps  = 2.5f;   // sustained draw that means binding
 constexpr uint16_t kOverloadMs    = 400;

@@ -31,6 +31,7 @@ current and a plan for what happens when it is lost.
 | 2 | PG7 cable gland | 0.002 kg each |
 | 1 | Relay or contactor for the e-stop supply break | — | Rated for the driver's current |
 | 1 | ACS712-20A current sensor module | 0.005 kg | In the 24 V feed to the driver, for load monitoring |
+| 1 | Lever microswitch, **normally open** | 0.002 kg | Home switch at the extension end of travel. Polarity is deliberate: see [wiring.md](wiring.md) |
 
 ## Power
 
@@ -88,6 +89,9 @@ That is what the 25 mm sling strap and its printed anchor are reacting.
 
 - **A battery.** Commission on a bench supply with a current limit. Add a
   battery once the arm has behaved for several hours.
-- **Limit switches.** See the open questions in [design.md](design.md); they
-  would improve this machine and are not in the current design.
+- **A limit switch at the flexion end.** There is now a home switch at the
+  extension end, which is what the travel counter is referenced to. The
+  flexion limit is still counted steps from that reference, so it is only as
+  good as the counter between one homing and the next. A second switch there
+  would make both ends physical. See [design.md](design.md).
 - **Shoulder actuation.** Out of scope. The sling carries the shoulder.

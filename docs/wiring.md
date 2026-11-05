@@ -39,6 +39,40 @@ The e-stop must be the normally-closed contact of the latching mushroom. A
 normally-open contact would read as "safe" when the cable is cut, which is
 exactly backwards.
 
+### Home switch
+
+A lever microswitch at the extension end of travel, which is what gives the
+firmware a real zero instead of an assumed one.
+
+| Signal | Uno pin | Wiring |
+|---|---|---|
+| Home switch | 9 | **Normally open**, closing to GND, internal pull-up |
+
+Note that this is the opposite convention to the e-stop, and for the same
+reason: pick the polarity by how it fails.
+
+- **Normally open**, as specified. A cut cable or an unplugged switch reads
+  open forever. The arm never homes, so it stays on its restricted travel and
+  runs slow. The failure is visible in the status output and costs range, not
+  safety.
+- **Normally closed**, which would be wrong here. The same cut cable reads as
+  "at home", and the firmware would adopt a zero wherever the arm happened to
+  be, then open up the full travel on the strength of it. A broken wire would
+  silently move every limit.
+
+The e-stop is normally closed because for a stop command, the safe assumption
+on a broken wire is "stop". The home switch is normally open because for a
+position reference, the safe assumption on a broken wire is "I do not know
+where I am".
+
+**Siting it matters.** The switch can only be acted on once it closes, so the
+arm travels a little further while stopping, and that overshoot has to fit
+between the switch and the hard stop. The firmware seeks at 5 °/s, which is
+0.28° of stopping distance at 45 °/s², so a degree of clearance is ample.
+Mount the lever so it closes about 1–2° before the hard stop and stays closed
+all the way to it, rather than closing exactly at the stop. A switch that
+closes only at the very end can be driven past before the firmware reacts.
+
 ### Panel
 
 | Signal | Uno pin | Notes |
@@ -46,6 +80,9 @@ exactly backwards.
 | Status LED | 8 | Green LED on the control box face, with its series resistor |
 | Onboard LED | 13 | Mirrors the status LED, useful on the bench |
 | Current sense | A0 | ACS712-20A output, 100 mV/A about a mid-rail zero |
+
+Pins 10 to 12 and A1 to A5 are unused. A flexion-end limit switch would be
+the obvious next claim on one of them.
 
 ### Current sensor
 

@@ -25,7 +25,8 @@ Everything below follows from that.
 | Driven past the elbow's working range | Planner decelerates to rest at the soft limit; step generator refuses to pulse past it independently; mechanical hard stops behind both |
 | Runaway from a firmware fault | E-stop breaks the driver supply in hardware, not through the firmware |
 | Motion on power-up from a stuck button | Firmware boots into fault and will not leave it until the e-stop is closed and both buttons are released |
-| Accumulated step loss moving the limits | Re-zero gesture, and a power-on park against the extension stop |
+| Accumulated step loss moving the limits | Home switch at the extension end re-references the counter every time the arm reaches it; a disagreement beyond 5° faults rather than being corrected quietly. Re-zero gesture as a fallback |
+| Travel limits trusted before anything has measured them | Until the home switch is reached the arm is held to 90° at 5°/s, so a parking error cannot put the elbow somewhere it should not be |
 | Ambiguous command | Both buttons, or neither, reads as stop |
 | Arm binding or pushing against something | Supply current monitored while driving; sustained overload faults the arm. Partial — see Known gaps |
 | Wearer trapped in a dead arm | Every strap releases one-handed from the free hand; cuffs are quick-release |
@@ -44,6 +45,13 @@ no "go to angle" command, no serial control, and no autonomous motion. This
 is deliberate: the only motion this machine performs is motion a human is
 actively asking for, for as long as they are asking for it.
 
+Homing does not break this, and that shaped how it works. The obvious way to
+find zero is to drive the arm at the switch on power-up, and that was
+rejected: it would mean the machine moving on its own to fix a lesser
+problem. Instead the zero is adopted the moment the wearer extends the arm
+onto the switch, which is a motion they were commanding anyway. The cost is
+that the arm runs restricted until they do. That is the right trade.
+
 ## Known gaps
 
 Stated plainly, because a safety page that only lists mitigations is a sales
@@ -61,18 +69,38 @@ page:
   happens below the overload threshold is invisible. A shaft encoder would
   make this exact instead of inferred, and remains the right fix.
 
-- **Lost steps are still unrecoverable.** Whether or not the load monitor
-  catches the event, the position counter has no way back to the truth. After
-  any fault, park the arm and power cycle rather than trusting the angle.
-- **No limit switches.** Soft limits are counted steps from an assumed
-  power-on pose. Park the arm wrong and the limits are wrong with it.
+- **Lost steps are detected late, not prevented.** The home switch gives the
+  counter a way back to the truth, but only at one end of travel and only
+  when the arm is taken there. Between one homing and the next, loss
+  accumulates unseen exactly as before, and the flexion limit moves with it.
+  What has changed is that the error is now caught and measured instead of
+  compounding forever, and that a large one faults rather than being
+  silently corrected.
+- **Only one end of travel is physical.** Zero is a switch. The 135° flexion
+  limit is still arithmetic from that switch, so it is only as good as the
+  counter in between. A second switch at the flexion end would fix this and
+  is not fitted.
+- **The home switch is a single contact with no cross-check.** It is wired
+  normally open so that a break reads as "not home" and merely costs range
+  (see [wiring.md](wiring.md)), and a contact jammed closed while the counter
+  says the arm is well into flexion faults. Neither covers a switch that
+  closes early because the lever is bent.
+- **Drift is only detectable in one direction.** Lost steps leave the arm
+  physically further extended than the counter claims, so it reaches the
+  switch with the count still positive and the error is measured. The
+  opposite error is invisible: the soft minimum halts the arm at a reported
+  0° before the switch can be reached. That is the benign direction — it
+  costs range rather than overrunning a limit — but it means a clean homing
+  message is not proof the counter is right.
 - **No torque limit.** The drivetrain can deliver roughly seven times the
   static load. Nothing in the firmware prevents it being applied to an arm.
 - **Never tested on hardware.** Every number in `config.h` is from CAD or
   from a datasheet, not from a bench.
 
-The first three are why the e-stop must be in the wearer's free hand and why
-somebody else must be present.
+None of this is a substitute for the e-stop being in the wearer's free hand,
+or for somebody else being present. The load monitor infers rather than
+measures, the counter is only referenced at one end of travel, and nothing
+here has been run against hardware.
 
 ## Before every session
 
@@ -84,7 +112,10 @@ somebody else must be present.
 - [ ] Release both buttons mid-motion and confirm it ramps to a stop
 - [ ] Check the forearm cuff, upper cuff, sling and belt, and the output hub
       grub screw on the keyed shaft
-- [ ] Confirm the arm is parked at full extension before power-on
+- [ ] Confirm the arm is parked at full extension before power-on, and that
+      the monitor prints `homed:` rather than leaving `zero=UNHOMED`
+- [ ] Note the size of any correction the homing message reports. Degrees,
+      repeatedly, means the machine is losing steps
 
 ## First time it is worn
 
