@@ -4,13 +4,6 @@
 
 The mechanical design, as modelled in Fusion 360.
 
-**The model is behind the build on the motor and gearbox.** It still names a 15:1
-gearbox and shows a 76 mm, 1.9 N·m motor, and the files below were exported that way.
-The build uses a 30:1 gearbox and a 41 mm, 0.55 N·m motor, as listed under
-[Drivetrain](#drivetrain). A shorter motor should clear everything the longer one
-cleared, and the catalogue gives one set of dimensions for the gearbox size, but
-neither has been re-modelled. The masses here include the larger motor.
-
 | File | What it is |
 |---|---|
 | `source/BudgetExoArm.f3d` | Fusion archive of the design |
@@ -134,15 +127,19 @@ the guard's stiffness could still close the 1.5 mm gap or misalign the magnet.
 
 | Component | Mass (kg) | Bodies | Notes |
 |---|---|---|---|
-| Upper Arm Module | 2.907 | 44 | Gearmotor 2.19, chain 0.27, struts, cuff, 15T sprocket |
-| Harness + Electronics | 0.765 | 31 | Waist belt, control box, pendant. Carried by the torso |
+| Upper Arm Module | 2.366 | 44 | Gearbox 1.10, motor 0.55, chain 0.27, struts, cuff, 15T sprocket |
+| Harness + Electronics | 0.764 | 31 | Waist belt, control box, pendant. Carried by the torso |
 | Forearm Module | 0.430 | 19 | 30T sprocket 0.256, strut, cuff, magnet cup |
 | Chain Guard | 0.044 | 2 | Guard and encoder board |
 | Switch Mounts | 0.013 | 10 | Added for the home and overrun switches |
-| **Device total** | **4.160** | 106 | |
+| **Device total** | **3.618** | 106 | |
 | Ref - Wearer Torso | 6.213 | 8 | Reference mannequin, not part of the device |
 | Ref - Wearer Upper Arm | 0.336 | 2 | Reference solid |
 | Ref - Wearer Forearm | 0.185 | 4 | Reference solid |
+
+The motor's 0.55 kg is the listing's gross weight, spread over its modelled bodies. The
+gearbox's 1.10 kg is its share of an earlier estimate for the whole gearmotor, not a
+figure for the part you will buy.
 
 The `Ref - Wearer` bodies are shape references at an arbitrary density. Their
 masses are **not** anthropometric and must not be used for load calculations.
@@ -155,8 +152,8 @@ error is a few grams and does not affect any figure here.
 
 | Item | Value |
 |---|---|
-| Motor | NEMA 23 stepper, 41 mm body, 0.55 N·m holding (the model shows 76 mm, 1.9 N·m) |
-| Gearbox | NMRV030 worm, 30:1 (the model says 15:1) |
+| Motor | NEMA 23 stepper, 41 mm body, 0.55 N·m holding |
+| Gearbox | NMRV030 worm, 30:1 |
 | Chain stage | #35, 15T to 30T, 2:1, 56 links |
 | Overall ratio | 60:1 |
 | Resolution | 200 full steps × 4 microsteps × 60 = 48 000 steps per elbow revolution |

@@ -236,7 +236,6 @@ torque limiter on the output is the only fix that holds when the firmware is wro
 
 - Does the drivetrain hold a loaded arm without current? The catalogue says it should,
   and the real gearbox has not been tested. If it does not, it needs a motor brake.
-- The CAD still shows the earlier 15:1 gearbox and larger motor, and needs re-exporting.
 - There is no torque limiter. A friction clutch at the 30T sprocket is the likely
   form. See [loads.md](loads.md).
 - The 88° soft limit itself has no physical reference. Both ends of travel carry

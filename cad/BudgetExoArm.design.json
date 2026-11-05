@@ -6,7 +6,7 @@
     "angle": "rad"
   },
   "fusion_default_length_unit": "mm",
-  "timeline_items": 365,
+  "timeline_items": 370,
   "parameters": [
     {
       "name": "d141",
@@ -576,6 +576,34 @@
       "comment": ""
     },
     {
+      "name": "d333",
+      "expression": "1",
+      "value": 1.0,
+      "unit": "",
+      "comment": ""
+    },
+    {
+      "name": "d334",
+      "expression": "1",
+      "value": 1.0,
+      "unit": "",
+      "comment": ""
+    },
+    {
+      "name": "d335",
+      "expression": "6.00 mm",
+      "value": 0.6000000000000001,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d336",
+      "expression": "0.00 mm",
+      "value": 0.0,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
       "name": "d85",
       "expression": "72.00 mm",
       "value": 7.2,
@@ -976,6 +1004,20 @@
     },
     {
       "name": "d284",
+      "expression": "0.0 deg",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": ""
+    },
+    {
+      "name": "d331",
+      "expression": "-35.00 mm",
+      "value": -3.5,
+      "unit": "mm",
+      "comment": ""
+    },
+    {
+      "name": "d332",
       "expression": "0.0 deg",
       "value": 0.0,
       "unit": "deg",
@@ -1591,18 +1633,18 @@
       "description": "",
       "part_number": "2026-09-25-13-44-36-213",
       "physical": {
-        "mass_kg": 10.8940530933543,
-        "volume_mm3": 46017211.56991181,
-        "area_mm2": 1950747.656476603,
+        "mass_kg": 10.352694544353936,
+        "volume_mm3": 45906054.723015115,
+        "area_mm2": 1942713.6244386341,
         "centre_of_mass_mm": {
-          "x": -9.347766469639781,
-          "y": -99.54532211556815,
-          "z": -194.23818004514646
+          "x": -6.877264753554195,
+          "y": -111.0245841114447,
+          "z": -200.35586622173304
         }
       },
       "bounding_box": {
         "min_mm": {
-          "x": -180.10968207622318,
+          "x": -179.90665006114295,
           "y": -442.4983032616413,
           "z": -725.0296566248714
         },
@@ -1612,7 +1654,7 @@
           "z": 377.02
         },
         "size_mm": {
-          "x": 567.1296820762232,
+          "x": 566.9266500611429,
           "y": 591.0283032616412,
           "z": 1102.0496566248714
         }
@@ -1728,29 +1770,29 @@
       "description": "",
       "part_number": "2026-09-25-13-45-26-334",
       "physical": {
-        "mass_kg": 0.7650513543379389,
-        "volume_mm3": 719552.4618027213,
-        "area_mm2": 324282.30086602323,
+        "mass_kg": 0.7643344012823564,
+        "volume_mm3": 718917.9900721173,
+        "area_mm2": 323859.2562309873,
         "centre_of_mass_mm": {
-          "x": -61.70265364000191,
-          "y": -194.09621758690335,
-          "z": -420.28031024096896
+          "x": -61.6189114405925,
+          "y": -194.3758703935893,
+          "z": -420.62968086611295
         }
       },
       "bounding_box": {
         "min_mm": {
-          "x": -180.0996820762232,
+          "x": -179.89665006114294,
           "y": -349.04171855451347,
           "z": -562.6373645091351
         },
         "max_mm": {
-          "x": 138.18040422206482,
-          "y": 124.05731576483369,
+          "x": 138.1804042220648,
+          "y": 124.23577038256269,
           "z": 73.58816015852092
         },
         "size_mm": {
-          "x": 318.280086298288,
-          "y": 473.09903431934714,
+          "x": 318.07705428320776,
+          "y": 473.27748893707616,
           "z": 636.225524667656
         }
       },
@@ -1762,30 +1804,30 @@
       "description": "",
       "part_number": "2026-09-25-13-47-21-260",
       "physical": {
-        "mass_kg": 2.9068410057042655,
-        "volume_mm3": 789905.3185001416,
-        "area_mm2": 226933.52620405963,
+        "mass_kg": 2.366199409759486,
+        "volume_mm3": 679382.9433340547,
+        "area_mm2": 219322.5388011264,
         "centre_of_mass_mm": {
-          "x": -25.124825890664173,
-          "y": 108.22063649033083,
-          "z": -157.16905602233334
+          "x": -17.96352243366545,
+          "y": 105.52922601122472,
+          "z": -175.42130110474577
         }
       },
       "bounding_box": {
         "min_mm": {
-          "x": -94.82938994738099,
+          "x": -85.7707233687928,
           "y": -46.797842519889336,
           "z": -384.01
         },
         "max_mm": {
           "x": 78.90954920792208,
           "y": 148.51999999999998,
-          "z": -48.15979011537081
+          "z": -57.98000000000002
         },
         "size_mm": {
-          "x": 173.73893915530306,
+          "x": 164.68027257671486,
           "y": 195.31784251988933,
-          "z": 335.8502098846292
+          "z": 326.03
         }
       },
       "body_count": 44
@@ -3397,38 +3439,38 @@
       "material": "Nylon 6/6",
       "visible": true,
       "physical": {
-        "mass_kg": 0.015797164780209674,
-        "volume_mm3": 13979.791840893517,
-        "area_mm2": 9376.41060549747,
+        "mass_kg": 0.015080211724627155,
+        "volume_mm3": 13345.320110289518,
+        "area_mm2": 8953.365970461517,
         "centre_of_mass_mm": {
-          "x": -146.12715509641066,
-          "y": 20.28459317330504,
-          "z": -260.47295735582253
+          "x": -145.89647931904176,
+          "y": 16.30273374527194,
+          "z": -270.5830022559553
         }
       },
       "bounding_box": {
         "min_mm": {
-          "x": -179.742693596342,
-          "y": -134.25918362478942,
-          "z": -357.47229364724495
+          "x": -179.72681087991958,
+          "y": -134.7263149884187,
+          "z": -357.4826248142177
         },
         "max_mm": {
-          "x": -91.93212644336512,
-          "y": 123.94297840989867,
-          "z": -76.77777339302246
+          "x": -82.97807250720537,
+          "y": 124.11152468056373,
+          "z": -110.49166179722505
         },
         "size_mm": {
-          "x": 87.81056715297687,
-          "y": 258.2021620346881,
-          "z": 280.69452025422254
+          "x": 96.74873837271421,
+          "y": 258.83783966898244,
+          "z": 246.99096301699262
         }
       }
     },
     {
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
-      "body": "Worm Gearbox NMRV030 Housing (15:1)",
-      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "body": "Worm Gearbox NMRV030 Housing (30:1)",
+      "material": "Lumped - NMRV030 worm gearbox (1.1 kg)",
       "visible": true,
       "physical": {
         "mass_kg": 0.8889987276050623,
@@ -3462,7 +3504,7 @@
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
       "body": "Output Bore Cover",
-      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "material": "Lumped - NMRV030 worm gearbox (1.1 kg)",
       "visible": true,
       "physical": {
         "mass_kg": 0.00879401198627345,
@@ -3496,7 +3538,7 @@
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
       "body": "Worm End Cap",
-      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "material": "Lumped - NMRV030 worm gearbox (1.1 kg)",
       "visible": true,
       "physical": {
         "mass_kg": 0.011102263119546112,
@@ -3530,7 +3572,7 @@
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
       "body": "NEMA 23 Input Flange",
-      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "material": "Lumped - NMRV030 worm gearbox (1.1 kg)",
       "visible": true,
       "physical": {
         "mass_kg": 0.1454736399270874,
@@ -3564,16 +3606,16 @@
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
       "body": "Motor Front Cap",
-      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "material": "Lumped - 23HS16 motor (0.55 kg)",
       "visible": true,
       "physical": {
-        "mass_kg": 0.11387220556721923,
+        "mass_kg": 0.10571295370676821,
         "volume_mm3": 25262.25718081981,
         "area_mm2": 8055.218558732559,
         "centre_of_mass_mm": {
           "x": -42.95400322420818,
           "y": 120.00000000000001,
-          "z": -127.60457673346595
+          "z": -127.60457673346596
         }
       },
       "bounding_box": {
@@ -3597,34 +3639,34 @@
     {
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
-      "body": "NEMA 23 Stepper Body (76 mm, 1.9 N-m)",
-      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "body": "NEMA 23 Stepper Body (41 mm, 0.55 N-m)",
+      "material": "Lumped - 23HS16 motor (0.55 kg)",
       "visible": true,
       "physical": {
-        "mass_kg": 0.8540415417541456,
-        "volume_mm3": 189466.92885614888,
-        "area_mm2": 19362.9712716619,
+        "mass_kg": 0.3303529803336513,
+        "volume_mm3": 78944.55369006206,
+        "area_mm2": 11751.983868728687,
         "centre_of_mass_mm": {
-          "x": -51.75385075769388,
-          "y": 120.00000000000003,
-          "z": -94.76309863963766
+          "x": -47.22451746839975,
+          "y": 120.00000000000001,
+          "z": -111.66680059969633
         }
       },
       "bounding_box": {
         "min_mm": {
-          "x": -86.75753041212121,
+          "x": -77.69886383353298,
           "y": 91.8,
           "z": -131.03957050020077
         },
         "max_mm": {
           "x": -16.750171103266524,
           "y": 148.2,
-          "z": -58.486626779074484
+          "z": -92.29403069919188
         },
         "size_mm": {
-          "x": 70.0073593088547,
+          "x": 60.948692730266465,
           "y": 56.400000000000006,
-          "z": 72.55294372112628
+          "z": 38.74553980100888
         }
       }
     },
@@ -3632,31 +3674,31 @@
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
       "body": "Motor Rear Cap",
-      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "material": "Lumped - 23HS16 motor (0.55 kg)",
       "visible": true,
       "physical": {
-        "mass_kg": 0.11583662640898403,
-        "volume_mm3": 25698.058913725836,
-        "area_mm2": 8311.572519265485,
+        "mass_kg": 0.1075366184761621,
+        "volume_mm3": 25698.058913725883,
+        "area_mm2": 8311.572519265486,
         "centre_of_mass_mm": {
-          "x": -60.57783886295776,
+          "x": -51.519172284369546,
           "y": 120.0,
-          "z": -61.831526705371786
+          "z": -95.63893062548925
         }
       },
       "bounding_box": {
         "min_mm": {
-          "x": -88.82808277294139,
+          "x": -79.76941619435318,
           "y": 91.8,
-          "z": -73.08402092285667
+          "z": -106.89142484297412
         },
         "max_mm": {
-          "x": -32.279313809417765,
+          "x": -23.22064723082957,
           "y": 148.2,
-          "z": -48.179790115370835
+          "z": -81.98719403548829
         },
         "size_mm": {
-          "x": 56.54876896352362,
+          "x": 56.548768963523614,
           "y": 56.400000000000006,
           "z": 24.904230807485828
         }
@@ -3666,33 +3708,33 @@
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
       "body": "Motor Lead Exit",
-      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "material": "Lumped - 23HS16 motor (0.55 kg)",
       "visible": true,
       "physical": {
-        "mass_kg": 0.00689122221443217,
-        "volume_mm3": 1528.7999999999943,
-        "area_mm2": 828.7999999999982,
+        "mass_kg": 0.006397447483418515,
+        "volume_mm3": 1528.799999999998,
+        "area_mm2": 828.799999999999,
         "centre_of_mass_mm": {
-          "x": -89.230545909136,
+          "x": -80.1718793305478,
           "y": 120.0,
-          "z": -78.92304433020183
+          "z": -112.73044825031931
         }
       },
       "bounding_box": {
         "min_mm": {
-          "x": -94.80938994738099,
+          "x": -85.7507233687928,
           "y": 113.0,
-          "z": -86.69391939012515
+          "z": -120.5013233102426
         },
         "max_mm": {
-          "x": -83.65170187089099,
+          "x": -74.59303529230279,
           "y": 127.0,
-          "z": -71.15216927027853
+          "z": -104.95957319039597
         },
         "size_mm": {
-          "x": 11.157688076490011,
+          "x": 11.15768807649002,
           "y": 13.999999999999986,
-          "z": 15.54175011984662
+          "z": 15.541750119846629
         }
       }
     },
@@ -3700,7 +3742,7 @@
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
       "body": "Output Shaft 14 mm keyed",
-      "material": "Lumped - 23HS30 + NMRV030 worm gearmotor (2.2 kg)",
+      "material": "Lumped - NMRV030 worm gearbox (1.1 kg)",
       "visible": true,
       "physical": {
         "mass_kg": 0.04921039648755579,

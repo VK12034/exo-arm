@@ -7,8 +7,8 @@ One right arm. Masses are from the Fusion model; see
 
 | Qty | Item | Mass | Notes |
 |---|---|---|---|
-| 1 | NEMA 23 stepper, 23HS16-2804, 41 mm body, 0.55 N·m, 2.8 A, 1.4 mH | 0.55 kg gross, per the listing | Do not swap for a stronger motor, because this one sets the force ceiling. Do not use the high-inductance 0.88 A version. Check the shaft size and the torque at 200 rpm on 24 V before ordering. The rear shaft of a dual-shaft motor spins exposed, so cover it. The model still shows a larger motor, lumped with the gearbox at 2.19 kg |
-| 1 | NMRV030 worm gearbox, 30:1, 14 mm keyed output | — | Single-start. **Should hold a loaded arm without current, untested**: see [loads.md](loads.md). A NEMA 23 motor needs an adapter to its input, so check that one exists for the 30:1 input bore |
+| 1 | NEMA 23 stepper, 23HS16-2804, 41 mm body, 0.55 N·m, 2.8 A, 1.4 mH | 0.55 kg gross, per the listing | Do not swap for a stronger motor, because this one sets the force ceiling. Do not use the high-inductance 0.88 A version. Check the shaft size and the torque at 200 rpm on 24 V before ordering. The rear shaft of a dual-shaft motor spins exposed, so cover it |
+| 1 | NMRV030 worm gearbox, 30:1, 14 mm keyed output | 1.10 kg, estimated | Single-start. **Should hold a loaded arm without current, untested**: see [loads.md](loads.md). A NEMA 23 motor needs an adapter to its input, so check that one exists for the 30:1 input bore |
 | 1 | #35 sprocket, 15T, 14 mm keyed bore | 0.084 kg | On the gearbox output |
 | 1 | #35 sprocket, 30T, plate type, drilled | 0.256 kg | On the elbow |
 | 1 | #35 roller chain, 56 links | 0.270 kg | No tensioner is modelled |
@@ -87,12 +87,12 @@ see.
 
 | | Mass |
 |---|---|
-| Upper arm module | 2.907 kg |
-| Harness and electronics | 0.765 kg |
+| Upper arm module | 2.366 kg |
+| Harness and electronics | 0.764 kg |
 | Forearm module | 0.430 kg |
 | Chain guard | 0.044 kg |
 | Switch mounts | 0.013 kg |
-| **Device** | **4.160 kg** |
+| **Device** | **3.618 kg** |
 
 Most of it is the gearmotor, mounted mid upper arm and carried by the sling
 rather than the wearer's shoulder joint. That is what the 25 mm sling strap and

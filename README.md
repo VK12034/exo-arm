@@ -26,7 +26,7 @@ needed to build, commission and operate it.
 | Control | Arduino Uno and a TB6600 driver, belt-mounted |
 | Interface | UP / DOWN buttons and a latching NC e-stop on a hand pendant |
 | Encoder | AS5600 on the elbow axis, checking the step count |
-| Device mass | 4.160 kg as modelled, with a larger motor than the build uses |
+| Device mass | 3.618 kg |
 
 The motor is deliberately small, because it sets the ceiling on how hard the arm can
 push. **By Motovario's catalogue figures, an NMRV030 at 30:1 should hold the arm
@@ -129,9 +129,7 @@ invent a zero wherever the arm happened to be.
 
 The mechanical design is modelled in CAD, including hard stops, switch mounts, a
 chain guard and the encoder mount. It has no torque limiter, and the holding test has
-not been done. The drivetrain was changed to a 30:1 worm and a smaller motor after the
-model was last exported, so [the CAD](cad/README.md) still shows the earlier 15:1 worm
-and larger motor. First-pass stall loads are in [docs/loads.md](docs/loads.md).
+not been done. First-pass stall loads are in [docs/loads.md](docs/loads.md).
 
 The firmware is written and its planning, step-rate, debounce, load, homing,
 overrun, encoder and logging logic are covered by host unit tests, but **it has
