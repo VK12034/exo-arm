@@ -54,6 +54,13 @@ PETG, FDM, 4 walls at 40% infill.
 | 1 | Upper arm cuff | 0.064 kg |
 | 1 | Forearm cuff | 0.028 kg |
 | 1 | Sling strap anchor | 0.014 kg |
+| 2 | Travel hard stop | **not designed** |
+| 1 | Home switch bracket | **not designed** |
+
+The last two are in no sense ready to print. They are listed because
+[safety.md](safety.md) and [wiring.md](wiring.md) both depend on them and the
+Fusion model does not contain them. Designing them is outstanding work, and
+the arm should not be worn before they are fitted.
 
 PETG rather than PLA throughout: these parts sit against a body, in a car, in
 sunlight, and PLA creeps under sustained load at temperatures the arm will

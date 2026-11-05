@@ -105,10 +105,15 @@ invent a zero wherever the arm happened to be.
 
 ## Status
 
-The mechanical design is complete in CAD. The firmware is written and its
-planning, step-rate, debounce, load and homing logic are covered by 45 host
-unit tests, but **it has never been run on hardware**. The pin assignments in `firmware/include/config.h`
-are a proposal, not a built wiring loom, and the direction sense has not been
+The mechanical design is substantially complete in CAD, with two known
+omissions: the travel hard stops and the home switch bracket are specified in
+the docs but not modelled, and [docs/safety.md](docs/safety.md) explains why
+that matters more than it sounds.
+
+The firmware is written and its planning, step-rate, debounce, load and
+homing logic are covered by 45 host unit tests, but **it has never been run
+on hardware**. The pin assignments in `firmware/include/config.h` are a
+proposal, not a built wiring loom, and the direction sense has not been
 verified against a real motor. Work through
 [docs/commissioning.md](docs/commissioning.md) before the arm is worn.
 

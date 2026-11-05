@@ -65,6 +65,11 @@ on a broken wire is "stop". The home switch is normally open because for a
 position reference, the safe assumption on a broken wire is "I do not know
 where I am".
 
+**There is no bracket for this yet.** The Fusion model has no mount for the
+switch and no hard stop for it to be referenced against, so the figures below
+describe where to put it rather than a part you can print. See
+[bom.md](bom.md).
+
 **Siting it matters.** The switch can only be acted on once it closes, so the
 arm travels a little further while stopping, and that overshoot has to fit
 between the switch and the hard stop. The firmware seeks at 5 °/s, which is

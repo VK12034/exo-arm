@@ -84,7 +84,10 @@ constexpr long kSeekMinSteps = -kMaxSteps;
 
 // Seeking speed. The switch can only be acted on once it is reached, so
 // whatever the arm is doing at that moment is overshoot, and it has to fit
-// between the switch and the hard stop. At 5 deg/s this is 0.28 degrees of
+// between the switch and the hard stop. Note that neither the stop nor the
+// switch bracket is in the CAD yet: docs/safety.md lists that as the largest
+// gap on the page, and until they exist this figure is sizing a clearance
+// nothing provides. At 5 deg/s this is 0.28 degrees of
 // stopping distance against 45 deg/s^2, so the switch wants siting at least a
 // degree clear of the stop. docs/commissioning.md gives the measurement.
 constexpr float kHomingSpeedDegPerSec = 5.0f;

@@ -153,6 +153,12 @@ carries anything, and a stepper that stalls loses position silently.
 
 ## Open questions
 
+- The mechanical hard stops are not designed. Both this document and
+  [safety.md](safety.md) describe them as the layer behind the soft limits,
+  and the home switch is specified relative to one, but the Fusion model
+  contains no travel stop and no switch mount. The firmware layers are real
+  and tested; the physical one is an intention. It is the largest
+  inconsistency between the documentation and the design.
 - Only the extension end is physical. The home switch references zero; the
   135° flexion limit is still counted steps from it, so it is only as good as
   the counter between one homing and the next. A second switch there would

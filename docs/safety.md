@@ -22,7 +22,7 @@ Everything below follows from that.
 
 | Hazard | Mitigation |
 |---|---|
-| Driven past the elbow's working range | Planner decelerates to rest at the soft limit; step generator refuses to pulse past it independently; mechanical hard stops behind both |
+| Driven past the elbow's working range | Planner decelerates to rest at the soft limit; step generator refuses to pulse past it independently. Mechanical hard stops behind both are assumed throughout this page but are **not in the CAD** — see Known gaps |
 | Runaway from a firmware fault | E-stop breaks the driver supply in hardware, not through the firmware |
 | Motion on power-up from a stuck button | Firmware boots into fault and will not leave it until the e-stop is closed and both buttons are released |
 | Accumulated step loss moving the limits | Home switch at the extension end re-references the counter every time the arm reaches it; a disagreement beyond 5° faults rather than being corrected quietly. Re-zero gesture as a fallback |
@@ -94,6 +94,21 @@ page:
   message is not proof the counter is right.
 - **No torque limit.** The drivetrain can deliver roughly seven times the
   static load. Nothing in the firmware prevents it being applied to an arm.
+- **The physical backstops do not exist yet.** This page has always treated
+  mechanical hard stops as the last line behind the soft limits, and the home
+  switch now assumes one to be sited against. Neither is in the Fusion model:
+  of its 82 bodies none is a travel stop, and none is a mount for the switch.
+
+  What is real is the firmware: the planner decelerates to rest at the soft
+  limit, and the step generator refuses to pulse past it on its own
+  arithmetic. Those are tested. What is missing is the thing that catches
+  them both when they are wrong, which is exactly the case they exist for.
+  Until the stops are designed and printed, a firmware fault that defeats
+  both limits has nothing physical in its way, and the e-stop in the free
+  hand is the only remaining layer.
+
+  This is the most significant gap on the page. Do not read the three-layer
+  description above as describing a machine that exists.
 - **Never tested on hardware.** Every number in `config.h` is from CAD or
   from a datasheet, not from a bench.
 
@@ -106,6 +121,8 @@ here has been run against hardware.
 
 - [ ] E-stop in the free hand, and a second person who knows where the supply
       switch is
+- [ ] Confirm the mechanical hard stops are actually fitted. They are not in
+      the CAD, so on an early build they are probably not there
 - [ ] Bench test with the arm **not worn**: drive to both soft limits and
       confirm it stops short of the hard stops
 - [ ] Press the e-stop mid-motion and confirm the motor goes dead
@@ -125,7 +142,11 @@ one long one, and stop at the first thing that feels wrong.
 
 ## Limits are set conservatively
 
-`kMaxAngleDeg` is 135°, inside both the elbow's anatomical range and the
-mechanism's hard stops. If the arm reaches a hard stop in normal use, the
-limits are wrong or the arm was parked wrong. Do not widen the limits to make
-the symptom go away.
+`kMaxAngleDeg` is 135°, inside the elbow's anatomical range and inside where
+the mechanism's hard stops are intended to go once they exist. If the arm
+reaches a hard stop in normal use, the limits are wrong or the arm was parked
+wrong. Do not widen the limits to make the symptom go away.
+
+And while the stops are still unbuilt, the 135° figure is the only thing
+bounding flexion at that end. Treat it as load-bearing rather than as a
+conservative margin inside something sturdier.

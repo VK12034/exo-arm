@@ -7,6 +7,13 @@ a test of the firmware as much as of the build.
 Keep the supply current-limited throughout. A limit of about 1 A is enough to
 move the arm unloaded and not enough to do damage when something is wrong.
 
+**Before step 5, note that the mechanical hard stops and the home switch
+bracket are not in the CAD.** Steps 5 and 6 are written as though they are
+fitted, because that is the intended machine. On a build that does not have
+them yet, the soft limits are the only thing stopping the arm at either end,
+so run those steps uncoupled or with the arm clear of anything it could
+damage, and do not treat "it stopped" as evidence that a backstop worked.
+
 ## 1. Driver alone, motor disconnected
 
 Flash the firmware and open the monitor:
