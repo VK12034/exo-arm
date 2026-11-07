@@ -11,9 +11,10 @@ One right arm. Masses are from the Fusion model; see
 | 1 | NMRV030 worm gearbox, 30:1, 14 mm keyed output | 1.10 kg, estimated | Single-start. **Should hold a loaded arm without current, untested**: see [loads.md](loads.md). A NEMA 23 motor needs an adapter to its input, so check that one exists for the 30:1 input bore |
 | 1 | #35 sprocket, 15T, 14 mm keyed bore | 0.084 kg | On the gearbox output |
 | 1 | #35 sprocket, 30T, plate type, bored to 52 mm | 0.174 kg after boring | On the elbow, free to slip inside the clutch. The bore must be concentric with the teeth |
-| 1 | #35 roller chain, 56 links | 0.270 kg | No tensioner is modelled |
+| 1 | #35 roller chain, 56 links, with a connecting link | 0.270 kg | Tensioned by sliding the gearbox plate along the upper strut's slots, about 5 mm each way |
 | 1 | Shaft key, 5 × 5 | 0.003 kg | |
 | 1 | M8 shoulder bolt, nylock and 2 bronze 8 × 12 bushings | 0.025 kg | Elbow pivot |
+| 1 | Pivot retaining spacer, 13 mm OD × 8.2 mm ID × about 9 mm | — | Not in the model yet. Between the pivot spacer and the nylock, cut so the forearm has about 0.4 mm of end play |
 | 1 | 1/4 in shock cord, 3 loops, with anchor and spring pins | 0.046 kg | Assist |
 
 ## Control
@@ -28,7 +29,7 @@ One right arm. Masses are from the Fusion model; see
 | 1 | Power rocker switch | 0.002 kg |
 | 1 | DC barrel jack, 24 V | 0.001 kg |
 | 2 | PG7 cable gland | 0.002 kg each |
-| 1 | Relay or contactor for the e-stop supply break | — | Rated for the driver's current |
+| 1 | 5 V relay, bare coil, contact rated 5 A or more at 30 V DC, and a 1N4007 diode | — | E-stop supply break. See [wiring.md](wiring.md#e-stop-in-hardware-as-well-as-firmware) |
 | 1 | AS5600 magnetic encoder board | 0.001 kg | Over the elbow axis, on the chain guard. Check its supply voltage |
 | 1 | Diametric magnet, 6 × 2.5 mm | 0.001 kg | Must be diametrically magnetised |
 | 1 | ACS712-20A current sensor module | 0.005 kg | In the 24 V feed to the driver, for load monitoring |

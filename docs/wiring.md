@@ -163,14 +163,27 @@ depends on the firmware working. The same loop must also break the **24 V
 supply to the TB6600**, through a relay or a contactor rated for it.
 
 ```
-24 V ──[fuse]──┬──── E-STOP NC contact ────── TB6600 VCC
+24 V ──[fuse]──┬──── relay contact (NO) ──── ACS712 ──── TB6600 VCC
                │
-               └──── 24 V → 5 V buck ──────── Arduino VIN
+               └──── 24 V → 5 V buck ──┬──── Arduino 5V pin
+                                       │
+                                       └──── relay coil ──┬──── pin 2
+                                                          │
+                                                      E-STOP NC ──── GND
 ```
+
+The mushroom's one normally-closed contact does both jobs. Use a 5 V relay with a bare
+coil, not an opto-isolated module, and put a 1N4007 flyback diode across the coil with
+its cathode on the 5 V side. With the loop closed, the coil pulls in and pin 2 reads low.
+With it open, or the cable cut, the relay drops out and pin 2 reads high through the coil.
 
 Wired this way the Arduino stays alive with the loop open, so it can see the
 fault, light the LED and refuse to resume — while the motor is dead
 regardless of what any code does.
+
+**Feed the buck's 5 V to the Uno's 5V pin, not VIN.** VIN goes through a regulator that
+needs about 7 V or more. Set the buck to 5.0 V with a meter before connecting it, because
+the 5V pin has no protection from a wrong voltage.
 
 Do not power the Arduino from USB and the buck at the same time while the
 motor supply is live.
@@ -182,7 +195,7 @@ motor supply is live.
 | Supply | 24 V, at least 4 A for a NEMA 23 at full current |
 | Fuse | Inline, sized to the driver's current setting |
 | Bulk capacitance | Electrolytic across the TB6600 supply terminals, as close as the layout allows |
-| Logic | 24 V → 5 V buck to the Arduino VIN |
+| Logic | 24 V → 5 V buck to the Arduino 5V pin |
 
 A stepper driver chops current continuously, and the 24 V rail sags hard on
 direction reversals. Commission on a current-limited bench supply before

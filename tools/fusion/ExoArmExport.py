@@ -11,6 +11,7 @@ Point it at the repository's cad/ folder. It writes:
     source/<design>.f3d    Fusion archive of the whole design
     step/<design>.step     STEP export of the whole design
     mesh/<design>.stl      mesh export of the whole design
+    parts/<part>.stl       one mesh per 3D-printed part
 
 Nothing in the design is modified. The script only reads and exports.
 
@@ -230,6 +231,20 @@ def _export(design, folder, stem):
     options.meshRefinement = adsk.fusion.MeshRefinementSettings.MeshRefinementMedium
     manager.execute(options)
     written["stl"] = stl.replace(os.sep, "/")
+
+    os.makedirs(os.path.join(folder, "parts"), exist_ok=True)
+    occurrences = [None] + list(root.allOccurrences)
+    for occurrence in occurrences:
+        component = root if occurrence is None else occurrence.component
+        for body in component.bRepBodies:
+            if "PETG print" not in body.name:
+                continue
+            slug = re.sub(r"[^a-z0-9]+", "-", body.name.split("(")[0].lower()).strip("-")
+            options = manager.createSTLExportOptions(
+                body, os.path.join(folder, "parts", slug + ".stl")
+            )
+            options.meshRefinement = adsk.fusion.MeshRefinementSettings.MeshRefinementHigh
+            manager.execute(options)
 
     return written
 

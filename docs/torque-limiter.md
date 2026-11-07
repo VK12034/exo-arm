@@ -54,6 +54,12 @@ springs pass through holes in it. **This keeps the magnet on the forearm side of
 clutch.** Had it stayed on the sprocket, it would have turned with the motor and never
 seen a slip.
 
+The pivot needs one more part, which is not in the model yet. Nothing else locates the
+forearm along the pivot bolt, so it could slide about 9 mm and rub the plates on the
+switches. Add a spacer, 13 mm OD by 8.2 mm ID, from y = 77.6 to the nylock at y = 87, cut
+so the forearm has about 0.4 mm of end play. It passes through the hub and outer plate
+without touching them.
+
 Two earlier parts had to change for the plates to fit:
 
 - The 5 mm sprocket spacers are gone.
