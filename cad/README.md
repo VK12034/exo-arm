@@ -104,6 +104,34 @@ would close at the target angle. Real switches differ, so
 [commissioning](../docs/commissioning.md) measures both closing points on the
 built arm, and those measurements decide.
 
+## Control box and pendant
+
+Both enclosures are sized for real parts rather than the model's earlier simple blocks.
+
+**Control box**, 58 × 156 × 116 mm outside, with 3 mm walls. It opens toward the lid, away
+from the wearer, and the belt loops are part of its closed back wall.
+
+| Feature | Size |
+|---|---|
+| Uno bosses | 7 mm OD × 6 mm, Ø2.5 pilots, on the Uno's standard hole pattern |
+| TB6600 | Space for 96 × 71 × 37 mm. Mounting holes vary by maker, so mark and drill the back wall from yours |
+| Glands | Ø12.5 in the top and end walls |
+| USB opening | 14 × 16 mm in the end wall, so the Uno can be flashed with the lid on. Check it against your board |
+| Vents | 5 slots in the lid over the driver, 4 in the end wall beside it |
+| Lid | Rocker 19.2 × 13 mm, LED Ø6.2, barrel jack Ø12, 4 Ø3.4 screw holes into Ø2.5 pilots |
+
+The barrel jack moved to clear the driver. The fuse, capacitor and wiring are not modelled,
+and nothing has been test-fitted.
+
+**Pendant**, 50 × 108 × 55 mm outside, 3 mm walls. That leaves 49 mm behind the panel,
+because published 22 mm e-stops range from about 18 to 72 mm deep, and typically 37 to
+46 mm. Check yours. It has Ø16 button holes, a Ø22.3 e-stop hole, a Ø9 cable hole, and a
+screw-on back cover that carries the belt clip. It is bigger than before, and neither the
+grip nor the weight with real switches has been tried.
+
+Checked with the enclosures in place: no overlaps inside the harness apart from the cables
+entering their glands, and neither enclosure touches the reference wearer.
+
 ## Chain tension
 
 The gearbox plate's three standoffs run in slots in the upper strut, 5.5 mm wide and
@@ -151,12 +179,12 @@ The bolts' shanks and the countersinks for the two extra bolts are not modelled.
 
 | Component | Mass (kg) | Bodies | Notes |
 |---|---|---|---|
-| Upper Arm Module | 2.365 | 42 | Gearbox 1.10, motor 0.55, chain 0.27, struts, cuff, 15T sprocket |
-| Harness + Electronics | 0.764 | 31 | Waist belt, control box, pendant. Carried by the torso |
+| Upper Arm Module | 2.370 | 43 | Gearbox 1.10, motor 0.55, chain 0.27, struts, cuff, 15T sprocket |
+| Harness + Electronics | 0.713 | 28 | Waist belt, control box, pendant. Carried by the torso |
 | Forearm Module | 0.600 | 29 | Clutch 0.255, bored 30T sprocket 0.174, strut, cuff, magnet cup |
 | Chain Guard | 0.044 | 2 | Guard and encoder board |
 | Switch Mounts | 0.013 | 10 | Added for the home and overrun switches |
-| **Device total** | **3.787** | 114 | |
+| **Device total** | **3.741** | 112 | |
 | Ref - Wearer Torso | 6.213 | 8 | Reference mannequin, not part of the device |
 | Ref - Wearer Upper Arm | 0.336 | 2 | Reference solid |
 | Ref - Wearer Forearm | 0.185 | 4 | Reference solid |
@@ -202,6 +230,7 @@ that, and a chain failure would release the forearm whatever the worm does.
 | UP and DOWN momentary buttons | Hand pendant |
 | E-stop, latching mushroom, normally closed | Hand pendant |
 | PG7 glands, 6-core pendant cable, 4-core motor cable | Control box |
+| Buck converter, e-stop relay, ACS712 | Control box, on the back wall |
 | AS5600 encoder board | On the chain guard, over the elbow axis |
 
 ## Materials
@@ -219,7 +248,6 @@ that, and a chain failure would release the forearm whatever the worm does.
 
 ## Not modelled or not checked
 
-- The forearm is not located along the pivot bolt. The build needs a spacer between the pivot spacer and the nylock: see [torque-limiter.md](../docs/torque-limiter.md).
 - [First-pass stall loads](../docs/loads.md) exist, but contact stress, strut bending,
   the gearbox plate and the shoulder mount have not been checked.
 - The encoder and sensor wiring runs are not modelled.

@@ -14,7 +14,7 @@ One right arm. Masses are from the Fusion model; see
 | 1 | #35 roller chain, 56 links, with a connecting link | 0.270 kg | Tensioned by sliding the gearbox plate along the upper strut's slots, about 5 mm each way |
 | 1 | Shaft key, 5 × 5 | 0.003 kg | |
 | 1 | M8 shoulder bolt, nylock and 2 bronze 8 × 12 bushings | 0.025 kg | Elbow pivot |
-| 1 | Pivot retaining spacer, 13 mm OD × 8.2 mm ID × about 9 mm | — | Not in the model yet. Between the pivot spacer and the nylock, cut so the forearm has about 0.4 mm of end play |
+| 1 | Pivot retaining spacer, 13 mm OD × 8.2 mm ID × about 9 mm | — | Between the pivot spacer and the nylock, cut so the forearm has about 0.4 mm of end play |
 | 1 | 1/4 in shock cord, 3 loops, with anchor and spring pins | 0.046 kg | Assist |
 
 ## Control
@@ -23,11 +23,11 @@ One right arm. Masses are from the Fusion model; see
 |---|---|---|
 | 1 | Arduino Uno | 0.008 kg |
 | 1 | TB6600 stepper driver | 0.197 kg |
-| 1 | E-stop, latching mushroom, **normally closed** | 0.005 kg |
-| 2 | Momentary push button (UP green, DOWN black) | 0.001 kg each |
-| 1 | Green status LED and series resistor | — |
-| 1 | Power rocker switch | 0.002 kg |
-| 1 | DC barrel jack, 24 V | 0.001 kg |
+| 1 | E-stop, latching mushroom, 22 mm panel hole, **normally closed**, no more than 49 mm behind the panel | 0.005 kg |
+| 2 | Momentary push button, 16 mm panel hole (UP green, DOWN black) | 0.001 kg each |
+| 1 | Green status LED in a 6 mm panel holder, and series resistor | — |
+| 1 | Power rocker switch, 19.2 × 13 mm panel cut-out | 0.002 kg |
+| 1 | DC barrel jack, 24 V, 12 mm panel hole | 0.001 kg |
 | 2 | PG7 cable gland | 0.002 kg each |
 | 1 | 5 V relay, bare coil, contact rated 5 A or more at 30 V DC, and a 1N4007 diode | — | E-stop supply break. See [wiring.md](wiring.md#e-stop-in-hardware-as-well-as-firmware) |
 | 1 | AS5600 magnetic encoder board | 0.001 kg | Over the elbow axis, on the chain guard. Check its supply voltage |
@@ -50,9 +50,10 @@ PETG, FDM, 4 walls at 40% infill.
 
 | Qty | Part | Mass |
 |---|---|---|
-| 1 | Control box body | 0.128 kg |
-| 1 | Control box lid | 0.052 kg |
-| 1 | Hand pendant housing | 0.136 kg |
+| 1 | Control box body, with belt loops | 0.138 kg |
+| 1 | Control box lid | 0.049 kg |
+| 1 | Hand pendant housing | 0.055 kg |
+| 1 | Hand pendant back cover | 0.014 kg |
 | 1 | Upper arm cuff | 0.046 kg |
 | 1 | Forearm cuff | 0.039 kg |
 | 1 | Gearbox plate, 10 mm, with heat-set inserts | 0.047 kg |
@@ -82,6 +83,9 @@ see.
 | 1 | 4-core motor cable, 18 AWG | 0.016 kg |
 | — | M3–M6 fasteners, nylocs, countersunk screws | — |
 | 2 | M3 screws for the guard pillars, through the upper strut | — |
+| 8 | M3 self-tapping screws for the control box and pendant covers | — |
+| 4 | M3 self-tapping screws for the Uno | — |
+| 1 | M5 × 25 bolt and nylock for the sling strap anchor | — |
 | 4 | M3 screws for the magnet cup, into the clutch's outer plate | — |
 
 ## Torque limiter
@@ -105,12 +109,12 @@ See [torque-limiter.md](torque-limiter.md).
 
 | | Mass |
 |---|---|
-| Upper arm module | 2.365 kg |
-| Harness and electronics | 0.764 kg |
+| Upper arm module | 2.370 kg |
+| Harness and electronics | 0.713 kg |
 | Forearm module | 0.600 kg |
 | Chain guard | 0.044 kg |
 | Switch mounts | 0.013 kg |
-| **Device** | **3.787 kg** |
+| **Device** | **3.741 kg** |
 
 Most of it is the gearmotor, mounted mid upper arm and carried by the sling
 rather than the wearer's shoulder joint. That is what the 25 mm sling strap and

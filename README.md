@@ -27,7 +27,7 @@ needed to build, commission and operate it.
 | Control | Arduino Uno and a TB6600 driver, belt-mounted |
 | Interface | UP / DOWN buttons and a latching NC e-stop on a hand pendant |
 | Encoder | AS5600 on the elbow axis, checking the step count |
-| Device mass | 3.787 kg |
+| Device mass | 3.741 kg |
 
 The motor is deliberately small, because it sets the ceiling on how hard the arm can
 push. **By Motovario's catalogue figures, an NMRV030 at 30:1 should hold the arm

@@ -6,7 +6,7 @@
     "angle": "rad"
   },
   "fusion_default_length_unit": "mm",
-  "timeline_items": 379,
+  "timeline_items": 399,
   "parameters": [
     {
       "name": "d141",
@@ -1633,13 +1633,13 @@
       "description": "",
       "part_number": "2026-09-25-13-44-36-213",
       "physical": {
-        "mass_kg": 10.521618280856085,
-        "volume_mm3": 45938415.31919425,
-        "area_mm2": 1977633.667185435,
+        "mass_kg": 10.475689096906395,
+        "volume_mm3": 45957062.27221244,
+        "area_mm2": 2017029.3452225528,
         "centre_of_mass_mm": {
-          "x": -6.76721898006257,
-          "y": -107.94603444453142,
-          "z": -202.43715472847697
+          "x": -7.040825303067852,
+          "y": -107.08023895636822,
+          "z": -201.0029918508025
         }
       },
       "bounding_box": {
@@ -1770,13 +1770,13 @@
       "description": "",
       "part_number": "2026-09-25-13-45-26-334",
       "physical": {
-        "mass_kg": 0.7643344012823564,
-        "volume_mm3": 718917.9900721173,
-        "area_mm2": 323859.2562309873,
+        "mass_kg": 0.7130153093390147,
+        "volume_mm3": 737130.7435696718,
+        "area_mm2": 362335.8456293339,
         "centre_of_mass_mm": {
-          "x": -61.6189114405925,
-          "y": -194.3758703935893,
-          "z": -420.62968086611295
+          "x": -69.6378535813285,
+          "y": -189.3162500920005,
+          "z": -414.21431698620563
         }
       },
       "bounding_box": {
@@ -1786,17 +1786,17 @@
           "z": -562.6373645091351
         },
         "max_mm": {
-          "x": 138.1804042220648,
+          "x": 165.18040422206482,
           "y": 124.23577038256269,
           "z": 73.58816015852092
         },
         "size_mm": {
-          "x": 318.07705428320776,
+          "x": 345.07705428320776,
           "y": 473.27748893707616,
           "z": 636.225524667656
         }
       },
-      "body_count": 31
+      "body_count": 28
     },
     {
       "name": "Upper Arm Module",
@@ -1804,13 +1804,13 @@
       "description": "",
       "part_number": "2026-09-25-13-47-21-260",
       "physical": {
-        "mass_kg": 2.3647611509435604,
-        "volume_mm3": 679199.7256504972,
-        "area_mm2": 219095.21315671265,
+        "mass_kg": 2.3701510589372106,
+        "volume_mm3": 679633.9251711499,
+        "area_mm2": 220014.30179548363,
         "centre_of_mass_mm": {
-          "x": -17.976085998654057,
-          "y": 105.54803731145381,
-          "z": -175.32667316759995
+          "x": -17.935206979890456,
+          "y": 105.49572145581291,
+          "z": -175.70385315729868
         }
       },
       "bounding_box": {
@@ -1830,7 +1830,7 @@
           "z": 326.03
         }
       },
-      "body_count": 42
+      "body_count": 43
     },
     {
       "name": "Forearm Module",
@@ -2449,74 +2449,6 @@
     {
       "occurrence": "/Harness + Electronics:1",
       "component": "Harness + Electronics",
-      "body": "Control Box Body (PETG print)",
-      "material": "PETG (FDM, 4 walls + 40% infill)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.12786119999999943,
-        "volume_mm3": 142067.99999999936,
-        "area_mm2": 96344.0,
-        "centre_of_mass_mm": {
-          "x": -139.89095815728766,
-          "y": -190.0,
-          "z": -420.0
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -159.3092789614096,
-          "y": -268.0,
-          "z": -478.0
-        },
-        "max_mm": {
-          "x": -101.3092789614096,
-          "y": -112.0,
-          "z": -362.0
-        },
-        "size_mm": {
-          "x": 58.00000000000001,
-          "y": 156.0,
-          "z": 115.99999999999994
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "Control Box Lid (PETG print)",
-      "material": "PETG (FDM, 4 walls + 40% infill)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.05183999999999982,
-        "volume_mm3": 57599.999999999796,
-        "area_mm2": 40079.99999999999,
-        "centre_of_mass_mm": {
-          "x": -160.80927896140958,
-          "y": -189.99999999999997,
-          "z": -420.00000000000006
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -162.30927896140958,
-          "y": -270.0,
-          "z": -480.0
-        },
-        "max_mm": {
-          "x": -159.3092789614096,
-          "y": -110.0,
-          "z": -360.0
-        },
-        "size_mm": {
-          "x": 2.9999999999999893,
-          "y": 160.0,
-          "z": 120.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
       "body": "M3 Lid Screw",
       "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
       "visible": true,
@@ -2653,176 +2585,6 @@
     {
       "occurrence": "/Harness + Electronics:1",
       "component": "Harness + Electronics",
-      "body": "Vent Rib",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.00013393830092477786,
-        "volume_mm3": 120.00000000000128,
-        "area_mm2": 308.0000000000001,
-        "centre_of_mass_mm": {
-          "x": -162.80927896140963,
-          "y": -160.0,
-          "z": -395.00000000000006
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -163.30927896140963,
-          "y": -162.0,
-          "z": -410.0
-        },
-        "max_mm": {
-          "x": -162.30927896140963,
-          "y": -158.0,
-          "z": -380.0
-        },
-        "size_mm": {
-          "x": 1.0000000000000142,
-          "y": 3.999999999999986,
-          "z": 30.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "Vent Rib (1)",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.00013393830092477786,
-        "volume_mm3": 120.00000000000128,
-        "area_mm2": 308.0000000000001,
-        "centre_of_mass_mm": {
-          "x": -162.80927896140963,
-          "y": -170.0,
-          "z": -395.00000000000006
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -163.30927896140963,
-          "y": -172.0,
-          "z": -410.0
-        },
-        "max_mm": {
-          "x": -162.30927896140963,
-          "y": -168.0,
-          "z": -380.0
-        },
-        "size_mm": {
-          "x": 1.0000000000000142,
-          "y": 3.999999999999986,
-          "z": 30.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "Vent Rib (2)",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.00013393830092477786,
-        "volume_mm3": 120.00000000000128,
-        "area_mm2": 308.0000000000001,
-        "centre_of_mass_mm": {
-          "x": -162.80927896140963,
-          "y": -180.00000000000003,
-          "z": -395.00000000000006
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -163.30927896140963,
-          "y": -182.0,
-          "z": -410.0
-        },
-        "max_mm": {
-          "x": -162.30927896140963,
-          "y": -178.0,
-          "z": -380.0
-        },
-        "size_mm": {
-          "x": 1.0000000000000142,
-          "y": 3.999999999999986,
-          "z": 30.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "Vent Rib (3)",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.00013393830092477786,
-        "volume_mm3": 120.00000000000128,
-        "area_mm2": 308.0000000000001,
-        "centre_of_mass_mm": {
-          "x": -162.80927896140963,
-          "y": -190.0,
-          "z": -395.00000000000006
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -163.30927896140963,
-          "y": -192.0,
-          "z": -410.0
-        },
-        "max_mm": {
-          "x": -162.30927896140963,
-          "y": -188.0,
-          "z": -380.0
-        },
-        "size_mm": {
-          "x": 1.0000000000000142,
-          "y": 3.999999999999986,
-          "z": 30.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "Vent Rib (4)",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.00013393830092477786,
-        "volume_mm3": 120.00000000000128,
-        "area_mm2": 308.0000000000001,
-        "centre_of_mass_mm": {
-          "x": -162.80927896140963,
-          "y": -200.00000000000003,
-          "z": -395.00000000000006
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -163.30927896140963,
-          "y": -202.0,
-          "z": -410.0
-        },
-        "max_mm": {
-          "x": -162.30927896140963,
-          "y": -198.0,
-          "z": -380.0
-        },
-        "size_mm": {
-          "x": 1.0000000000000142,
-          "y": 3.999999999999986,
-          "z": 30.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
       "body": "Status LED (green)",
       "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
       "visible": true,
@@ -2891,40 +2653,6 @@
     {
       "occurrence": "/Harness + Electronics:1",
       "component": "Harness + Electronics",
-      "body": "DC Barrel Jack (24 V in)",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.0007731824823285098,
-        "volume_mm3": 692.7211801165832,
-        "area_mm2": 471.23889803846987,
-        "centre_of_mass_mm": {
-          "x": -165.45213610426674,
-          "y": -130.00000000000003,
-          "z": -454.9999999994014
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -169.30927896140963,
-          "y": -136.0,
-          "z": -461.0
-        },
-        "max_mm": {
-          "x": -162.30927896140963,
-          "y": -124.0,
-          "z": -449.0
-        },
-        "size_mm": {
-          "x": 7.000000000000028,
-          "y": 11.999999999999993,
-          "z": 12.000000000000028
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
       "body": "Motor Cable Gland (PG7)",
       "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
       "visible": true,
@@ -2987,244 +2715,6 @@
           "x": 13.999999999999986,
           "y": 11.999999999999957,
           "z": 14.000000000000057
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "Arduino Uno (inside)",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.00789343053450013,
-        "volume_mm3": 7071.999999999976,
-        "area_mm2": 7551.999999999999,
-        "centre_of_mass_mm": {
-          "x": -152.30927896140963,
-          "y": -216.0,
-          "z": -444.00000000000006
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -153.3092789614096,
-          "y": -250.0,
-          "z": -470.00000000000006
-        },
-        "max_mm": {
-          "x": -151.30927896140963,
-          "y": -182.00000000000003,
-          "z": -418.00000000000006
-        },
-        "size_mm": {
-          "x": 1.999999999999993,
-          "y": 67.99999999999997,
-          "z": 52.00000000000003
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "TB6600 Stepper Driver (inside)",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.19688930235942134,
-        "volume_mm3": 176400.0,
-        "area_mm2": 20456.0,
-        "centre_of_mass_mm": {
-          "x": -135.3092789614096,
-          "y": -150.00000000000003,
-          "z": -421.0000000000001
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -153.3092789614096,
-          "y": -175.0,
-          "z": -470.0
-        },
-        "max_mm": {
-          "x": -117.3092789614096,
-          "y": -125.0,
-          "z": -372.0
-        },
-        "size_mm": {
-          "x": 36.000000000000014,
-          "y": 50.0,
-          "z": 97.99999999999997
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "Hand Pendant Housing (PETG print)",
-      "material": "PETG (FDM, 4 walls + 40% infill)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.13607999999999998,
-        "volume_mm3": 151200.0,
-        "area_mm2": 19647.999999999996,
-        "centre_of_mass_mm": {
-          "x": 106.16040422206481,
-          "y": -267.0,
-          "z": -486.0
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": 92.16040422206481,
-          "y": -292.0,
-          "z": -540.0
-        },
-        "max_mm": {
-          "x": 120.16040422206481,
-          "y": -242.00000000000003,
-          "z": -432.0
-        },
-        "size_mm": {
-          "x": 28.000000000000007,
-          "y": 50.0,
-          "z": 107.99999999999997
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "UP Button (green, momentary)",
-      "material": "Lumped - pendant w/ switches (120 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.0012430833842690355,
-        "volume_mm3": 1724.7343668208719,
-        "area_mm2": 923.6282401554004,
-        "centre_of_mass_mm": {
-          "x": 123.7997484843599,
-          "y": -267.00000000000006,
-          "z": -454.99999999912313
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": 120.1604042220648,
-          "y": -276.0,
-          "z": -464.0
-        },
-        "max_mm": {
-          "x": 128.1604042220648,
-          "y": -258.00000000000006,
-          "z": -446.0
-        },
-        "size_mm": {
-          "x": 8.000000000000025,
-          "y": 17.99999999999997,
-          "z": 17.99999999999997
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "DOWN Button (black, momentary)",
-      "material": "Lumped - pendant w/ switches (120 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.0012430833842690355,
-        "volume_mm3": 1724.7343668208719,
-        "area_mm2": 923.6282401554004,
-        "centre_of_mass_mm": {
-          "x": 123.7997484843599,
-          "y": -267.00000000000006,
-          "z": -481.99999999912313
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": 120.1604042220648,
-          "y": -276.0,
-          "z": -491.0
-        },
-        "max_mm": {
-          "x": 128.1604042220648,
-          "y": -258.00000000000006,
-          "z": -473.00000000000006
-        },
-        "size_mm": {
-          "x": 8.000000000000025,
-          "y": 17.99999999999997,
-          "z": 17.99999999999997
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "E-Stop Collar",
-      "material": "Lumped - pendant w/ switches (120 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.002421683159733643,
-        "volume_mm3": 3360.000000000011,
-        "area_mm2": 2642.0000000000027,
-        "centre_of_mass_mm": {
-          "x": 121.6604042220648,
-          "y": -267.0,
-          "z": -517.5
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": 120.1604042220648,
-          "y": -283.00000000000006,
-          "z": -535.0
-        },
-        "max_mm": {
-          "x": 123.16040422206481,
-          "y": -251.0,
-          "z": -500.0
-        },
-        "size_mm": {
-          "x": 3.000000000000007,
-          "y": 32.00000000000003,
-          "z": 35.0
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "E-Stop Mushroom (latching, NC)",
-      "material": "Lumped - pendant w/ switches (120 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.005090075496970149,
-        "volume_mm3": 7062.30028526971,
-        "area_mm2": 2519.557308179016,
-        "centre_of_mass_mm": {
-          "x": 132.66574230035675,
-          "y": -267.0,
-          "z": -517.0000000009323
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": 123.16040422206481,
-          "y": -282.0,
-          "z": -532.0
-        },
-        "max_mm": {
-          "x": 138.1604042220648,
-          "y": -252.00000000000003,
-          "z": -502.0
-        },
-        "size_mm": {
-          "x": 15.000000000000018,
-          "y": 30.0,
-          "z": 30.0
         }
       }
     },
@@ -3333,74 +2823,6 @@
     {
       "occurrence": "/Harness + Electronics:1",
       "component": "Harness + Electronics",
-      "body": "Belt Loop",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.007931500968424344,
-        "volume_mm3": 7106.108630909602,
-        "area_mm2": 4373.697651553865,
-        "centre_of_mass_mm": {
-          "x": -99.97364731339026,
-          "y": -190.0000000000065,
-          "z": -467.91219688365794
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -102.30927896140962,
-          "y": -254.0,
-          "z": -474.00000000000006
-        },
-        "max_mm": {
-          "x": -97.30927896140962,
-          "y": -126.0,
-          "z": -462.0
-        },
-        "size_mm": {
-          "x": 5.0,
-          "y": 127.99999999999999,
-          "z": 12.000000000000028
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
-      "body": "Belt Loop (1)",
-      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.007228367567600072,
-        "volume_mm3": 6476.146868543357,
-        "area_mm2": 4270.946006812381,
-        "centre_of_mass_mm": {
-          "x": -100.13755352011798,
-          "y": -190.00000000001307,
-          "z": -372.1383492337095
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -102.30927896140962,
-          "y": -254.0,
-          "z": -378.00000000000006
-        },
-        "max_mm": {
-          "x": -97.30927896140962,
-          "y": -126.0,
-          "z": -366.0
-        },
-        "size_mm": {
-          "x": 5.0,
-          "y": 127.99999999999999,
-          "z": 12.000000000000028
-        }
-      }
-    },
-    {
-      "occurrence": "/Harness + Electronics:1",
-      "component": "Harness + Electronics",
       "body": "Pendant Belt Clip",
       "material": "Lumped - pendant w/ switches (120 g)",
       "visible": true,
@@ -3463,6 +2885,482 @@
           "x": 96.74873837271421,
           "y": 258.83783966898244,
           "z": 246.99096301699262
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Control Box Body (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.13805459439470702,
+        "volume_mm3": 153393.9937718967,
+        "area_mm2": 99407.65135378603,
+        "centre_of_mass_mm": {
+          "x": -119.65097858328545,
+          "y": -190.4962364967052,
+          "z": -420.31591748449836
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -159.31,
+          "y": -268.0,
+          "z": -478.0
+        },
+        "max_mm": {
+          "x": -97.30927896140962,
+          "y": -112.0,
+          "z": -362.0
+        },
+        "size_mm": {
+          "x": 62.00072103859039,
+          "y": 156.0,
+          "z": 115.99999999999994
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Control Box Lid (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.04906114689958431,
+        "volume_mm3": 54512.385443982566,
+        "area_mm2": 39534.49823514099,
+        "centre_of_mass_mm": {
+          "x": -160.8092789614096,
+          "y": -190.79375852671407,
+          "z": -419.57343190710606
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -162.30927896140958,
+          "y": -270.0,
+          "z": -480.0
+        },
+        "max_mm": {
+          "x": -159.3092789614096,
+          "y": -110.0,
+          "z": -360.0
+        },
+        "size_mm": {
+          "x": 2.9999999999999893,
+          "y": 160.0,
+          "z": 120.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Arduino Uno (inside)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.00789343053450013,
+        "volume_mm3": 7071.999999999976,
+        "area_mm2": 7551.999999999999,
+        "centre_of_mass_mm": {
+          "x": -111.31,
+          "y": -224.5,
+          "z": -436.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -112.31000000000002,
+          "y": -258.5,
+          "z": -462.0
+        },
+        "max_mm": {
+          "x": -110.31000000000003,
+          "y": -190.50000000000006,
+          "z": -410.0
+        },
+        "size_mm": {
+          "x": 1.999999999999993,
+          "y": 67.99999999999997,
+          "z": 52.00000000000003
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "TB6600 Stepper Driver (inside)",
+      "material": "Lumped - TB6600 driver (0.2 kg)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.19688930235942118,
+        "volume_mm3": 252191.99999999985,
+        "area_mm2": 25989.999999999985,
+        "centre_of_mass_mm": {
+          "x": -123.81,
+          "y": -150.5,
+          "z": -424.00000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -142.31,
+          "y": -186.0,
+          "z": -471.99999999999994
+        },
+        "max_mm": {
+          "x": -105.31,
+          "y": -115.0,
+          "z": -376.0
+        },
+        "size_mm": {
+          "x": 36.99999999999999,
+          "y": 71.00000000000001,
+          "z": 95.99999999999994
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "DC Barrel Jack (24 V in)",
+      "material": "Lumped - control box w/ Arduino + TB6600 (450 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0007731824823285098,
+        "volume_mm3": 692.7211801165832,
+        "area_mm2": 471.23889803846987,
+        "centre_of_mass_mm": {
+          "x": -165.45213610426674,
+          "y": -192.0,
+          "z": -454.9999999994014
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -169.30927896140963,
+          "y": -198.0,
+          "z": -461.0
+        },
+        "max_mm": {
+          "x": -162.30927896140963,
+          "y": -185.99999999999997,
+          "z": -449.0
+        },
+        "size_mm": {
+          "x": 7.000000000000028,
+          "y": 12.000000000000028,
+          "z": 12.000000000000028
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Buck Converter 24 to 5 V (inside)",
+      "material": "ABS Plastic",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.01340051999999994,
+        "volume_mm3": 12641.999999999944,
+        "area_mm2": 3597.999999999989,
+        "centre_of_mass_mm": {
+          "x": -111.31,
+          "y": -236.5,
+          "z": -393.5
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -118.31,
+          "y": -258.0,
+          "z": -404.0
+        },
+        "max_mm": {
+          "x": -104.31,
+          "y": -215.0,
+          "z": -383.00000000000006
+        },
+        "size_mm": {
+          "x": 13.999999999999986,
+          "y": 42.99999999999997,
+          "z": 20.999999999999943
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "E-Stop Relay, 5 V (inside)",
+      "material": "ABS Plastic",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0046825499999999885,
+        "volume_mm3": 4417.499999999989,
+        "area_mm2": 1623.9999999999975,
+        "centre_of_mass_mm": {
+          "x": -111.81,
+          "y": -200.5,
+          "z": -396.25000000000006
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -119.31,
+          "y": -210.0,
+          "z": -404.0
+        },
+        "max_mm": {
+          "x": -104.31,
+          "y": -191.0,
+          "z": -388.5
+        },
+        "size_mm": {
+          "x": 15.0,
+          "y": 18.999999999999986,
+          "z": 15.499999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "ACS712 Current Sensor (inside)",
+      "material": "ABS Plastic",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.005553339999999993,
+        "volume_mm3": 5238.999999999994,
+        "area_mm2": 1949.9999999999989,
+        "centre_of_mass_mm": {
+          "x": -110.81,
+          "y": -242.5,
+          "z": -373.5
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -117.31,
+          "y": -258.0,
+          "z": -380.0
+        },
+        "max_mm": {
+          "x": -104.30999999999999,
+          "y": -227.0,
+          "z": -367.0
+        },
+        "size_mm": {
+          "x": 13.000000000000007,
+          "y": 31.000000000000014,
+          "z": 12.999999999999972
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Hand Pendant Housing (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.05505757219291848,
+        "volume_mm3": 61175.08021435387,
+        "area_mm2": 41281.54010967036,
+        "centre_of_mass_mm": {
+          "x": 124.71451561261864,
+          "y": -267.0,
+          "z": -485.57797944816616
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 95.16,
+          "y": -292.0,
+          "z": -540.0
+        },
+        "max_mm": {
+          "x": 147.16,
+          "y": -242.0,
+          "z": -432.0
+        },
+        "size_mm": {
+          "x": 51.99999999999999,
+          "y": 50.0,
+          "z": 107.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "Hand Pendant Back Cover (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.01448194461009618,
+        "volume_mm3": 16091.049566773534,
+        "area_mm2": 11803.543358115467,
+        "centre_of_mass_mm": {
+          "x": 93.66000000000001,
+          "y": -267.0,
+          "z": -485.99999999999875
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 92.16,
+          "y": -292.0,
+          "z": -540.0
+        },
+        "max_mm": {
+          "x": 95.16,
+          "y": -242.0,
+          "z": -432.0
+        },
+        "size_mm": {
+          "x": 3.000000000000007,
+          "y": 50.0,
+          "z": 107.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "UP Button (green, momentary)",
+      "material": "Lumped - pendant w/ switches (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0012430833842690375,
+        "volume_mm3": 1724.7343668208746,
+        "area_mm2": 923.628240155401,
+        "centre_of_mass_mm": {
+          "x": 150.7997484843599,
+          "y": -267.00000000000006,
+          "z": -454.9999999991232
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 147.16040422206478,
+          "y": -276.0,
+          "z": -464.0
+        },
+        "max_mm": {
+          "x": 155.16040422206484,
+          "y": -258.00000000000006,
+          "z": -446.0
+        },
+        "size_mm": {
+          "x": 8.000000000000043,
+          "y": 17.99999999999997,
+          "z": 17.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "DOWN Button (black, momentary)",
+      "material": "Lumped - pendant w/ switches (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.0012430833842690375,
+        "volume_mm3": 1724.7343668208746,
+        "area_mm2": 923.628240155401,
+        "centre_of_mass_mm": {
+          "x": 150.7997484843599,
+          "y": -267.00000000000006,
+          "z": -481.99999999912313
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 147.16040422206478,
+          "y": -276.0,
+          "z": -491.0
+        },
+        "max_mm": {
+          "x": 155.16040422206484,
+          "y": -258.00000000000006,
+          "z": -473.00000000000006
+        },
+        "size_mm": {
+          "x": 8.000000000000043,
+          "y": 17.99999999999997,
+          "z": 17.99999999999997
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "E-Stop Collar",
+      "material": "Lumped - pendant w/ switches (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.002421683159733643,
+        "volume_mm3": 3360.000000000011,
+        "area_mm2": 2642.0000000000027,
+        "centre_of_mass_mm": {
+          "x": 148.66040422206478,
+          "y": -267.0,
+          "z": -517.5
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 147.16040422206478,
+          "y": -283.00000000000006,
+          "z": -535.0
+        },
+        "max_mm": {
+          "x": 150.1604042220648,
+          "y": -251.0,
+          "z": -500.0
+        },
+        "size_mm": {
+          "x": 3.000000000000007,
+          "y": 32.00000000000003,
+          "z": 35.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Harness + Electronics:1",
+      "component": "Harness + Electronics",
+      "body": "E-Stop Mushroom (latching, NC)",
+      "material": "Lumped - pendant w/ switches (120 g)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.005090075496970153,
+        "volume_mm3": 7062.300285269714,
+        "area_mm2": 2519.557308179016,
+        "centre_of_mass_mm": {
+          "x": 159.66574230035678,
+          "y": -267.0,
+          "z": -517.0000000009322
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": 150.1604042220648,
+          "y": -282.0,
+          "z": -532.0
+        },
+        "max_mm": {
+          "x": 165.16040422206484,
+          "y": -252.00000000000003,
+          "z": -502.0
+        },
+        "size_mm": {
+          "x": 15.000000000000036,
+          "y": 30.0,
+          "z": 30.0
         }
       }
     },
@@ -4319,40 +4217,6 @@
     {
       "occurrence": "/Upper Arm Module:1",
       "component": "Upper Arm Module",
-      "body": "Sling Strap Anchor (PETG print)",
-      "material": "PETG (FDM, 4 walls + 40% infill)",
-      "visible": true,
-      "physical": {
-        "mass_kg": 0.014148000000000023,
-        "volume_mm3": 15720.000000000027,
-        "area_mm2": 5284.000000000005,
-        "centre_of_mass_mm": {
-          "x": 0.0,
-          "y": 72.8,
-          "z": -82.97862595419845
-        }
-      },
-      "bounding_box": {
-        "min_mm": {
-          "x": -16.0,
-          "y": 66.8,
-          "z": -104.0
-        },
-        "max_mm": {
-          "x": 16.0,
-          "y": 78.80000000000001,
-          "z": -57.999999999999986
-        },
-        "size_mm": {
-          "x": 32.0,
-          "y": 12.00000000000001,
-          "z": 46.000000000000014
-        }
-      }
-    },
-    {
-      "occurrence": "/Upper Arm Module:1",
-      "component": "Upper Arm Module",
       "body": "M5x20 SHCS",
       "material": "Steel",
       "visible": true,
@@ -4891,6 +4755,74 @@
           "x": 10.0,
           "y": 5.800000000000001,
           "z": 10.0
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Sling Strap Anchor (PETG print)",
+      "material": "PETG (FDM, 4 walls + 40% infill)",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.01389141042001809,
+        "volume_mm3": 15434.900466686766,
+        "area_mm2": 5443.828526251386,
+        "centre_of_mass_mm": {
+          "x": 1.0624834527917995e-11,
+          "y": 72.8,
+          "z": -82.75657799621911
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -16.0,
+          "y": 66.8,
+          "z": -104.0
+        },
+        "max_mm": {
+          "x": 16.0,
+          "y": 78.80000000000001,
+          "z": -57.999999999999986
+        },
+        "size_mm": {
+          "x": 32.0,
+          "y": 12.00000000000001,
+          "z": 46.000000000000014
+        }
+      }
+    },
+    {
+      "occurrence": "/Upper Arm Module:1",
+      "component": "Upper Arm Module",
+      "body": "Pivot Retaining Spacer",
+      "material": "Steel",
+      "visible": true,
+      "physical": {
+        "mass_kg": 0.005646497573632705,
+        "volume_mm3": 719.2990539659497,
+        "area_mm2": 759.2601125195811,
+        "centre_of_mass_mm": {
+          "x": -1.4121058359299174e-09,
+          "y": 82.10000000000001,
+          "z": -330.0
+        }
+      },
+      "bounding_box": {
+        "min_mm": {
+          "x": -6.5,
+          "y": 77.60000000000001,
+          "z": -336.5
+        },
+        "max_mm": {
+          "x": 6.5,
+          "y": 86.6,
+          "z": -323.5
+        },
+        "size_mm": {
+          "x": 13.0,
+          "y": 8.999999999999995,
+          "z": 12.999999999999972
         }
       }
     },
@@ -6318,9 +6250,9 @@
       "name": "Elbow (chain-driven)",
       "type": "revolute",
       "origin_mm": {
-        "x": -3.60822483003176e-14,
+        "x": 3.552713678800501e-14,
         "y": 70.19999999999999,
-        "z": -330.0
+        "z": -329.99999999999994
       },
       "suppressed": false,
       "rotation_axis": {
